@@ -15,7 +15,6 @@ const getAll = (keyword, page, perPage) => {
 };
 
 const get = (id) => {
-  console.log(id)
   return axios.get(process.env.REACT_APP_API_URL + `user/view/${id}`, {
     headers: authHeader(),
     data: {},

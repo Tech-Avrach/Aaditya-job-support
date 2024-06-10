@@ -18,8 +18,8 @@ import styles from "../../assets/preview.module.scss";
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 //import users action
-import { updateUser, retrieveSingleUser } from "../../redux/actions/users";
-
+import { AddUserSuperAdmin, updateUser } from "../../redux/actions/users";
+import { editCurrentUser, getCurrentUser } from "../../redux/actions/currentUser";
 //import states action
 // import { retrieveStates } from "../../redux/actions/states";
 
@@ -57,8 +57,7 @@ const EditUserInformation = (props) => {
   const [profileImgErr, setProfileImgErr] = useState("");
 
   useEffect(() => {
-    console.log(id)
-    dispatch(retrieveSingleUser(id))
+    dispatch(getCurrentUser(id))
         .then((response) => {
             setcurrentUserInfo(response)
         })
@@ -362,7 +361,7 @@ const EditUserInformation = (props) => {
       return;
     } else {
 
-        dispatch(updateUser(id, formData))
+        dispatch(editCurrentUser(id, formData))
         .then((response) => {
             toast("User Added successfully!", {
               transition: Slide,
@@ -376,6 +375,10 @@ const EditUserInformation = (props) => {
               type: "success", // info/success/warning/error
             });
             setcurrentUserInfo({});
+            navigate(-1)
+            setTimeout(() => {
+              navigate(0)
+            }, 300)
           })
           .catch((error) => {
             toast(error.response.data.message, {
@@ -390,6 +393,11 @@ const EditUserInformation = (props) => {
               type: "error",
             });
           });
+      //dispatch to update the user
+
+      for (let pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
     }
   };
 

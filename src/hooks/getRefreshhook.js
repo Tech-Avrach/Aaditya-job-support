@@ -14,7 +14,7 @@ const useTokenRefreshHook = () => {
     if (payloadBase64) {
       const decodedPayload = atob(payloadBase64);
       const parsedToken = JSON.parse(decodedPayload);
-      console.log(parsedToken.userId);
+
       const jwtexpire = getRemainingTime(parsedToken.exp);
       if (jwtexpire.minutes < 8) {
         localStorage.setItem("_expire", jwtexpire.minutes);

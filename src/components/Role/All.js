@@ -151,7 +151,7 @@ const All = () => {
         ),
       },
       {
-        name: "Update",
+        name: "Status Update",
         button: true,
         minWidth: "150px",
         headerStyle: {
@@ -182,38 +182,38 @@ const All = () => {
           />
         ),
       },
-      {
-        name: "Status", // Add this column
-        button: true,
-        minWidth: "150px",
-        headerStyle: {
-          textAlign: "center",
-        },
-        cell: (row) => (
-          <input
-            name="statusUpdate"
-            type="checkbox"
-            checked={checkedRows[row.id]?.statusUpdate || false}
-            onChange={() => handleCheckboxChange(row.id, "statusUpdate")}
-          />
-        ),
-      },
-      {
-        name: "Restore", // Add this column
-        button: true,
-        minWidth: "150px",
-        headerStyle: {
-          textAlign: "center",
-        },
-        cell: (row) => (
-          <input
-            name="restore"
-            type="checkbox"
-            checked={checkedRows[row.id]?.restore || false}
-            onChange={() => handleCheckboxChange(row.id, "restore")}
-          />
-        ),
-      },
+      // {
+      //   name: "Status Update", // Add this column
+      //   button: true,
+      //   minWidth: "150px",
+      //   headerStyle: {
+      //     textAlign: "center",
+      //   },
+      //   cell: (row) => (
+      //     <input
+      //       name="statusUpdate"
+      //       type="checkbox"
+      //       checked={checkedRows[row.id]?.statusUpdate || false}
+      //       onChange={() => handleCheckboxChange(row.id, "statusUpdate")}
+      //     />
+      //   ),
+      // },
+      // {
+      //   name: "Restore", // Add this column
+      //   button: true,
+      //   minWidth: "150px",
+      //   headerStyle: {
+      //     textAlign: "center",
+      //   },
+      //   cell: (row) => (
+      //     <input
+      //       name="restore"
+      //       type="checkbox"
+      //       checked={checkedRows[row.id]?.restore || false}
+      //       onChange={() => handleCheckboxChange(row.id, "restore")}
+      //     />
+      //   ),
+      // },
     ],
     [checkedRows, selectedRole]
   );

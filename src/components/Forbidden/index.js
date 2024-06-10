@@ -1,16 +1,17 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { FaExclamationTriangle } from 'react-icons/fa';
+import { FaBan } from 'react-icons/fa';
 
-const PageNotFound = () => {
+
+const ForbiddenPage = () => {
   return (
     <Container className="text-center mt-5">
       <Row>
         <Col>
-          <FaExclamationTriangle size={100} className="text-danger" />
+          <FaBan size={100} className="text-warning" />
           <h1 className="display-4">403</h1>
-          <p className="lead">Oops! The page you are looking for does not exist.</p>
+          <p className="lead">Sorry, you don't have permission to access this page.</p>
           <Link to="/">
             <Button color="primary">Go Home</Button>
           </Link>
@@ -20,4 +21,4 @@ const PageNotFound = () => {
   );
 };
 
-export default PageNotFound;
+export default ForbiddenPage;

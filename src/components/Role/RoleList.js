@@ -156,7 +156,7 @@ const RoleList = () => {
               handleOnClick={(e) => handleStatusToggle(e, row.publicId, !row.isActive)}
             />
             {row.deletedAt === null ? (
-              row.isActive ?  
+              
               <>
                 <IconContainer
                   id={"edit-icon"}
@@ -171,7 +171,7 @@ const RoleList = () => {
                   text={"Delete"}
                   iconColor={"#d92550"}
                 />
-              </> : <></>
+              </> 
             ) : (
               <IconContainer
                 id={"restore-icon"}

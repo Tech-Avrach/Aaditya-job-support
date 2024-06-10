@@ -112,10 +112,10 @@ const getNavItem = (moduleId) => {
 }
 
 export const createNavItems = (permission) => {
-  let modules = permission.map(e => e.moduleId)
+  let modules = permission?.map(e => e.moduleId)
 
   let navItems = []
-  modules.forEach(e => {
+  modules?.forEach(e => {
     let ni = getNavItem(e)
     if(ni) navItems.push(ni)
   })

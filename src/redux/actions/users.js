@@ -28,12 +28,10 @@ export const retrieveUsers =
 export const retrieveSingleUser = (id) => async (dispatch) => {
   try {
     const res = await UserService.get(id);
-    console.log(res);
     dispatch({
       type: RETRIEVE_SINGALE_USER,
       payload: { user: res?.data?.userInfo },
     });
-    return Promise.resolve(res?.data?.userInfo);
   } catch (err) {
     console.log(err);
   }
