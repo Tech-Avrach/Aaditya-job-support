@@ -19,7 +19,7 @@ import { login } from "../../redux/actions/auth";
 
 //Configure toastify
 toast.configure();
-console.log("hii")
+console.log("hii");
 
 const Login = () => {
   let navigate = useNavigate();
