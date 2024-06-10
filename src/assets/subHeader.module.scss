@@ -1,0 +1,30 @@
+.subHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    &__img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: contain;
+    }
+
+    &__text {
+        margin: 0;
+    }
+}
+
+.subHeaderBlock {
+    align-items: center;
+    gap: 0.2rem;
+    &__img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: contain;
+    }
+
+    &__text {
+        margin: 0;
+    }
+}
