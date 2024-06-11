@@ -18,8 +18,7 @@ import styles from "../../assets/preview.module.scss";
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 //import users action
-import { AddUserSuperAdmin, updateUser } from "../../redux/actions/users";
-import { editCurrentUser, getCurrentUser } from "../../redux/actions/currentUser";
+import { retrieveSingleUser, updateUser } from "../../redux/actions/users";
 //import states action
 // import { retrieveStates } from "../../redux/actions/states";
 
@@ -57,7 +56,7 @@ const EditUserInformation = (props) => {
   const [profileImgErr, setProfileImgErr] = useState("");
 
   useEffect(() => {
-    dispatch(getCurrentUser(id))
+    dispatch(retrieveSingleUser(id))
         .then((response) => {
             setcurrentUserInfo(response)
         })
@@ -361,7 +360,7 @@ const EditUserInformation = (props) => {
       return;
     } else {
 
-        dispatch(editCurrentUser(id, formData))
+        dispatch(updateUser(id, formData))
         .then((response) => {
             toast("User Added successfully!", {
               transition: Slide,

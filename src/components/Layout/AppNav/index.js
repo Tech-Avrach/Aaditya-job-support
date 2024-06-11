@@ -19,7 +19,7 @@ function Nav(props) {
     <>
       <h5 className="app-sidebar__heading"></h5>
         <MetisMenu
-           content={authDetails.permission[0].roleId == 1 ? AdminNav : createNavItems(authDetails.permission)}
+          content={authDetails.permission[0].roleId == 1 ? AdminNav : createNavItems(authDetails.permission)}
           // content={AdminNav}
 
           onSelected={toggleMobileSidebar}

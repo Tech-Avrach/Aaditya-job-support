@@ -32,6 +32,7 @@ export const retrieveSingleUser = (id) => async (dispatch) => {
       type: RETRIEVE_SINGALE_USER,
       payload: { user: res?.data?.userInfo },
     });
+    return Promise.resolve(res?.data?.userInfo);
   } catch (err) {
     console.log(err);
   }
@@ -72,7 +73,7 @@ export const updateUserStatus = (id, data) => async (dispatch) => {
     const res = await UserService.updateStatus(id, data);
     dispatch({
       type: UPDATE_USER_STATUS,
-      payload: res.data?.userInfo,
+      payload: res.data?.listUsers,
     });
 
     return Promise.resolve(res.data);
@@ -81,13 +82,13 @@ export const updateUserStatus = (id, data) => async (dispatch) => {
   }
 };
 
-export const deleteUser = (id) => async (dispatch) => {
+export const deleteUser = (id, data) => async (dispatch) => {
   try {
-    const res = await UserService.deleteUser(id);
+    const res = await UserService.deleteUser(id, data);
 
     dispatch({
       type: DELETE_USER,
-      payload: res.data.userInfo,
+      payload: res.data.listUsers,
     });
 
     return Promise.resolve(res.data);
@@ -96,18 +97,21 @@ export const deleteUser = (id) => async (dispatch) => {
   }
 };
 
-export const restoreUser = (id) => async (dispatch) => {
+export const restoreUser = (id, data) => async (dispatch) => {
   try {
-    const res = await UserService.restore(id);
+    const res = await UserService.restore(id, data);
+
+    // console.log(res)
 
     dispatch({
       type: RESTORE_USER,
-      payload: res.data.userInfo,
+      payload: res.data.listUsers,
     });
 
-    return Promise.resolve(res.data);
+    // return Promise.resolve(res.data);
   } catch (err) {
     return Promise.reject(err);
+    // console.log(err)
   }
 };
 

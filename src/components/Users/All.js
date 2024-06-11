@@ -60,12 +60,29 @@ const All = () => {
     dispatch(retrieveUsers(filterText, 1, perPage));
   }, []);
 
+  const getData = (action) => {
+    if(action === "delete" || action === "restore") {
+      let data = {
+        isBlock: "false",
+        all:"true",
+        page:currentPage,
+        perPage:perPage,
+        keyword:filterText,
+      }
+      return data;
+    }
+  }
+
   //status handler
   const handleStatusChange = (e, id, status) => {
     e.preventDefault();
     let data = {
       isBlock: status,
-    };
+      all:"true",
+      page:currentPage,
+      perPage:perPage,
+      keyword:filterText,
+    }
 
     let message = "";
 
@@ -101,9 +118,10 @@ const All = () => {
   //delete/restore handler
   const handleDelete = (e, id, action) => {
     e.preventDefault();
+    let data = getData(action);
     if (action === "delete") {
       //dispatch to delete the user
-      dispatch(deleteUser(id))
+      dispatch(deleteUser(id, data))
         .then((response) => {
           toast("User deleted successfully!", {
             transition: Slide,
@@ -132,7 +150,7 @@ const All = () => {
         });
     } else {
       //dispatch to restore the user
-      dispatch(restoreUser(id))
+      dispatch(restoreUser(id, data))
         .then((response) => {
           toast("User restored successfully!", {
             transition: Slide,

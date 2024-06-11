@@ -4,7 +4,6 @@ const user = JSON.parse(localStorage.getItem("_gmp"));
 
 const getPermissionMap = (permission) => {
   let moduleAccessMap = {}
-  console.log(permission,"permision");
   permission?.forEach(element => {
     moduleAccessMap[element.moduleId] = {
       "create": element.create,

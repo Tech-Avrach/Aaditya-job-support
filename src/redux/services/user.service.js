@@ -43,15 +43,17 @@ const updateStatus = (id, data) => {
   );
 };
 
-const deleteUser = (id) => {
+const deleteUser = (id, data) => {
   return axios.delete(process.env.REACT_APP_API_URL + `user/delete/${id}`, {
     headers: authHeader(),
+    data: data,
   });
 };
 
-const restore = (id) => {
+const restore = (id, data) => {
   return axios.get(process.env.REACT_APP_API_URL + `user/restore/${id}`, {
     headers: authHeader(),
+    data: data,
   });
 };
 

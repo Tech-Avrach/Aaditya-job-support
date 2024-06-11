@@ -96,7 +96,6 @@ const All = () => {
       restore: checkedRows[key].restore ? 1 : 0, // Add this line
     }));
 
-    console.log(permissions);
   
     return {
       roleId: selectedRole?.isActive,
