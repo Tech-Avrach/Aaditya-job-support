@@ -63,9 +63,24 @@ const All = () => {
   //delete/restore handler
   const handleDelete = (e, id, action) => {
     e.preventDefault();
+    let data = {
+      currency: "INR",
+      // "adType": "sell",
+      // "status": "active",
+      // "region": "US",
+      // "platform": "PC",        //'PC', 'PS4', 'Xbox', 'Nintendo', 'PS5'
+      category: "Game Item", // 'Game Item', 'Game Boosting/Coaching', 'Game Coins', 'Gift cards and Top up', 'Game account'
+      // "minPrice": 10,
+      // "maxPrice": 100,
+      all: true, // true, false
+      // "keyword": "RPG",
+      page: currentPage,
+      perPage: perPage,
+      get: "list" //["list", "item"]
+  }
     if (action === "delete") {
       //dispatch to delete the user
-      dispatch(deleteGame(id))
+      dispatch(deleteGame(id, data))
         .then((response) => {
           toast("Game deleted successfully!", {
             transition: Slide,
@@ -94,7 +109,7 @@ const All = () => {
         });
     } else {
       //dispatch to restore the user
-      dispatch(restoreGame(id))
+      dispatch(restoreGame(id, data))
         .then((response) => {
           toast("Game restored successfully!", {
             transition: Slide,
@@ -189,7 +204,7 @@ const All = () => {
               <IconContainer
                 id={"delete-icon"}
                 Icon={DeleteIcon}
-                // handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
+                handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
                 text={"Delete"}
                 iconColor={"#d92550"}
               />
@@ -198,7 +213,7 @@ const All = () => {
             <IconContainer
               id={"restore-icon"}
               Icon={RestoreIcon}
-              // handleOnClick={(e) => handleDelete(e, row.publicId, "restore")}
+              handleOnClick={(e) => handleDelete(e, row.publicId, "restore")}
               text={"Restore"}
               iconColor={"#3ac47d"}
             />

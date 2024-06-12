@@ -87,13 +87,13 @@ export const updateGame = (id, data) => async (dispatch) => {
   }
 };
 
-export const deleteGame = (id) => async (dispatch) => {
+export const deleteGame = (id, data) => async (dispatch) => {
   try {
-    const res = await GameService.deleteGame(id);
-
+    const res = await GameService.deleteGame(id, data);
+    console.log(res)
     dispatch({
       type: DELETE_GAME,
-      payload: res.data.pageInfo,
+      payload: res?.data?.listPages?.rows,
     });
 
     return Promise.resolve(res.data);
@@ -102,13 +102,13 @@ export const deleteGame = (id) => async (dispatch) => {
   }
 };
 
-export const restoreGame = (id) => async (dispatch) => {
+export const restoreGame = (id, data) => async (dispatch) => {
   try {
-    const res = await GameService.restore(id);
-
+    const res = await GameService.restore(id, data);
+    console.log(res)
     dispatch({
       type: RESTORE_GAME,
-      payload: res.data.adInfo,
+      payload: res?.data?.adInfo
     });
 
     return Promise.resolve(res.data);

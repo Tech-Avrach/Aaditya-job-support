@@ -111,6 +111,7 @@ export const restoreUser = (id, data) => async (dispatch) => {
   try {
     const res = await UserService.restore(id, data);
 
+
     dispatch({
       type: RESTORE_USER,
       payload: res.data?.listUsers?.rows,

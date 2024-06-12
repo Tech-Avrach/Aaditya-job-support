@@ -178,8 +178,9 @@ const All = (props) => {
   const handleDelete = (e, id, action) => {
     e.preventDefault();
     if (action === "delete") {
+      let data = { all: "true", page: currentPage, perPage: perPage };
       //dispatch to delete the user
-      dispatch(deleteSeller(id))
+      dispatch(deleteSeller(id, data))
         .then((response) => {
           toast("Seller deleted successfully!", {
             transition: Slide,
@@ -207,8 +208,9 @@ const All = (props) => {
           });
         });
     } else {
+      let data = { page: currentPage, perPage: perPage };
       //dispatch to restore the user
-      dispatch(restoreSeller(id))
+      dispatch(restoreSeller(id, data))
         .then((response) => {
           toast("Seller restored successfully!", {
             transition: Slide,

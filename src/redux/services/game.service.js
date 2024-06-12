@@ -46,20 +46,23 @@ const create = (data) => {
 };
 
 const update = (id, data) => {
+
   return axios.put(process.env.REACT_APP_API_URL + `ad/update/${id}`, data, {
     headers: multipartHeader(),
   });
 };
 
-const deleteGame = (id) => {
+const deleteGame = (id, data) => {
   return axios.delete(process.env.REACT_APP_API_URL + `ad/delete/${id}`, {
     headers: authHeader(),
+    data: data,
   });
 };
 
-const restore = (id) => {
+const restore = (id, data) => {
   return axios.get(process.env.REACT_APP_API_URL + `ad/restore/${id}`, {
     headers: authHeader(),
+    data: data,
   });
 };
 

@@ -50,7 +50,6 @@ const All = () => {
         [permissionType]: !prevCheckedRows[key]?.[permissionType],
       },
     }));
-    console.log(key, permissionType);
   };
   
 
@@ -61,8 +60,6 @@ const All = () => {
           setPermissions(data.data.data);
           const initialCheckedRows = {};
 
-          console.log(data.data.data);
-  
           data.data.data.forEach((permission, index) => {
             initialCheckedRows[permission.moduleId] = {
               create: permission.create,
@@ -72,6 +69,7 @@ const All = () => {
               statusUpdate: permission.statusUpdate, 
               restore: permission.restore, 
             };
+
           });
   
           setCheckedRows(initialCheckedRows);
@@ -150,7 +148,7 @@ const All = () => {
         ),
       },
       {
-        name: "Status Update",
+        name: "Update",
         button: true,
         minWidth: "150px",
         headerStyle: {
@@ -181,22 +179,22 @@ const All = () => {
           />
         ),
       },
-      // {
-      //   name: "Status Update", // Add this column
-      //   button: true,
-      //   minWidth: "150px",
-      //   headerStyle: {
-      //     textAlign: "center",
-      //   },
-      //   cell: (row) => (
-      //     <input
-      //       name="statusUpdate"
-      //       type="checkbox"
-      //       checked={checkedRows[row.id]?.statusUpdate || false}
-      //       onChange={() => handleCheckboxChange(row.id, "statusUpdate")}
-      //     />
-      //   ),
-      // },
+      {
+        name: "Status Update", // Add this column
+        button: true,
+        minWidth: "150px",
+        headerStyle: {
+          textAlign: "center",
+        },
+        cell: (row) => (
+          <input
+            name="statusUpdate"
+            type="checkbox"
+            checked={checkedRows[row.id]?.statusUpdate || false}
+            onChange={() => handleCheckboxChange(row.id, "statusUpdate")}
+          />
+        ),
+      },
       // {
       //   name: "Restore", // Add this column
       //   button: true,
@@ -247,6 +245,7 @@ const All = () => {
     { id: 8, feature: "Games Ads" },
     { id: 7, feature: "Dispute Resolution" },
   ];
+
 
   const subHeaderComponent = useMemo(() => {
     return (

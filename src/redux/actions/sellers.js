@@ -101,13 +101,14 @@ export const handleAccountApproval = (id, data) => async (dispatch) => {
   }
 };
 
-export const deleteSeller = (id) => async (dispatch) => {
+export const deleteSeller = (id, data) => async (dispatch) => {
   try {
-    const res = await SellerService.deleteUser(id);
+    const res = await SellerService.deleteUser(id, data);
+    console.log(res)
 
     dispatch({
       type: DELETE_SELLER,
-      payload: res.data.sellerInfo,
+      payload: res?.data?.listSellers,
     });
 
     return Promise.resolve(res.data);
@@ -116,17 +117,18 @@ export const deleteSeller = (id) => async (dispatch) => {
   }
 };
 
-export const restoreSeller = (id) => async (dispatch) => {
+export const restoreSeller = (id, data) => async (dispatch) => {
   try {
-    const res = await SellerService.restore(id);
-
+    const res = await SellerService.restore(id, data);
+  
     dispatch({
       type: RESTORE_SELLER,
-      payload: res.data.sellerInfo,
+      payload: res?.data?.listSellers,
     });
 
     return Promise.resolve(res.data);
   } catch (err) {
-    return Promise.reject(err);
+    // return Promise.reject(err);
+    console.log(err)
   }
 };
