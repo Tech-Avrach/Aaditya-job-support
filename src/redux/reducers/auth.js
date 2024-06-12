@@ -29,12 +29,12 @@ export default function (state = initialState, action) {
 
   switch (type) {
     case LOGIN_SUCCESS:
-      // let permissionMap = getPermissionMap(payload.user.permission);
+      let permissionMap = getPermissionMap(payload.user.permission);
       return {
         ...state,
         isLoggedIn: true,
         user: payload.user,
-        // permissionMap
+        permissionMap
       };
     case CURRENT_USER_UPDATE:
       // let permissionMap = getPermissionMap(payload.user.permission);

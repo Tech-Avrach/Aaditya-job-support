@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import {
   Button,
   Form,
@@ -19,6 +19,7 @@ import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 //import users action
 import { AddUserSuperAdmin, updateUser } from "../../redux/actions/users";
+import ModuleIdMap from "../Common/ModuleIdMap";
 //import states action
 // import { retrieveStates } from "../../redux/actions/states";
 
@@ -46,11 +47,26 @@ const ProfileInformation = () => {
 
   const [emailErr, setEmailErr] = useState("");
 
+  const [dobErr, setDobErr] = useState("");
+
   const [contactNumberErr, setcontactNumberErr] = useState("");
 
   const [companyNumberErr, setCompanyNumberErr] = useState("");
 
   const [profileImgErr, setProfileImgErr] = useState("");
+
+  const permissionMap = useSelector(state => state.auth.permissionMap)
+
+  const permission = permissionMap[ModuleIdMap.user];
+  // const permissison = {
+  //   "create": element.create,
+  //   "read": element.read,
+  //   "update": element.update,
+  //   "delete": element.delete,
+  //   "restore": element.restore,
+  //   "statusUpdate": element.statusUpdate
+  // }
+
 
   //input change handler
   const handleInputChange = (event) => {
@@ -213,6 +229,17 @@ const ProfileInformation = () => {
     setRemoveProfileImg(true);
   };
 
+  const formatDateString = (dateString) => {
+    const date = new Date(dateString);
+    if (isNaN(date)) return '';
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear());
+    return `${month}/${day}/${year}`;
+ 
+  };
+
   //update form handler
   const updateHandler = (event) => {
     event.preventDefault();
@@ -246,6 +273,16 @@ const ProfileInformation = () => {
       formData.append("email", currentUser.email);
 
       setEmailErr("");
+    }
+    console.log("currentUser.dateOfBirth", currentUser.dateOfBirth);
+    if (currentUser.dateOfBirth === "" || currentUser.dateOfBirth === null) {
+      setDobErr("Please enter a valid date!");
+
+      errorCount++;
+    } else {
+      formData.append("dateOfBirth", formatDateString(currentUser.dateOfBirth));
+
+      setDobErr("");
     }
 
     if (
@@ -428,8 +465,39 @@ const ProfileInformation = () => {
                     </FormGroup>
                   </Col>
                 </Row>
+                
                 <Row>
                   <Col md="6">
+                    <FormGroup>
+                      <Label for="username">Username</Label>
+                      <Input
+                        type="text"
+                        name="username"
+                        id="username"
+                        placeholder="User Name here..."
+                        value={currentUser.username ? currentUser.username : ""}
+                        onChange={handleInputChange}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="username">Date of Birth</Label>
+                      <Input
+                        invalid={dobErr !== "" ? true : false}
+                        type="date"
+                        name="dateOfBirth"
+                        id="dateOfBirth"
+                        placeholder="Date of Birth here..."
+                        value={currentUser.dateOfBirth ? currentUser.dateOfBirth : ""}
+                        onChange={handleInputChange}
+                      />
+                      {dobErr !== "" && (
+                        <FormFeedback>{dobErr}</FormFeedback>
+                      )}
+                    </FormGroup>
+                  </Col>
+                  <Col md="12">
                     <FormGroup>
                       <Label for="email">Email</Label>
                       <Input
@@ -445,6 +513,33 @@ const ProfileInformation = () => {
                       {emailErr !== "" && (
                         <FormFeedback>{emailErr}</FormFeedback>
                       )}
+                    </FormGroup>
+                  </Col>
+                </Row>
+
+                <Row>
+                <Col md="6">
+                    <FormGroup>
+                      <Label for="countryCode">Country Code</Label>
+                      <Input
+                        type="select"
+                        name="countryCode"
+                        id="countryCode"
+                        value={
+                          currentUser.countryCode != null
+                            ? currentUser.countryCode
+                            : ""
+                        }
+                        onChange={handleInputChange}
+                      >
+                        <option value=""> Select Country Code </option>
+                        {countries &&
+                          countries.map((country, index) => (
+                            <option key={index} value={country.code}>
+                              {country.name}
+                            </option>
+                          ))}
+                      </Input>
                     </FormGroup>
                   </Col>
                   <Col md="6">
@@ -467,45 +562,6 @@ const ProfileInformation = () => {
                       {contactNumberErr !== "" && (
                         <FormFeedback>{contactNumberErr}</FormFeedback>
                       )}
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label for="username">User Name</Label>
-                      <Input
-                        type="text"
-                        name="username"
-                        id="username"
-                        placeholder="User Name here..."
-                        value={currentUser.username ? currentUser.username : ""}
-                        onChange={handleInputChange}
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label for="countryCode">Country Code</Label>
-                      <Input
-                        type="select"
-                        name="countryCode"
-                        id="countryCode"
-                        value={
-                          currentUser.countryCode != null
-                            ? currentUser.countryCode
-                            : ""
-                        }
-                        onChange={handleInputChange}
-                      >
-                        <option value=""> Select Country Code </option>
-                        {countries &&
-                          countries.map((country, index) => (
-                            <option key={index} value={country.code}>
-                              {country.name}
-                            </option>
-                          ))}
-                      </Input>
                     </FormGroup>
                   </Col>
                 </Row>
@@ -673,45 +729,48 @@ const ProfileInformation = () => {
                     </Col>
                   </Row> */}
 
+                {/* <Row>
+                  
+                </Row> */}
                 <Row>
-                  <FormGroup>
-                    <Label for="profileImage">Profile Image</Label>
-                    <Input
-                      invalid={profileImgErr !== "" ? true : false}
-                      type="file"
-                      name="profileImage"
-                      id="profileImage"
-                      accept="image/*"
-                      onChange={handleFileInput}
-                    />
-                    {profileImgPreview && (
-                      <div className={styles.previewContainer}>
-                        <img
-                          width={100}
-                          src={profileImgPreview}
-                          alt="preview"
-                          onError={() =>
-                            setProfileImgPreview(
-                              `${process.env.REACT_APP_PROFILE_IMAGE_URL}` +
-                                `user.png`
-                            )
-                          }
-                        />
-                        <a
-                          href="#"
-                          className={styles.deleteIcon}
-                          onClick={removeProfilePicture}
-                        >
-                          <i className="pe-7s-trash"></i>
-                        </a>
-                      </div>
-                    )}
-                    {profileImgErr !== "" && (
-                      <FormFeedback>{profileImgErr}</FormFeedback>
-                    )}
-                  </FormGroup>
-                </Row>
-                <Row>
+                  <Col md="12">
+                    <FormGroup>
+                      <Label for="profileImage">Profile Image</Label>
+                      <Input
+                        invalid={profileImgErr !== "" ? true : false}
+                        type="file"
+                        name="profileImage"
+                        id="profileImage"
+                        accept="image/*"
+                        onChange={handleFileInput}
+                      />
+                      {profileImgPreview && (
+                        <div className={styles.previewContainer}>
+                          <img
+                            width={100}
+                            src={profileImgPreview}
+                            alt="preview"
+                            onError={() =>
+                              setProfileImgPreview(
+                                `${process.env.REACT_APP_PROFILE_IMAGE_URL}` +
+                                  `user.png`
+                              )
+                            }
+                          />
+                          <a
+                            href="#"
+                            className={styles.deleteIcon}
+                            onClick={removeProfilePicture}
+                          >
+                            <i className="pe-7s-trash"></i>
+                          </a>
+                        </div>
+                      )}
+                      {profileImgErr !== "" && (
+                        <FormFeedback>{profileImgErr}</FormFeedback>
+                      )}
+                    </FormGroup>
+                  </Col>
                   <Col md="6">
                     <FormGroup>
                       <Label for="newPassword">Password</Label>

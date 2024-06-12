@@ -62,6 +62,16 @@ export const updateUser = (id, data) => async (dispatch) => {
       payload: res.data.userInfo,
     });
 
+    const userObj = {
+      firstName: res.data?.userInfo?.firstName,
+      lastName: res.data?.userInfo?.lastName,
+      email: res.data?.userInfo?.email,
+      profileImage: res.data?.userInfo?.profileImage,
+      publicId: res.data?.userInfo?.publicId,
+    };
+    let currentUser = JSON.parse(localStorage.getItem("_gmp"));
+    localStorage.setItem("_gmp", JSON.stringify({...currentUser, ...userObj}));
+
     return Promise.resolve(res.data);
   } catch (err) {
     return Promise.reject(err);
@@ -73,7 +83,7 @@ export const updateUserStatus = (id, data) => async (dispatch) => {
     const res = await UserService.updateStatus(id, data);
     dispatch({
       type: UPDATE_USER_STATUS,
-      payload: res.data?.listUsers,
+      payload: res.data?.listUsers?.rows,
     });
 
     return Promise.resolve(res.data);
@@ -88,7 +98,7 @@ export const deleteUser = (id, data) => async (dispatch) => {
 
     dispatch({
       type: DELETE_USER,
-      payload: res.data.listUsers,
+      payload: res.data?.listUsers?.rows,
     });
 
     return Promise.resolve(res.data);
@@ -101,11 +111,9 @@ export const restoreUser = (id, data) => async (dispatch) => {
   try {
     const res = await UserService.restore(id, data);
 
-    // console.log(res)
-
     dispatch({
       type: RESTORE_USER,
-      payload: res.data.listUsers,
+      payload: res.data?.listUsers?.rows,
     });
 
     // return Promise.resolve(res.data);

@@ -31,30 +31,30 @@ const userReducer = (state = initialState, action) => {
       return payload;
 
     case UPDATE_USER_STATUS:
-      const updated = state.users?.map((item) =>
-        item.id === payload.id ? payload : item
-      );
+      // const updated = state.users?.map((item) =>
+      //   item.id === payload.id ? payload : item
+      // );
       return {
-        users: updated,
+        users: payload,
         totalUserCount: state.totalUserCount,
       };
 
     case DELETE_USER:
-      const remainData = state.users?.map((item) =>
-        item.id === payload.id ? payload : item
-      );
+      // const remainData = state.users?.map((item) =>
+      //   item.id === payload.id ? payload : item
+      // );
       return {
         ...state,
-        users: remainData,
+        users: payload,
         totalUserCount: state.totalUserCount,
       };
 
     case RESTORE_USER:
-      const restored = state.users?.map((item) =>
-        item.id === payload.id ? payload : item
-      );
+      // const restored = state.users?.map((item) =>
+      //   item.id === payload.id ? payload : item
+      // );
       return {
-        users: restored,
+        users: payload,
         totalUserCount: state.totalUserCount,
       };
 

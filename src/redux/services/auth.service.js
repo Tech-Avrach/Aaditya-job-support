@@ -28,7 +28,7 @@ const login = (email, password, rememberMe) => {
 
         localStorage.setItem("_gmp", JSON.stringify(userObj));
       }
-      return response.data.userInfo;
+      return response.data;
     });
 };
 
