@@ -111,17 +111,45 @@ const getNavItem = (moduleId) => {
 
 }
 
-export const createNavItems = (permission) => {
-  let modules = permission?.map(e => e.moduleId)
+export const createNavItems = (permissions) => {
+  if (!Array.isArray(permissions)) return [];
 
-  let navItems = []
-  modules?.forEach(e => {
-    let ni = getNavItem(e)
-    if(ni) navItems.push(ni)
-  })
+  return permissions.reduce((navItems, { moduleId, read, create }) => {
+    if (read !== 1) return navItems; 
 
-  return navItems
-}
+    const navItem = getNavItem(moduleId);
+    if (!navItem) return navItems; 
+
+    if (create === 0 && navItem.content) {
+      navItem.content = navItem.content.filter(item => item.label !== "Add");
+    }
+
+    navItems.push(navItem); 
+    return navItems; 
+  }, []); 
+};
+
+
+// export const createNavItems = (permission) => {
+//   let modules = permission?.map(e => ({ moduleId: e.moduleId, readPermission: e.read, createPermission: e.create }));
+//   let navItems = []
+//   console.log(permission);
+//   modules?.forEach(e => {
+//     if(e.readPermission === 1) {
+//       let ni = getNavItem(e.moduleId)
+//       if(e.createPermission === 0){
+//         // i want to remove object with add label in content from ni
+//       }
+    
+//       if(ni) navItems.push(ni)
+
+//     }
+//   })
+
+//   return navItems
+// }
+
+
 
 export const CSRNav = [
   {

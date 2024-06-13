@@ -48,6 +48,14 @@ const All = () => {
     (state) => state.user
   );
 
+  const { permissionMap: permissions } = useSelector((state) => state.auth);
+
+  const currentModuleId = 1;
+
+  const permission = permissions[currentModuleId];
+
+  console.log(permission);
+
   const [perPage, setPerPage] = useState(10);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -180,100 +188,105 @@ const All = () => {
     }
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+
+    const commonColumns = [
       {
         name: "Unique Id",
-        selector: (row, id) => {
-          return row.publicId;
-        },
+        selector: (row) => row.publicId,
         sortable: true,
         width: "110px",
-        headerStyle: (selector, id) => {
-          return { textAlign: "center" };
-        },
+        headerStyle: { textAlign: "center" },
       },
       {
         name: "Name",
-        selector: (row) => {
-          return row.lastName !== null && row.lastName !== ""
+        selector: (row) =>
+          row.lastName !== null && row.lastName !== ""
             ? row.firstName + " " + row.lastName
-            : row.firstName;
-        },
+            : row.firstName,
         sortable: true,
-        // width: "250px",
-        headerStyle: (selector, id) => {
-          return { textAlign: "center" };
-        },
+        headerStyle: { textAlign: "center" },
       },
       {
         name: "Email",
         selector: (row) => row.email,
         sortable: true,
-        // width: "250px",
-        headerStyle: (selector, id) => {
-          return { textAlign: "center" };
-        },
+        headerStyle: { textAlign: "center" },
       },
       {
         name: "Phone Number",
         selector: (row) => row.contactNumber,
         sortable: true,
-        // width: "200px",
-        headerStyle: (selector, id) => {
-          return { textAlign: "center" };
-        },
+        headerStyle: { textAlign: "center" },
       },
+    ];
+
+    const renderActionCell = (row) => {
+      const isDeleted = row.deletedAt !== null;
+  
+      if (isDeleted) {
+        return permission.restore ? (
+          <IconContainer
+            id={"restore-icon"}
+            Icon={RestoreIcon}
+            handleOnClick={(e) => handleDelete(e, row.publicId, "restore")}
+            text={"Restore"}
+            iconColor={"#3ac47d"}
+          />
+        ) : null;
+      }
+  
+      return (
+        <>
+          {permission.update ? (
+            <IconContainer
+              id="edit-icon"
+              Icon={EditIcon}
+              handleOnClick={() => handleViewClick(row)}
+              text="Edit"
+            />
+          ) : null }
+          {permission.delete ? (
+            <IconContainer
+              id={"delete-icon"}
+              Icon={DeleteIcon}
+              handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
+              text={"Delete"}
+              iconColor={"#d92550"}
+            />
+          ) : null }
+          {permission.statusUpdate ? (
+            <IconContainer
+            id={`active-deactivate-icon-${row.id}`}
+            Icon={row.isBlock ? InactiveIcon : ActiveIcon}
+            handleOnClick={(e) =>
+              handleStatusChange(e, row.publicId, row.isBlock ? "0" : "1")
+            }
+            text={row.isBlock ? "Unblock" : "Block"}
+            iconColor={row.isBlock ? "#d92550" : "#3ac47d"}
+          />
+          ) : null}
+        </>
+      );
+    };
+  
+  
+    if (permission.delete === 0 && permission.update === 0 && permission.restore === 0 && permission.statusUpdate) {
+      return commonColumns;
+    }
+
+    return [
+      ...commonColumns,
       {
         name: "Actions",
         button: true,
-        // width: "218px",
         minWidth: "250px",
-        headerStyle: (selector, id) => {
-          return { textAlign: "center" };
-        },
-        cell: (row) =>
-          row.deletedAt === null ? (
-            <>
-              <IconContainer
-                id="edit-icon"
-                Icon={EditIcon}
-                handleOnClick={() => handleViewClick(row)}
-                text="Edit"
-              />
-
-              <IconContainer
-                id={"delete-icon"}
-                Icon={DeleteIcon}
-                handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
-                text={"Delete"}
-                iconColor={"#d92550"}
-              />
-              <IconContainer
-                id={`active-deactivate-icon-${row.id}`}
-                Icon={row.isBlock ? InactiveIcon : ActiveIcon}
-                handleOnClick={(e) =>
-                  row.isBlock
-                    ? handleStatusChange(e, row.publicId, "0")
-                    : handleStatusChange(e, row.publicId, "1")
-                }
-                text={row.isBlock ? "Unblock" : "Block"}
-                iconColor={row.isBlock ? "#d92550" : "#3ac47d"}
-              />
-            </>
-          ) : (
-            <IconContainer
-              id={"restore-icon"}
-              Icon={RestoreIcon}
-              handleOnClick={(e) => handleDelete(e, row.publicId, "restore")}
-              text={"Restore"}
-              iconColor={"#3ac47d"}
-            />
-          ),
+        headerStyle: { textAlign: "center" },
+        cell: renderActionCell,
       },
-    ],
-    [handleStatusChange, handleDelete]
-  );
+    ];
+  }, [permission, handleViewClick, handleDelete, handleStatusChange]);
+  
 
   const handlePageChange = (page) => {
     dispatch(retrieveUsers(filterText, page, perPage));
