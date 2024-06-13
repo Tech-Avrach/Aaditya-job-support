@@ -38,21 +38,21 @@ const sellerReducer = (state = initialState, action) => {
       };
 
     case DELETE_SELLER:
-      const updatedSellers = state.sellers?.map((item) =>
-        item.publicId === payload.publicId ? { ...item, ...payload } : item
-      );
+      // const updatedSellers = state.sellers?.map((item) =>
+      //   item.publicId === payload.publicId ? { ...item, ...payload } : item
+      // );
       return {
         ...state,
-        sellers: updatedSellers,
+        sellers: payload,
         totalSellerCount: state.totalSellerCount,
       };
 
     case RESTORE_SELLER:
-      const restored = state.sellers?.map((item) =>
-        item.publicId === payload.publicId ? { ...item, ...payload } : item
-      );
+      // const restored = state.sellers?.map((item) =>
+      //   item.publicId === payload.publicId ? { ...item, ...payload } : item
+      // );
       return {
-        sellers: restored,
+        sellers: payload,
         totalSellerCount: state.totalSellerCount,
       };
 

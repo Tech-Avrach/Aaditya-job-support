@@ -120,7 +120,7 @@ export const deleteSeller = (id, data) => async (dispatch) => {
 export const restoreSeller = (id, data) => async (dispatch) => {
   try {
     const res = await SellerService.restore(id, data);
-  
+
     dispatch({
       type: RESTORE_SELLER,
       payload: res?.data?.listSellers,
