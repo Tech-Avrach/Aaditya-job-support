@@ -277,76 +277,53 @@ const All = (props) => {
         sortable: true,
         headerStyle: { textAlign: "center" },
       },
-    ];
+      {
+        name: "Actions",
+        button: true,
+        minWidth: "250px",
+        headerStyle: { textAlign: "center" },
+        cell: (row) =>
+          row.deletedAt === null ? (
+            <>
+              <IconContainer
+                Icon={FaEye}
+                handleOnClick={() => handleViewClick(row)}
+                text="View"
+              />
 
-    const renderActionCell = (row) => {
-      const isDeleted = row.deletedAt !== null;
-  
-      if (isDeleted) {
-        return permission.delete ? (
-          <IconContainer
+              <IconContainer
+                // id={row.isBlock ? "deactivate-icon" : "active-icon"}
+                Icon={row.isBlock ? InactiveIcon : ActiveIcon}
+                handleOnClick={(e) =>
+                  row.isBlock
+                    ? handleStatusChange(e, row.publicId, 0)
+                    : handleStatusChange(e, row.publicId, 1)
+                }
+                text={row.isBlock ? "Unblock" : "Block"}
+                iconColor={row.isBlock ? "#d92550" : "#3ac47d"}
+              />
+
+              <IconContainer
+                id={"delete-icon"}
+                Icon={DeleteIcon}
+                handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
+                text={"Delete"}
+                iconColor={"#d92550"}
+              />
+            </>
+          ) : (
+            <IconContainer
               id={"restore-icon"}
               Icon={RestoreIcon}
               handleOnClick={(e) => handleDelete(e, row.publicId, "restore")}
               text={"Restore"}
               iconColor={"#3ac47d"}
             />
-        ) : null;
-      }
-  
-      return (
-        <>
-          {permission.update ? (
-            <IconContainer
-            Icon={FaEye}
-            handleOnClick={() => handleViewClick(row)}
-            text="View"
-          />
-          ) : null }
-          {permission.delete ? (
-            <IconContainer
-            id={"delete-icon"}
-            Icon={DeleteIcon}
-            handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
-            text={"Delete"}
-            iconColor={"#d92550"}
-          />
-          ) : null }
-          {permission.statusUpdate ? (
-            <IconContainer
-            // id={row.isBlock ? "deactivate-icon" : "active-icon"}
-            Icon={row.isBlock ? InactiveIcon : ActiveIcon}
-            handleOnClick={(e) =>
-              row.isBlock
-                ? handleStatusChange(e, row.publicId, 0)
-                : handleStatusChange(e, row.publicId, 1)
-            }
-            text={row.isBlock ? "Unblock" : "Block"}
-            iconColor={row.isBlock ? "#d92550" : "#3ac47d"}
-          />
-          ) : null}
-        </>
-      );
-    };
-  
-  
-    if (permission.delete === 0 && permission.update === 0 && permission.statusUpdate) {
-      return commonColumns;
-    }
-
-    return [
-      ...commonColumns,
-      {
-        name: "Actions",
-        button: true,
-        minWidth: "250px",
-        headerStyle: { textAlign: "center" },
-        cell: renderActionCell,
+          ),
       },
-    ];
-  }, [permission, handleViewClick, handleDelete, handleStatusChange]);
-  
-
+    ],
+    [handleStatusChange]
+  );
 
   const handlePageChange = (page) => {
     dispatch(
