@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Row, Col, Card, CardBody } from "reactstrap";
 
@@ -48,6 +48,12 @@ const All = (props) => {
   const [filterText, setFilterText] = useState("");
 
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+
+  const { permissionMap: permissions } = useSelector((state) => state.auth);
+
+  const currentModuleId = 2;
+
+  const permission = permissions[currentModuleId];
 
   useEffect(() => {
     dispatch(retrieveUsers(filterText, 1, perPage));
@@ -156,8 +162,8 @@ const All = (props) => {
     }
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    const commonColumns = [
       {
         name: "Unique Id",
         selector: (row) => row.public_id,
@@ -183,22 +189,22 @@ const All = (props) => {
         sortable: true,
         headerStyle: { textAlign: "center" },
       },
-      {
-        name: "Actions",
-        button: true,
-        // width: "218px",
-        minWidth: "250px",
-        headerStyle: (selector, id) => {
-          return { textAlign: "center" };
-        },
-        cell: (row) =>
-          row.deletedAt === null ? (
-            <>
+    ];
+
+    const renderActionCell = (row) => {
+      if (row.deletedAt === null) {
+        return (
+          <>
+            {permission.update ? (
               <IconContainer
                 Icon={FaEye}
                 // handleOnClick={() => handleViewClick(row)}
+
                 text="View"
               />
+            ) : null}
+
+            {permission.delete ? (
               <IconContainer
                 id={row.deletedAt === null ? "delete-icon" : "restore-icon"}
                 Icon={row.deletedAt === null ? DeleteIcon : RestoreIcon}
@@ -210,24 +216,47 @@ const All = (props) => {
                 text={row.deletedAt === null ? "Delete" : "Restore"}
                 iconColor={row.deletedAt === null ? "#d92550" : "#3ac47d"}
               />
-            </>
-          ) : (
-            <IconContainer
-              id={row.deletedAt === null ? "delete-icon" : "restore-icon"}
-              Icon={row.deletedAt === null ? DeleteIcon : RestoreIcon}
-              handleOnClick={(e) =>
-                row.deletedAt === null
-                  ? handleDelete(e, row.publicId, "delete")
-                  : handleDelete(e, row.publicId, "restore")
-              }
-              text={row.deletedAt === null ? "Delete" : "Restore"}
-              iconColor={row.deletedAt === null ? "#d92550" : "#3ac47d"}
-            />
-          ),
+            ) : null}
+          </>
+        );
+      } else {
+        return permission.delete ? (
+          <IconContainer
+            id={row.deletedAt === null ? "delete-icon" : "restore-icon"}
+            Icon={row.deletedAt === null ? DeleteIcon : RestoreIcon}
+            handleOnClick={(e) =>
+              row.deletedAt === null
+                ? handleDelete(e, row.publicId, "delete")
+                : handleDelete(e, row.publicId, "restore")
+            }
+            text={row.deletedAt === null ? "Delete" : "Restore"}
+            iconColor={row.deletedAt === null ? "#d92550" : "#3ac47d"}
+          />
+        ) : null;
+      }
+    };
+
+    if (
+      permission.delete === 0 &&
+      permission.update === 0 &&
+      permission.statusUpdate
+    ) {
+      return commonColumns;
+    }
+
+    return [
+      ...commonColumns,
+      {
+        name: "Actions",
+        button: true,
+        minWidth: "250px",
+        headerStyle: { textAlign: "center" },
+        cell: renderActionCell,
       },
-    ],
-    [handleStatusChange]
-  );
+    ];
+  }, [permission, handleViewClick, handleDelete, handleStatusChange]);
+  //
+
 
   const handlePageChange = (page) => {
     dispatch(retrieveUsers(filterText, page, perPage));

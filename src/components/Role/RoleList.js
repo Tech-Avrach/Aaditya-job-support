@@ -30,6 +30,12 @@ const RoleList = () => {
     (state) => state.role
   );
   
+  const { permissionMap: permissions } = useSelector((state) => state.auth);
+
+  const currentModuleId = 1;
+
+  const permission = permissions[currentModuleId];
+
   const dispatch = useDispatch();
 
   const [perPage, setPerPage] = useState(10);
@@ -111,8 +117,9 @@ const RoleList = () => {
     }
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+
+    const commonColumns = [
       {
         name: "Unique Id",
         selector: (row) => row.publicId,
@@ -138,55 +145,72 @@ const RoleList = () => {
           textAlign: "center",
         },
       },
-      {
-        name: "Actions",
-        button: true,
-        minWidth: "300px",
-        headerStyle: {
-          textAlign: "center",
-        },
-        cell: (row) => (
-          <>
-            <IconContainer
-              // id={row.name+"-active-icon"}
-              id={"subadmin-active-icon"}
-              Icon={row.isActive ? ActiveIcon : InactiveIcon}
-              text={row.isActive ? "Active" : "Inactive"}
-              iconColor={row.isActive ? "#3ac47d" : "#d92550"}
-              handleOnClick={(e) => handleStatusToggle(e, row.publicId, !row.isActive)}
-            />
-            {row.deletedAt === null ? (
-              
-              <>
-                <IconContainer
-                  id={"edit-icon"}
-                  Icon={EditIcon}
-                  handleOnClick={() => handleViewClick(row)}
-                  text="Edit"
-                />
-                <IconContainer
-                  id={"delete-icon"}
-                  Icon={DeleteIcon}
-                  handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
-                  text={"Delete"}
-                  iconColor={"#d92550"}
-                />
-              </> 
-            ) : (
-              <IconContainer
+    ];
+
+    const renderActionCell = (row) => {
+      const isDeleted = row.deletedAt !== null;
+  
+      if (isDeleted) {
+        return permission.delete ? (
+          <IconContainer
                 id={"restore-icon"}
                 Icon={RestoreIcon}
                 handleOnClick={(e) => handleDelete(e, row.publicId, "restore")}
                 text={"Restore"}
                 iconColor={"#3ac47d"}
               />
-            )}
-          </>
-        ),
+        ) : null;
+      }
+  
+      return (
+        <>
+          {permission.update ? (
+            <IconContainer
+            id={"edit-icon"}
+            Icon={EditIcon}
+            handleOnClick={() => handleViewClick(row)}
+            text="Edit"
+          />
+          ) : null }
+          {permission.delete ? (
+            <IconContainer
+            id={"delete-icon"}
+            Icon={DeleteIcon}
+            handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
+            text={"Delete"}
+            iconColor={"#d92550"}
+          />
+          ) : null }
+          {permission.statusUpdate ? (
+            <IconContainer
+            // id={row.name+"-active-icon"}
+            id={"subadmin-active-icon"}
+            Icon={row.isActive ? ActiveIcon : InactiveIcon}
+            text={row.isActive ? "Active" : "Inactive"}
+            iconColor={row.isActive ? "#3ac47d" : "#d92550"}
+            handleOnClick={(e) => handleStatusToggle(e, row.publicId, !row.isActive)}
+          />
+          ) : null}
+        </>
+      );
+    };
+  
+  
+    if (permission.delete === 0 && permission.update === 0 && permission.statusUpdate) {
+      return commonColumns;
+    }
+
+    return [
+      ...commonColumns,
+      {
+        name: "Actions",
+        button: true,
+        minWidth: "250px",
+        headerStyle: { textAlign: "center" },
+        cell: renderActionCell,
       },
-    ],
-    [handleViewClick, handleDelete, handleStatusToggle]
-  );
+    ];
+  }, [permission, handleViewClick, handleDelete ]);
 
   const debounceSearch = useCallback(
     debounceFunction((nextValue) => {

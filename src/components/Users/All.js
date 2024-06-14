@@ -225,7 +225,7 @@ const All = () => {
       const isDeleted = row.deletedAt !== null;
   
       if (isDeleted) {
-        return permission.restore ? (
+        return permission.delete ? (
           <IconContainer
             id={"restore-icon"}
             Icon={RestoreIcon}
@@ -271,7 +271,7 @@ const All = () => {
     };
   
   
-    if (permission.delete === 0 && permission.update === 0 && permission.restore === 0 && permission.statusUpdate) {
+    if (permission.delete === 0 && permission.update === 0 && permission.statusUpdate) {
       return commonColumns;
     }
 

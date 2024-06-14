@@ -58,6 +58,12 @@ const All = (props) => {
   const { sellers: filteredsellers, totalSellerCount: totalSellers } =
     useSelector((state) => state.seller);
 
+  const { permissionMap: permissions } = useSelector((state) => state.auth);
+
+  const currentModuleId = 2;
+
+  const permission = permissions[currentModuleId];
+
   const [selectedOption, setSelectedOption] = useState({
     value: "",
     label: "All",
@@ -240,24 +246,28 @@ const All = (props) => {
     }
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+
+    const commonColumns = [
       {
         name: "Unique Id",
-        selector: (row) => row?.publicId,
+        selector: (row) => row.publicId,
         sortable: true,
         width: "110px",
         headerStyle: { textAlign: "center" },
       },
       {
         name: "Name",
-        selector: (row) => `${row?.user?.firstName} ${row?.user?.lastName}`,
+        selector: (row) =>
+          row.lastName !== null && row.lastName !== ""
+            ? row.firstName + " " + row.lastName
+            : row.firstName,
         sortable: true,
         headerStyle: { textAlign: "center" },
       },
       {
         name: "Email",
-        selector: (row) => row?.user?.email,
+        selector: (row) => row.email,
         sortable: true,
         headerStyle: { textAlign: "center" },
       },
@@ -267,53 +277,76 @@ const All = (props) => {
         sortable: true,
         headerStyle: { textAlign: "center" },
       },
-      {
-        name: "Actions",
-        button: true,
-        minWidth: "250px",
-        headerStyle: { textAlign: "center" },
-        cell: (row) =>
-          row.deletedAt === null ? (
-            <>
-              <IconContainer
-                Icon={FaEye}
-                handleOnClick={() => handleViewClick(row)}
-                text="View"
-              />
+    ];
 
-              <IconContainer
-                // id={row.isBlock ? "deactivate-icon" : "active-icon"}
-                Icon={row.isBlock ? InactiveIcon : ActiveIcon}
-                handleOnClick={(e) =>
-                  row.isBlock
-                    ? handleStatusChange(e, row.publicId, 0)
-                    : handleStatusChange(e, row.publicId, 1)
-                }
-                text={row.isBlock ? "Unblock" : "Block"}
-                iconColor={row.isBlock ? "#d92550" : "#3ac47d"}
-              />
-
-              <IconContainer
-                id={"delete-icon"}
-                Icon={DeleteIcon}
-                handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
-                text={"Delete"}
-                iconColor={"#d92550"}
-              />
-            </>
-          ) : (
-            <IconContainer
+    const renderActionCell = (row) => {
+      const isDeleted = row.deletedAt !== null;
+  
+      if (isDeleted) {
+        return permission.delete ? (
+          <IconContainer
               id={"restore-icon"}
               Icon={RestoreIcon}
               handleOnClick={(e) => handleDelete(e, row.publicId, "restore")}
               text={"Restore"}
               iconColor={"#3ac47d"}
             />
-          ),
+        ) : null;
+      }
+  
+      return (
+        <>
+          {permission.update ? (
+            <IconContainer
+            Icon={FaEye}
+            handleOnClick={() => handleViewClick(row)}
+            text="View"
+          />
+          ) : null }
+          {permission.delete ? (
+            <IconContainer
+            id={"delete-icon"}
+            Icon={DeleteIcon}
+            handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
+            text={"Delete"}
+            iconColor={"#d92550"}
+          />
+          ) : null }
+          {permission.statusUpdate ? (
+            <IconContainer
+            // id={row.isBlock ? "deactivate-icon" : "active-icon"}
+            Icon={row.isBlock ? InactiveIcon : ActiveIcon}
+            handleOnClick={(e) =>
+              row.isBlock
+                ? handleStatusChange(e, row.publicId, 0)
+                : handleStatusChange(e, row.publicId, 1)
+            }
+            text={row.isBlock ? "Unblock" : "Block"}
+            iconColor={row.isBlock ? "#d92550" : "#3ac47d"}
+          />
+          ) : null}
+        </>
+      );
+    };
+  
+  
+    if (permission.delete === 0 && permission.update === 0 && permission.statusUpdate) {
+      return commonColumns;
+    }
+
+    return [
+      ...commonColumns,
+      {
+        name: "Actions",
+        button: true,
+        minWidth: "250px",
+        headerStyle: { textAlign: "center" },
+        cell: renderActionCell,
       },
-    ],
-    [handleStatusChange]
-  );
+    ];
+  }, [permission, handleViewClick, handleDelete, handleStatusChange]);
+  
+
 
   const handlePageChange = (page) => {
     dispatch(
