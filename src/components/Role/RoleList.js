@@ -29,7 +29,7 @@ const RoleList = () => {
   const { role: filteredRole, totalRolecount ,isActive} = useSelector(
     (state) => state.role
   );
-  
+
   const { permissionMap: permissions } = useSelector((state) => state.auth);
 
   const currentModuleId = 1;
@@ -182,6 +182,8 @@ const RoleList = () => {
           />
           ) : null }
           {permission.statusUpdate ? (
+            <>
+            {/* {console.log(row.name, row.id, row.isActive)} */}
             <IconContainer
             // id={row.name+"-active-icon"}
             id={"subadmin-active-icon"}
@@ -190,6 +192,7 @@ const RoleList = () => {
             iconColor={row.isActive ? "#3ac47d" : "#d92550"}
             handleOnClick={(e) => handleStatusToggle(e, row.publicId, !row.isActive)}
           />
+          </>
           ) : null}
         </>
       );
