@@ -29,11 +29,11 @@ const sellerReducer = (state = initialState, action) => {
     //   return payload;
 
     case UPDATE_SELLER_STATUS:
-      const updated = state.sellers?.map((item) =>
-        item.id === payload.id ? { ...item, ...payload } : item
-      );
+      // const updated = state.sellers?.map((item) =>
+      //   item.id === payload.id ? { ...item, ...payload } : item
+      // );
       return {
-        sellers: updated,
+        sellers: payload,
         totalSellerCount: state.totalSellerCount,
       };
 

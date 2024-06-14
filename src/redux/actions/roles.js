@@ -14,10 +14,10 @@ import RoleService from "../../redux/services/role.service";
 
 
 export const retrieveRole =
-  (keyword = "", page = "", perPage = "") =>
+  (keyword = "", page = "", perPage = "", all = true) =>
   async (dispatch) => {
     try {
-      const res = await RoleService.getAll(keyword, page, perPage);
+      const res = await RoleService.getAll(keyword, page, perPage, all);
       dispatch({
         type: RETRIEVE_ROLE,
         payload: res.data.rolesList,

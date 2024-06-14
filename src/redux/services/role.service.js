@@ -1,7 +1,7 @@
 import axios from "axios";
 import { authHeader, multipartHeader } from "./auth-header";
 
-const getAll = (keyword, page, perPage) => {
+const getAll = (keyword, page, perPage, all) => {
   return axios.get(process.env.REACT_APP_API_URL + "role/list", {
     headers: authHeader(),
     data: {},
@@ -9,6 +9,7 @@ const getAll = (keyword, page, perPage) => {
       keyword: keyword,
       page: page,
       perPage: perPage,
+      all: all,
     },
   });
 };

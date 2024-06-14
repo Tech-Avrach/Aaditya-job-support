@@ -78,7 +78,7 @@ export const updateSellerStatus = (id, data) => async (dispatch) => {
     const res = await SellerService.updateStatus(id, data);
     dispatch({
       type: UPDATE_SELLER_STATUS,
-      payload: res.data?.sellerInfo,
+      payload: res.data?.listSellers,
     });
 
     return Promise.resolve(res.data);
