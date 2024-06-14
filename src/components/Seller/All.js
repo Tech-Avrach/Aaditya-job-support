@@ -282,7 +282,7 @@ const All = (props) => {
               />
 
               <IconContainer
-                // id={row.isBlock ? "deactivate-icon" : "active-icon"}
+                id={ `active-deactivate-icon-${row.id}`}
                 Icon={row.isBlock ? InactiveIcon : ActiveIcon}
                 handleOnClick={(e) =>
                   row.isBlock
