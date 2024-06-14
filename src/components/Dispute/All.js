@@ -40,6 +40,12 @@ const All = (props) => {
     (state) => state.dispute
   );
 
+  const { permissionMap: permissions } = useSelector((state) => state.auth);
+
+  const currentModuleId = 7;
+
+  const permission = permissions[currentModuleId];
+
   const [perPage, setPerPage] = useState(10);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,9 +66,15 @@ const All = (props) => {
 
     let data = {
       status: status,
-    };
+      all: "false",
+      searchText: filterText,
+      page: currentPage,
+      perPage: perPage
+    };  
 
     let message = "Status Updated successfully!";
+
+    console.log(status)
 
     // if (status === "pending") {
     //   message = "Status Updated  successfully!";
@@ -72,6 +84,8 @@ const All = (props) => {
 
     //dispatch to update the status of the user
     // updateUserStatus(all, keyword, page, perPage, id, data)
+    //
+
     dispatch(updateDisputeStatus(id, data))
       .then((response) => {
         toast(message, {
@@ -95,8 +109,10 @@ const All = (props) => {
 
   const handleViewClick = (row) => navigate(`/dispute/${row.publicId}`);
   // const handleViewClick = () => {};
-  const columns = useMemo(
-    () => [
+
+  const columns = useMemo(() => {
+
+    const commonColumns = [
       {
         name: "Unique ID",
         selector: (row) => row.publicId,
@@ -124,38 +140,56 @@ const All = (props) => {
         width: "180px",
         headerStyle: () => ({ textAlign: "center" }),
       },
+    ];
+
+    const renderActionCell = (row) => {
+      return (
+        <>
+          {permission.read ? (
+            <IconContainer
+            Icon={FaEye}
+            handleOnClick={() => handleViewClick(row)}
+            text="View"
+          />
+          ) : null }
+          {permission.statusUpdate ? (
+            <Input
+            type="select"
+            defaultValue={row.status}
+            id="status"
+            name="status"
+            onChange={(e) =>
+              handleStatusChange(e, row.publicId, e.target.value)
+            }
+            style={{ marginLeft: "10px", width: "50%" }}
+          >
+            <option value="pending">Pending</option>
+            <option value="resolved">Resolved</option>
+          </Input>
+          ) : null}
+        </>
+      );
+    };
+  
+  
+    if (permission.read === 0 && permission.statusUpdate) {
+      return commonColumns;
+    }
+
+    return [
+      ...commonColumns,
       {
         name: "Actions",
         button: true,
         minWidth: "250px",
-        headerStyle: () => ({ textAlign: "center" }),
-        cell: (row) => (
-          <>
-            <IconContainer
-              Icon={FaEye}
-              handleOnClick={() => handleViewClick(row)}
-              text="View"
-            />
-
-            <Input
-              type="select"
-              defaultValue={row.status}
-              id="status"
-              name="status"
-              onChange={(e) =>
-                handleStatusChange(e, row.publicId, e.target.value)
-              }
-              style={{ marginLeft: "10px", width: "50%" }}
-            >
-              <option value="pending">Pending</option>
-              <option value="resolved">Resolved</option>
-            </Input>
-          </>
-        ),
+        headerStyle: { textAlign: "center" },
+        cell: renderActionCell,
       },
-    ],
-    [handleViewClick]
-  );
+    ];
+  }, [permission, handleViewClick, handleStatusChange]);
+
+  //
+  
 
   const handlePageChange = (page) => {
     // dispatch(retrieveUsers(filterText, page, perPage));
