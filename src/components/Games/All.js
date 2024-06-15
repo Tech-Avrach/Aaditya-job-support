@@ -70,16 +70,16 @@ const All = () => {
   const handleDelete = (e, id, action) => {
     e.preventDefault();
     let data = {
-      currency: "INR",
-      // "adType": "sell",
-      // "status": "active",
-      // "region": "US",
-      // "platform": "PC",        //'PC', 'PS4', 'Xbox', 'Nintendo', 'PS5'
-      category: "Game Item", // 'Game Item', 'Game Boosting/Coaching', 'Game Coins', 'Gift cards and Top up', 'Game account'
-      // "minPrice": 10,
-      // "maxPrice": 100,
+      currency: filterValues.currency,
+      adType: filterValues.adType,
+      status: filterValues.status,
+      region: filterValues.region,
+      platform: filterValues.platform,        //'PC', 'PS4', 'Xbox', 'Nintendo', 'PS5'
+      category: filterValues.category, // 'Game Item', 'Game Boosting/Coaching', 'Game Coins', 'Gift cards and Top up', 'Game account'
+      minPrice: filterValues.minPrice,
+      maxPrice: filterValues.maxPrice,
       all: true, // true, false
-      // "keyword": "RPG",
+      keyword: filterText,
       page: currentPage,
       perPage: perPage,
       get: "list" //["list", "item"]

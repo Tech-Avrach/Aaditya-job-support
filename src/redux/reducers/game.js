@@ -35,12 +35,12 @@ const gamesReducer = (state = initialState, action) => {
     //   };
 
     case DELETE_GAME:
-      const updatedGames = state.games?.map((item) =>
-        item.publicId === payload.publicId ? { ...item, ...payload } : item
-      );
+      // const updatedGames = state.games?.map((item) =>
+      //   item.publicId === payload.publicId ? { ...item, ...payload } : item
+      // );
       return {
         ...state,
-        games: updatedGames,
+        games: payload,
         totalGameCount: state.totalGameCount,
       };
 

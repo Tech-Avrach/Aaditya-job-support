@@ -101,10 +101,9 @@ export const addPermission = (data) => async (dispatch) => {
 export const deleteRole = (id) => async (dispatch) => {
   try {
     const res = await RoleService.deleteUser(id);
-
     dispatch({
       type: DELETE_ROLE,
-      payload: res.data.pageInfo,
+      payload: res.data.rolesList?.rows,
     });
 
     return Promise.resolve(res.data);
@@ -119,7 +118,7 @@ export const restoreRole = (id) => async (dispatch) => {
 
     dispatch({
       type: RESTORE_ROLE,
-      payload: res.data.pageInfo,
+      payload: res.data.rolesList?.rows,
     });
 
     return Promise.resolve(res.data);

@@ -50,21 +50,21 @@ const roleReducer = (state = initialState, action) => {
       };
 
     case DELETE_ROLE:
-      const remainData = state.role.map((item) =>
-        item.id === payload.id ? payload : item
-      );
+      // const remainData = state.role.map((item) =>
+      //   item.id === payload.id ? payload : item
+      // );
       return {
         ...state,
-        role: filterRoles(remainData),
+        role: filterRoles(payload),
       };
 
     case RESTORE_ROLE:
-      const restored = state.role.map((item) =>
-        item.id === payload.id ? payload : item
-      );
+      // const restored = state.role.map((item) =>
+      //   item.id === payload.id ? payload : item
+      // );
       return {
         ...state,
-        role: filterRoles(restored),
+        role: filterRoles(payload),
       };
 
       case UPDATE_ROLES_STATUS:
