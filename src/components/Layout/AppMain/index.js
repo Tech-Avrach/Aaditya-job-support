@@ -9,6 +9,7 @@ import ProtectedRoutes from "../../../routes/ProtectedRoutes";
 import PublicRoutes from "../../../routes/PublicRoutes";
 import useTokenRefreshHook from "../../../hooks/getRefreshhook";
 import { handleRefreshTokenHelper } from "../../../hooks/refreshHelper";
+import EditRules from "../../RulesAndRegulations/EditRules";
 
 const Login = lazy(() => import("../../Login/"));
 const Dashboard = lazy(() => import("../../Dashboard/"));
@@ -123,6 +124,7 @@ const AppMain = () => {
         <Route path="rules">
           <Route path="list" element={<RulesList currentUser={currentUser} />} />
           <Route path="add" element={<AddRules currentUser={currentUser} />} />
+          <Route path=":id" element={<EditRules currentUser={currentUser} />} />
         </Route>
       </Route>      
 
