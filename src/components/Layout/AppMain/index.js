@@ -35,6 +35,9 @@ const AddRole = lazy(() => import("../../Role/AddRole"));
 const Permissions = lazy(() => import("../../Role/All"));
 const ViewSingalRole = lazy(() => import("../../Role/ViewSingal"));
 
+const AddRules = lazy(() => import("./../../RulesAndRegulations/AddRules"));
+const RulesList = lazy(() => import("./../../RulesAndRegulations/All"));
+
 const PageNotFound = lazy(() => import("../../PageNotFound"));
 const ForbiddenPage = lazy(()=> import ("../../Forbidden"))
 
@@ -116,7 +119,12 @@ const AppMain = () => {
           <Route path="permission" element={<Permissions />} />
           <Route path=":id" element={<ViewSingalRole />} />
         </Route>
-      </Route>
+
+        <Route path="rules">
+          <Route path="list" element={<RulesList currentUser={currentUser} />} />
+          <Route path="add" element={<AddRules currentUser={currentUser} />} />
+        </Route>
+      </Route>      
 
       <Route element={<PublicRoutes isLoggedIn={isLoggedIn} />}>
         <Route path="login" element={<Login />} />

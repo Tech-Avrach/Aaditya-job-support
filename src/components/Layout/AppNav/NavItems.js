@@ -63,6 +63,20 @@ export const AdminNav = [
       },
     ],
   },
+  {
+    icon: "pe-7s-network",
+    label: "Rules and Regulations",
+    content: [
+      {
+        label: "Add",
+        to: "/rules/add",
+      },
+      {
+        label: "List",
+        to: "/rules/list",
+      },
+    ],
+  },
 ];
 
 const getNavItem = (moduleId) => {
@@ -103,6 +117,20 @@ const getNavItem = (moduleId) => {
         {
           label: "List",
           to: "/games/list",
+        },
+      ],
+    }
+    case 19: return {
+      icon: "pe-7s-display2",
+      label: "Rules and Regulations",
+      content: [
+        {
+          label: "Add",
+          to: "/rules/add",
+        },
+        {
+          label: "List",
+          to: "/rules/list",
         },
       ],
     }

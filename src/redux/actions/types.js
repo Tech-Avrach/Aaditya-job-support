@@ -56,3 +56,6 @@ export const UPDATE_DISPUTE_STATUS = "UPDATE_DISPUTE_STATUS";
 //  Roles and Permision API
 
 export const UPDATE_ROLES_STATUS = "UPDATE_ROLES_STATUS";
+
+export const RETRIEVE_RULES = "RETRIEVE_RULES";
+export const CREATE_RULES = "CREATE_RULES";
