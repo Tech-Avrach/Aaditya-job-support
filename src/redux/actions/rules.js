@@ -17,7 +17,7 @@ export const retrieveRules =
       console.log(res);
       dispatch({
         type: RETRIEVE_RULES,
-        payload: res.data.listRules.rows,
+        payload: res.data.listRules,
       });
     return Promise.resolve(res.data);
     } catch (err) {

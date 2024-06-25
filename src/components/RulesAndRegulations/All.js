@@ -40,7 +40,7 @@ const All = () => {
     page: currentPage,
     perPage: perPage,
     all: true,
-    active: true,
+    active: false,
   };
 
   const fetchRules = useCallback(() => {

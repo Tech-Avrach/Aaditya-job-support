@@ -16,8 +16,8 @@ import {
       case RETRIEVE_RULES:
         // Filter out the role with id 1
         return {
-            rules: payload,
-          totalRulecount: payload.length,
+            rules: payload.rows,
+          totalRulecount: payload.count,
         };
   
   
