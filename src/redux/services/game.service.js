@@ -66,6 +66,18 @@ const restore = (id, data) => {
   });
 };
 
+const uploadadImage = (formImage) => {
+  return axios.post(process.env.REACT_APP_API_URL + `adImage/upload`, formImage, {
+    headers: multipartHeader(),
+  })
+}
+
+const uploadTradeItemPic = (formImage) => {
+  return axios.post(process.env.REACT_APP_API_URL + `tradeImage/upload`, formImage, {
+    headers: multipartHeader(),
+  })
+}
+
 export default {
   getAll,
   get,
@@ -73,4 +85,6 @@ export default {
   update,
   deleteGame,
   restore,
+  uploadadImage,
+  uploadTradeItemPic,
 };

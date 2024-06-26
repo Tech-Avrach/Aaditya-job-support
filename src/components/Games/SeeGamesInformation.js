@@ -37,7 +37,7 @@ const GameInformation = () => {
       gameService
         .get(id)
         .then((response) => {
-          setCurrentGame(response.data.pageInfo);
+          setCurrentGame(response?.data?.adInfo);
         })
         .catch((error) => {
           toast(error, {

@@ -62,7 +62,7 @@ const All = () => {
 
   useEffect(() => {
     dispatch(retrieveGame(filterText, 1, perPage));
-  }, []);
+  }, [perPage, filterText]);
 
   const handleViewClick = (row) => navigate(`/games/${row.publicId}`);
 

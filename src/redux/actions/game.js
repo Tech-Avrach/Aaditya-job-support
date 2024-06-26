@@ -58,12 +58,15 @@ export const retrieveSingaleGame = (id) => async (dispatch) => {
 };
 
 export const createGame = (data) => async (dispatch) => {
+
+  console.log("data",data)
   try {
     const res = await GameService.create(data);
+    console.log("res",res)
 
     dispatch({
       type: CREATE_GAME,
-      payload: res.data.pageInfo,
+      payload: res?.data?.adInfo,
     });
 
     return Promise.resolve(res.data);
@@ -78,7 +81,7 @@ export const updateGame = (id, data) => async (dispatch) => {
 
     dispatch({
       type: UPDATE_GAME,
-      payload: res.data.adInfo,
+      payload: res?.data?.adInfo,
     });
 
     return Promise.resolve(res.data);
