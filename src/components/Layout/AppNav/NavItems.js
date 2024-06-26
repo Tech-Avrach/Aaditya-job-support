@@ -47,7 +47,16 @@ export const AdminNav = [
   {
     icon: "pe-7s-help2",
     label: "Dispute",
-    to: "/dispute/list",
+    content: [
+      {
+        label: "Add",
+        to: "/dispute/add",
+      },
+      {
+        label: "List",
+        to: "/dispute/list",
+      },
+    ],
   },
   {
     icon: "pe-7s-network",

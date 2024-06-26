@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch, } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -19,6 +18,7 @@ import {
   } from "reactstrap";
 
 import { createRule } from "../../redux/actions/rules"
+import { useNavigate } from 'react-router-dom';
 
 toast.configure();
 
@@ -63,6 +63,7 @@ const AddRulesAndRegulations = () => {
       const updateHandler = (event) => {
         event.preventDefault();
 
+        console.log(currentRules)
         let errorCount = 0;
         if (
           currentRules.rulesRegText === "" ||
@@ -74,17 +75,16 @@ const AddRulesAndRegulations = () => {
         }
 
         if ( currentRules.rulesRegText.length < 10 ) {
-            setRulesErr("Rules regulation must have minimum 10 character length !");
-            errorCount++;
-        }
+          setRulesErr("Rules regulation must have minimum 10 character length !");
+          errorCount++;
+      }
     
         if (errorCount > 0) {
           return;
         } else {
           dispatch(createRule(currentRules))
             .then((response) => {
-                console.log(response)
-              toast("Role Created successfully!", {
+              toast("Rule Created successfully!", {
                 transition: Slide,
     
                 closeButton: true,

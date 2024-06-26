@@ -1,10 +1,21 @@
 import axios from "axios";
 import { authHeader, multipartHeader } from "./auth-header";
 
-const getAll = () => {
-  return axios.get(process.env.REACT_APP_API_URL + "dispute/list", {
+const getAll = (filterText, page, perPage) => {
+  return axios.get(process.env.REACT_APP_API_URL + "dispute/list" + `?all=true&page=${page}&perPage=${perPage}`, {
     headers: authHeader(),
     data: {},
+    params: {},
+  });
+};
+
+const createDispute = (transactionId, reason) => {
+  let data = { 
+    "transactionId": transactionId, 
+    "reason": reason 
+  }
+  return axios.post(process.env.REACT_APP_API_URL + "dispute/create", data, {
+    headers: authHeader(),
     params: {},
   });
 };
@@ -31,4 +42,5 @@ export default {
   getAll,
   get,
   updateStatus,
+  createDispute
 };

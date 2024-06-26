@@ -9,7 +9,6 @@ import ProtectedRoutes from "../../../routes/ProtectedRoutes";
 import PublicRoutes from "../../../routes/PublicRoutes";
 import useTokenRefreshHook from "../../../hooks/getRefreshhook";
 import { handleRefreshTokenHelper } from "../../../hooks/refreshHelper";
-import EditRules from "../../RulesAndRegulations/EditRules";
 
 const Login = lazy(() => import("../../Login/"));
 const Dashboard = lazy(() => import("../../Dashboard/"));
@@ -30,6 +29,7 @@ const AddGame = lazy(() => import("../../Games/AddGames"));
 const GamesInformation = lazy(() => import("../../Games/SeeGamesInformation"));
 
 const DisputeList = lazy(() => import("../../Dispute/All"));
+const AddDispute = lazy(() => import("../../Dispute/Add"));
 const DisputeView = lazy(() => import("../../Dispute/View"));
 
 const AddRole = lazy(() => import("../../Role/AddRole"));
@@ -38,6 +38,7 @@ const ViewSingalRole = lazy(() => import("../../Role/ViewSingal"));
 
 const AddRules = lazy(() => import("./../../RulesAndRegulations/AddRules"));
 const RulesList = lazy(() => import("./../../RulesAndRegulations/All"));
+const EditRules = lazy(() => import("./../../RulesAndRegulations/EditRules"));
 
 const PageNotFound = lazy(() => import("../../PageNotFound"));
 const ForbiddenPage = lazy(()=> import ("../../Forbidden"))
@@ -111,6 +112,10 @@ const AppMain = () => {
           <Route
             path="list"
             element={<DisputeList currentUser={currentUser} />}
+          />
+          <Route
+            path="add"
+            element={<AddDispute currentUser={currentUser} />}
           />
           <Route path=":id" element={<DisputeView />} />
         </Route>

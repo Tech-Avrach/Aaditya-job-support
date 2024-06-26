@@ -57,7 +57,7 @@ const All = (props) => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
   useEffect(() => {
-    dispatch(retrieveDispute());
+    dispatch(retrieveDispute(filterText, 1, perPage));
   }, []);
 
   //status handler
@@ -192,19 +192,19 @@ const All = (props) => {
   
 
   const handlePageChange = (page) => {
-    // dispatch(retrieveUsers(filterText, page, perPage));
+    dispatch(retrieveDispute(filterText, page, perPage));
     setCurrentPage(page);
   };
 
   const handlePerRowsChange = async (newPerPage, page) => {
-    // dispatch(retrieveUsers(filterText, page, newPerPage));
+    dispatch(retrieveDispute(filterText, page, newPerPage));
     setPerPage(newPerPage);
   };
 
   // Search
   const debounceSearch = useCallback(
     debounceFunction((nextValue) => {
-      // dispatch(retrieveUsers(nextValue, 1, perPage));
+      dispatch(retrieveDispute(nextValue, 1, perPage));
     }, 1000),
     []
   );
@@ -214,7 +214,7 @@ const All = (props) => {
       if (filterText) {
         setResetPaginationToggle(!resetPaginationToggle);
         setFilterText("");
-        // dispatch(retrieveUsers(filterText, 1, perPage));
+        dispatch(retrieveDispute(filterText, 1, perPage));
       }
     };
 

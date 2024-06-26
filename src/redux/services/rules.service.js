@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { authHeader } from "./auth-header";
+import { authHeader, multipartHeader } from "./auth-header";
 
 const getAll = (param) => {
     return axios.get(process.env.REACT_APP_API_URL + "rulesReg/list", {
@@ -34,10 +34,9 @@ const getAll = (param) => {
   };
 
   const deleteRule = (id, param) => {
-
     console.log(param)
     return axios.delete(
-      `${process.env.REACT_APP_API_URL}rulesReg/delete/${id}`, 
+     ` ${process.env.REACT_APP_API_URL}rulesReg/delete/${id}`, 
       {
         data: param,
         headers: authHeader(),
@@ -52,12 +51,10 @@ const getAll = (param) => {
   };
 
   const isActiverule = (id,Active, param) => {
-
     return axios.put(process.env.REACT_APP_API_URL + `rulesReg/updateStatus/${id}`,{
       "isActive" :Active,
       ...param
   }, {
-  
       headers: authHeader(),
     });
   };

@@ -9,6 +9,7 @@ import game from "./game";
 import role from "./roles";
 import dispute from "./dispute";
 import rules from "./rules";
+
 const reducers = combineReducers({
   auth,
   message,
