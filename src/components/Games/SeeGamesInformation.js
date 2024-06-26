@@ -20,6 +20,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { updateGame } from "../../redux/actions/game";
 import gameService from "../../redux/services/game.service";
 import { categories, currencies, platforms, regions } from "./data";
+import styles from "../../assets/preview.module.scss";
+
 //import states action
 // import { retrieveStates } from "../../redux/actions/states";
 
@@ -32,12 +34,16 @@ const GameInformation = () => {
 
   const dispatch = useDispatch();
   const [currentGame, setCurrentGame] = useState({});
+
+  const [gameImgPreview, setGameImgPreview] = useState(null);
   useEffect(() => {
     const getGames = (id) => {
       gameService
         .get(id)
         .then((response) => {
           setCurrentGame(response?.data?.adInfo);
+          console.log(response?.data?.adInfo.adType);
+          setGameImgPreview(response?.data?.adInfo?.adImage[0]?.imageUrl)
         })
         .catch((error) => {
           toast(error, {
@@ -352,6 +358,167 @@ const GameInformation = () => {
                       />
                     </FormGroup>
                   </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="gameImage">Game Image</Label>
+                      <Input
+                        // invalid={gameImgErr !== "" ? true : false}
+                        type="file"
+                        name="gameImage"
+                        id="gameImage"
+                        accept="image/*"
+                        // onChange={handleFileInput}
+                      />
+                      {gameImgPreview && (
+                        <div
+                          className={styles.previewContainer}
+                          style={{
+                            position: "relative",
+                            display: "inline-block",
+                          }}
+                        >
+                          <img
+                            width={100}
+                            src={gameImgPreview}
+                            alt="preview"
+                            onError={() =>
+                              setGameImgPreview(
+                                `${process.env.REACT_APP_PROFILE_IMAGE_URL}` +
+                                  `user.png`
+                              )
+                            }
+                          />
+                          <a
+                            href="#"
+                            className={styles.deleteIcon}
+                            // onClick={removeProfilePicture}
+                            style={{
+                              position: "absolute",
+                            }}
+                          >
+                            <i className="pe-7s-trash"></i>
+                          </a>
+                        </div>
+                      )}
+                      {/* {gameImgErr !== "" && (
+                        <FormFeedback>{gameImgErr}</FormFeedback>
+                      )} */}
+                    </FormGroup>
+                  </Col>
+
+                  {currentGame.adType === "trade" ? (
+                    <>
+                      <Col md="6">
+                        <FormGroup>
+                          <Label for="tradeItemPrice">Trade Item Price</Label>
+                          <Input
+                            type="text"
+                            name="tradeItemPrice"
+                            id="tradeItemPrice"
+                            placeholder="Item Price here..."
+                            // value={tradeItemPrice}
+                            // onChange={(e) => setTradeItemPrice(e.target.value)}
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col md="6">
+                        <FormGroup>
+                        <Label for="priceType">Price Type</Label>
+                          <Input
+                            type="select"
+                            name="priceType"
+                            id="priceType"
+                            // value={priceType}
+                            // onChange={(e) => setPriceType(e.target.value)}
+                          >
+                            <option value="request">Request</option>
+                            <option value="offer">Offer</option>
+                          </Input>
+                        </FormGroup>
+                      </Col>
+                      <Col md="6">
+                    <FormGroup>
+                      <Label for="tradeItemCurrency">tradeItemCurrency</Label>
+                      <Input
+                        type="select"
+                        name="tradeItemCurrency"
+                        id="tradeItemCurrency"
+                        // value={tradeItemCurrency}
+                        // onChange={(e) => setTradeItemCurrency(e.target.value)}
+                      >
+                        <option value=""> Select Trade Item Currency </option>
+                        {currencies &&
+                          currencies.map((currency, index) => (
+                            <option key={index} value={currency.code}>
+                              {currency.name}
+                            </option>
+                          ))}
+                      </Input>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="tradeItemPic">Trade Item Image</Label>
+                      <Input
+                        // invalid={tradeImgErr !== "" ? true : false}
+                        type="file"
+                        name="tradeItemPic"
+                        id="tradeItemPic"
+                        accept="image/*"
+                        // onChange={handleTradeItemFileInput}
+                      />
+                      {/* {tradeImgPreview && (
+                        <div
+                          className={styles.previewContainer}
+                          style={{
+                            position: "relative",
+                            display: "inline-block",
+                          }}
+                        >
+                          <img
+                            width={100}
+                            src={tradeImgPreview}
+                            alt="preview"
+                            onError={() =>
+                              setGameImgPreview(
+                                `${process.env.REACT_APP_PROFILE_IMAGE_URL}` +
+                                  `user.png`
+                              )
+                            }
+                          />
+                          <a
+                            href="#"
+                            className={styles.deleteIcon}
+                            name="tradeItemPic"
+                            onClick={removeTradeImage}
+                            style={{
+                              position: "absolute",
+                            }}
+                          >
+                            <i className="pe-7s-trash"></i>
+                          </a>
+                        </div>
+                      )}
+                       {tradeImgErr !== "" && (
+                        <FormFeedback>{tradeImgErr}</FormFeedback>
+                      )} */}
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="tradeItemTitle">Trade Item Title</Label>
+                      <Input
+                        type="text"
+                        name="tradeItemTitle"
+                        id="tradeItemTitle"
+                        placeholder="Trade Item Title here..."
+                        // value={tradeItemTitle}
+                        // onChange={(e) => setTradeItemTitle(e.target.value)}
+                      />
+                    </FormGroup>
+                  </Col>
+                    </>
+                  ) : null}
                 </Row>
               </CardBody>
               <CardFooter className="d-block">

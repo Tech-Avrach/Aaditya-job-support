@@ -194,7 +194,6 @@ const AddGameInformation = () => {
           .uploadadImage(formData)
           .then((response) => {
             console.log("game", response.data.imageUrl)
-            setCurrentGame({ ...currentGame, adImage: response.data.imageUrl });
             setGameImgPreview(response.data.imageUrl);
           })
           .catch((error) => {
@@ -245,6 +244,7 @@ const AddGameInformation = () => {
         const gameData = {
           "isFeatured" : 0,
           "adType": formType,
+          "adImage": gameImgPreview,
           ...currentGame
         }
         dispatch(createGame(gameData))
@@ -280,6 +280,7 @@ const AddGameInformation = () => {
       }else {
 
         const tradeData = {
+
           "isFeatured" : 0,
           "adType": formType,
           "tradeItemPrice": tradeItemPrice,
@@ -290,6 +291,7 @@ const AddGameInformation = () => {
         }
 
         const gameData = {
+          "adImage": gameImgPreview,
           ...currentGame,
           ...tradeData
         } 
@@ -330,28 +332,29 @@ const AddGameInformation = () => {
   return (
     <>
       <Row>
-        <Col md="1">
-          <FormGroup>
-            <Input
-              type="select"
-              name="formType"
-              id="formType"
-              value={formType}
-              onChange={(e) => setFormType(e.target.value)}
-            >
-              <option value="Sell">Sell</option>
-              <option value="Trade">Trade</option>
-            </Input>
-          </FormGroup>
-        </Col>
-      </Row>
-
-      <Row>
         <Col md="12">
           <Card className="main-card mb-3">
             <Form>
               <CardBody>
                 <Row>
+                  <Col md="12">
+                  <Row>
+                      <Col md="1">
+                        <FormGroup>
+                          <Input
+                            type="select"
+                            name="formType"
+                            id="formType"
+                            value={formType}
+                            onChange={(e) => setFormType(e.target.value)}
+                          >
+                            <option value="Sell">Sell</option>
+                            <option value="Trade">Trade</option>
+                          </Input>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </Col>
                   <Col md="6">
                     <FormGroup>
                       <Label for="title">Title</Label>
