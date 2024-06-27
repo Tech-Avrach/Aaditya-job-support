@@ -37,14 +37,43 @@ const GameInformation = () => {
   const [currentGame, setCurrentGame] = useState({});
 
   const [gameImgPreview, setGameImgPreview] = useState(null);
+
+  const [tradeItemPrice, setTradeItemPrice] = useState("");
+
+  const [tradeItemCurrency, setTradeItemCurrency] = useState("");
+
+  const [tradeItemTitle, setTradeItemTitle] = useState("");
+
+  const [priceType, setPriceType] = useState("");
+
+  const [gameErr, setGameErr] = useState("");
+
+  const [priceErr, setPriceErr] = useState("");
+  const [gameImgErr, setGameImgErr] = useState("");
+  const [selectedGameImg, setSelectedGameImg] = useState(null);
+
+  const [tradeImgErr, setTradeImgErr] = useState("");
+  const [selectedTradeImg, setSelectedTradeImg] = useState(null);
+  const [tradeImgPreview, setTradeImgPreview] = useState("");
+
+
   useEffect(() => {
     const getGames = (id) => {
       gameService
         .get(id)
         .then((response) => {
           setCurrentGame(response?.data?.adInfo);
-          console.log(response?.data?.adInfo.adType);
+          console.log(response?.data?.adInfo);
           setGameImgPreview(response?.data?.adInfo?.adImage[0]?.imageUrl)
+
+          if(response?.data?.adInfo?.adType === "trade"){
+            setTradeItemPrice(response?.data?.adInfo.tradeItem?.price)
+            setTradeItemCurrency(response?.data?.adInfo.tradeItem?.currency)
+            setTradeItemTitle(response?.data?.adInfo.tradeItem?.title)
+            setPriceType(response?.data?.adInfo.tradeItem?.priceType)
+            setTradeImgPreview(response?.data?.adInfo?.tradeItem?.imageUrl)
+          }
+
         })
         .catch((error) => {
           toast(error, {
@@ -63,17 +92,6 @@ const GameInformation = () => {
     getGames(id);
   }, []);
 
-  //states for handling validations
-
-  const [gameErr, setGameErr] = useState("");
-
-  const [priceErr, setPriceErr] = useState("");
-  const [gameImgErr, setGameImgErr] = useState("");
-  const [selectedGameImg, setSelectedGameImg] = useState(null);
-
-  const [tradeImgErr, setTradeImgErr] = useState("");
-  const [selectedTradeImg, setSelectedTradeImg] = useState(null);
-  const [tradeImgPreview, setTradeImgPreview] = useState(""); 
 
   //input change handler
 
@@ -227,9 +245,37 @@ const GameInformation = () => {
       return;
     } else {
       //dispatch to update the user
-      dispatch(updateGame(id, currentGame))
+      if(currentGame.adType === "trade"){
+          const tradeData = {
+            "tradeItemPrice": tradeItemPrice,
+            "priceType": priceType,
+            "tradeItemCurrency": tradeItemCurrency,
+            "tradeItemPic": tradeImgPreview,
+            "tradeItemTitle": tradeItemTitle
+          }
+
+          const gameData = {
+            "adImage": gameImgPreview,
+            "title": currentGame.title,
+            "gameName": currentGame.gameName,
+            "platform": currentGame.platform,    
+            "category": currentGame.category,    
+            "price": currentGame.price,
+            "description": currentGame.description,
+            "region": currentGame.region,  
+            "currency": currentGame.currency,
+            "quanity": currentGame.quanity,
+            "adKey": currentGame.adKey,
+            "deliveryTime": currentGame.deliveryTime,
+            "isFeatured": currentGame.isFeatured,
+            "adType": currentGame.adType,
+            ...tradeData
+          }
+
+
+        dispatch(updateGame(id, gameData))
         .then((response) => {
-          setCurrentGame({ ...currentGame });
+          // setCurrentGame({ ...currentGame });
           toast("Game Updated successfully!", {
             transition: Slide,
 
@@ -257,6 +303,56 @@ const GameInformation = () => {
             type: "error",
           });
         });
+      } else {
+
+        const gameData = {
+          "adImage": gameImgPreview,
+          "title": currentGame.title,
+          "gameName": currentGame.gameName,
+          "platform": currentGame.platform,    
+          "category": currentGame.category,    
+          "price": currentGame.price,
+          "description": currentGame.description,
+          "region": currentGame.region,  
+          "currency": currentGame.currency,
+          "quanity": currentGame.quanity,
+          "adKey": currentGame.adKey,
+          "deliveryTime": currentGame.deliveryTime,
+          "isFeatured": currentGame.isFeatured,
+          "adType": currentGame.adType,
+        }
+
+        dispatch(updateGame(id, gameData))
+        .then((response) => {
+          // setCurrentGame({ ...currentGame });
+          toast("Game Updated successfully!", {
+            transition: Slide,
+
+            closeButton: true,
+
+            autoClose: 3000,
+
+            position: "top-right",
+
+            type: "success", // info/success/warning/error
+          });
+          setCurrentGame({});
+          navigate("/games/list");
+        })
+        .catch((error) => {
+          toast(error.response.data.message, {
+            transition: Slide,
+
+            closeButton: true,
+
+            autoClose: 3000,
+
+            position: "top-right",
+
+            type: "error",
+          });
+        });
+      }
     }
   };
   return (
@@ -538,8 +634,8 @@ const GameInformation = () => {
                             name="tradeItemPrice"
                             id="tradeItemPrice"
                             placeholder="Item Price here..."
-                            // value={tradeItemPrice}
-                            // onChange={(e) => setTradeItemPrice(e.target.value)}
+                            value={tradeItemPrice}
+                            onChange={(e) => setTradeItemPrice(e.target.value)}
                           />
                         </FormGroup>
                       </Col>
@@ -550,8 +646,8 @@ const GameInformation = () => {
                             type="select"
                             name="priceType"
                             id="priceType"
-                            // value={priceType}
-                            // onChange={(e) => setPriceType(e.target.value)}
+                            value={priceType}
+                            onChange={(e) => setPriceType(e.target.value)}
                           >
                             <option value="request">Request</option>
                             <option value="offer">Offer</option>
@@ -565,8 +661,8 @@ const GameInformation = () => {
                         type="select"
                         name="tradeItemCurrency"
                         id="tradeItemCurrency"
-                        // value={tradeItemCurrency}
-                        // onChange={(e) => setTradeItemCurrency(e.target.value)}
+                        value={tradeItemCurrency}
+                        onChange={(e) => setTradeItemCurrency(e.target.value)}
                       >
                         <option value=""> Select Trade Item Currency </option>
                         {currencies &&
@@ -634,8 +730,8 @@ const GameInformation = () => {
                         name="tradeItemTitle"
                         id="tradeItemTitle"
                         placeholder="Trade Item Title here..."
-                        // value={tradeItemTitle}
-                        // onChange={(e) => setTradeItemTitle(e.target.value)}
+                        value={tradeItemTitle}
+                        onChange={(e) => setTradeItemTitle(e.target.value)}
                       />
                     </FormGroup>
                   </Col>

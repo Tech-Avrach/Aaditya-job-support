@@ -5,7 +5,7 @@ import IconContainer from "../Common/IconContainer";
 import * as Ionicons from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteRule, activeStatusRule, restoreRule, retrieveRules } from "../../redux/actions/rules";
+import { retrieveFaqs, deleteFaq, restoreFaq, activeStatusFaq } from "../../redux/actions/faq";
 import { toast, Slide } from "react-toastify";
 import FilterComponent from "../../helpers/FilterComponent";
 import debounceFunction from "../../helpers/Debounce";
@@ -23,6 +23,7 @@ toast.configure();
 const FaqList = () => {
     const navigate = useNavigate();
     const { rules, totalRulecount } = useSelector((state) => state.rules);
+    const { faqs } = useSelector((state) => state.faqs);
     const { permissionMap: permissions } = useSelector((state) => state.auth);
     const currentModuleId = 5;
     const permission = permissions[currentModuleId];
@@ -40,18 +41,21 @@ const FaqList = () => {
         active: true,
     };
 
+
     const fetchRules = useCallback(() => {
-        dispatch(retrieveRules(param));
+        dispatch(retrieveFaqs(param));
     }, [dispatch, filterText, currentPage, perPage]);
 
     useEffect(() => {
         fetchRules();
     }, [fetchRules, currentPage, perPage, filterText]);
 
-    const handleViewClick = (row) => navigate(`/rules/${row.publicId}`);
+    const handleViewClick = (row) => navigate(`/faq/${row.publicId}`);
+
+
     const handleStatusToggle = (e, id, isActive) => {
         e.preventDefault();
-        dispatch(activeStatusRule(id, isActive, param))
+        dispatch(activeStatusFaq(id, isActive, param))
             .then(() => {
                 toast(`Account ${isActive ? "activated" : "deactivated"} successfully!`, {
                     transition: Slide,
@@ -76,7 +80,7 @@ const FaqList = () => {
     const handleDelete = (e, id, action) => {
         e.preventDefault();
         if (action === "delete") {
-            dispatch(deleteRule(id, param))
+            dispatch(deleteFaq(id, param))
                 .then((res) => {
                     toast("Role deleted successfully!", {
                         transition: Slide,
@@ -98,7 +102,7 @@ const FaqList = () => {
                     });
                 });
         } else {
-            dispatch(restoreRule(id, param))
+            dispatch(restoreFaq(id, param))
                 .then(() => {
                     toast("Role restored successfully!", {
                         transition: Slide,
@@ -123,15 +127,15 @@ const FaqList = () => {
 
     const columns = useMemo(() => {
         const commonColumns = [
-            {
-                name: "Id",
-                selector: (row) => row.id,
-                sortable: true,
-                width: "100px",
-                headerStyle: {
-                    textAlign: "center",
-                },
-            },
+            // {
+            //     name: "Id",
+            //     selector: (row) => row.id,
+            //     sortable: true,
+            //     width: "100px",
+            //     headerStyle: {
+            //         textAlign: "center",
+            //     },
+            // },
             {
                 name: "Public Id",
                 selector: (row) => row.publicId,
@@ -142,8 +146,16 @@ const FaqList = () => {
                 },
             },
             {
-                name: "FAQ",
-                selector: (row) => row.rulesRegText,
+                name: "Question",
+                selector: (row) => row.question,
+                sortable: true,
+                headerStyle: {
+                    textAlign: "center",
+                },
+            },
+            {
+                name: "Answer",
+                selector: (row) => row.answer,
                 sortable: true,
                 headerStyle: {
                     textAlign: "center",
@@ -158,21 +170,21 @@ const FaqList = () => {
                     textAlign: "center",
                 },
             },
-            {
-                name: "Created At",
-                selector: (row) => format(new Date(row.createdAt), 'PPpp'),
-                sortable: true,
-                width: "250px",
-                headerStyle: {
-                    textAlign: "center",
-                },
-            },
+            // {
+            //     name: "Created At",
+            //     selector: (row) => format(new Date(row.createdAt), 'PPpp'),
+            //     sortable: true,
+            //     width: "250px",
+            //     headerStyle: {
+            //         textAlign: "center",
+            //     },
+            // },
         ];
 
         const renderActionCell = (row) => {
             const isDeleted = row.deletedAt !== null;
             if (isDeleted) {
-                return permission.delete ? (
+                return permission?.delete ? (
                     <IconContainer
                         id={"restore-icon"}
                         Icon={RestoreIcon}
@@ -185,7 +197,7 @@ const FaqList = () => {
 
             return (
                 <>
-                    {permission.update ? (
+                    {permission?.update ? (
                         <IconContainer
                             id={"edit-icon"}
                             Icon={EditIcon}
@@ -193,7 +205,7 @@ const FaqList = () => {
                             text="Edit"
                         />
                     ) : null}
-                    {permission.delete ? (
+                    {permission?.delete ? (
                         <IconContainer
                             id={"delete-icon"}
                             Icon={DeleteIcon}
@@ -202,7 +214,7 @@ const FaqList = () => {
                             iconColor={"#d92550"}
                         />
                     ) : null}
-                    {permission.statusUpdate ? (
+                    {permission?.statusUpdate ? (
                         <IconContainer
                             id={"subadmin-active-icon"}
                             Icon={row.isActive ? ActiveIcon : InactiveIcon}
@@ -215,7 +227,7 @@ const FaqList = () => {
             );
         };
 
-        if (permission.delete === 0 && permission.update === 0 && permission.statusUpdate) {
+        if (permission?.delete === 0 && permission?.update === 0 && permission?.statusUpdate) {
             return commonColumns;
         }
 
@@ -243,7 +255,7 @@ const FaqList = () => {
             if (filterText) {
                 setResetPaginationToggle(!resetPaginationToggle);
                 setFilterText("");
-                dispatch(retrieveRules({ ...param, keyword: "", page: 1 }));
+                dispatch(retrieveFaqs({ ...param, keyword: "", page: 1 }));
             }
         };
 
@@ -273,13 +285,13 @@ const FaqList = () => {
                 <Card className="main-card mb-3">
                     <CardHeader className="card-header-sm">
                         <div className="card-header-title font-size-lg text-capitalize fw-normal">
-                            Rules and Regulations
+                            Faqs
                         </div>
                     </CardHeader>
                     <CardBody>
                         <DataTable
                             columns={columns}
-                            data={rules}
+                            data={faqs}
                             pagination
                             paginationServer
                             paginationTotalRows={totalRulecount}

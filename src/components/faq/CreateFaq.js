@@ -17,7 +17,7 @@ import {
     CardFooter,
   } from "reactstrap";
 
-import { createRule } from "../../redux/actions/rules"
+import { createFaq } from "../../redux/actions/faq"
 import { useNavigate } from 'react-router-dom';
 
 toast.configure();
@@ -27,33 +27,30 @@ const CreateFaq = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [currentRules, setCurrentRules] = useState({
-        rulesRegText: "",
-    });
-    const [rulesErr, setRulesErr] = useState("");
+    const [currentQuestion, setCurrentQuestion] = useState("");
+    const [currentAnswer, setCurrentAnswer] = useState("");
+    const [questionErr, setQuestionErr] = useState("");
+    const [answerErr, setAnswerErr] = useState("");
 
-
-    const handleChange = (e) => {
-        e.preventDefault();
-        const { name, value } = e.target;
-        setCurrentRules((prev) => {
-          return {
-            ...prev,
-            [name]: value,
-          };
-        });
-      };
 
 
     const handleValidation = (event) => {
         const inputValue = event.target.value.trim();
     
         const inputFieldName = event.target.name;
-        if (inputFieldName === "rulesRegText") {
+        if (inputFieldName === "question") {
           if (inputValue.length < 1) {
-            setRulesErr("Rule is required!");
+            setQuestionErr("Question is required!");
           } else {
-            setRulesErr("");
+            setQuestionErr("");
+          }
+        }
+
+        if (inputFieldName === "answer") {
+          if (inputValue.length < 1) {
+            setAnswerErr("Answer is required!");
+          } else {
+            setAnswerErr("");
           }
         }
 
@@ -63,28 +60,38 @@ const CreateFaq = () => {
       const updateHandler = (event) => {
         event.preventDefault();
 
-        console.log(currentRules)
         let errorCount = 0;
         if (
-          currentRules.rulesRegText === "" ||
-          currentRules.rulesRegText === null ||
-          currentRules.rulesRegText < 1
+          currentQuestion === "" ||
+          currentQuestion === null ||
+          currentQuestion < 1
         ) {
-          setRulesErr("Rule is required!");
+          setQuestionErr("Question is required!");
           errorCount++;
         }
 
-        if ( currentRules.rulesRegText.length < 10 ) {
-          setRulesErr("Rules regulation must have minimum 10 character length !");
+        if(
+          currentAnswer === "" ||
+          currentAnswer === null ||
+          currentAnswer < 1
+        ) {
+          setAnswerErr("Answer is required!");
           errorCount++;
-      }
+        } 
     
         if (errorCount > 0) {
           return;
         } else {
-          dispatch(createRule(currentRules))
+
+          const data = {
+            question: currentQuestion,
+            answer: currentAnswer
+          };
+
+          console.log(data);
+          dispatch(createFaq(data))
             .then((response) => {
-              toast("Rule Created successfully!", {
+              toast("QNA Created successfully!", {
                 transition: Slide,
     
                 closeButton: true,
@@ -95,7 +102,7 @@ const CreateFaq = () => {
     
                 type: "success", // info/success/warning/error
               });
-              navigate("/rules/list");
+              navigate("/faq/list");
             })
             .catch((error) => {
               toast(error?.response?.data.message, {
@@ -130,32 +137,32 @@ const CreateFaq = () => {
                     <FormGroup>
                       <Label for="name">Question</Label>
                       <Input
-                        invalid={rulesErr !== "" ? true : false}
+                        invalid={questionErr !== "" ? true : false}
                         type="text"
-                        name="rulesRegText"
-                        id="rules"
-                        onChange={handleChange}
-                        placeholder="Add Rule..."
-                        // value={currentRole.name ? currentRole.name : ""}
+                        name="question"
+                        id="question"
+                        onChange={(e) => setCurrentQuestion(e.target.value)}
+                        placeholder="Question..."
+                        value={currentQuestion ? currentQuestion : ""}
                         onKeyUp={handleValidation}
                       />
-                      {rulesErr !== "" && <FormFeedback>{rulesErr}</FormFeedback>}
+                      {questionErr !== "" && <FormFeedback>{questionErr}</FormFeedback>}
                     </FormGroup>
                   </Col>
                   <Col md="6">
                     <FormGroup>
                       <Label for="name">Answer</Label>
                       <Input
-                        invalid={rulesErr !== "" ? true : false}
+                        invalid={answerErr !== "" ? true : false}
                         type="text"
                         name="rulesRegText"
                         id="rules"
-                        onChange={handleChange}
-                        placeholder="Add Rule..."
-                        // value={currentRole.name ? currentRole.name : ""}
+                        onChange={(e) => setCurrentAnswer(e.target.value)}
+                        placeholder="Answer..."
+                        value={currentAnswer ? currentAnswer : ""}
                         onKeyUp={handleValidation}
                       />
-                      {rulesErr !== "" && <FormFeedback>{rulesErr}</FormFeedback>}
+                      {answerErr !== "" && <FormFeedback>{answerErr}</FormFeedback>}
                     </FormGroup>
                   </Col>
                 </Row>

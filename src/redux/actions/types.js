@@ -64,3 +64,10 @@ export const UPDATE_RULES = "UPDATE_RULES";
 export const DELETE_RULES = "DELETE_RULES";
 export const UPDATE_RULES_STATUS = "UPDATE_RULES_STATUS";
 export const RESTORE_RULES = "RESTORE_RULES";
+
+export const RETRIEVE_FAQ = "RETRIEVE_FAQ";
+export const CREATE_FAQ = "CREATE_FAQ";
+export const UPDATE_FAQ = "UPDATE_FAQ";
+export const DELETE_FAQ = "DELETE_FAQ";
+export const UPDATE_FAQ_STATUS = "UPDATE_FAQ_STATUS";
+export const RESTORE_FAQ = "RESTORE_FAQ";

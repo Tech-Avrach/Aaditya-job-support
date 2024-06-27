@@ -9,6 +9,7 @@ import game from "./game";
 import role from "./roles";
 import dispute from "./dispute";
 import rules from "./rules";
+import faqs from "./faq"
 
 const reducers = combineReducers({
   auth,
@@ -21,6 +22,7 @@ const reducers = combineReducers({
   role,
   dispute,
   rules,
+  faqs,
 });
 
 export default reducers;

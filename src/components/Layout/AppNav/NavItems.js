@@ -157,6 +157,21 @@ const getNavItem = (moduleId) => {
         },
       ],
     }
+
+    case 5: return {
+      icon: "pe-7s-display2",
+      label: "FAQ",
+      content: [
+        {
+          label: "Add",
+          to: "/faq/add",
+        },
+        {
+          label: "List",
+          to: "/faq/list",
+        },
+      ],
+    }
     default: return null;
   }
 
