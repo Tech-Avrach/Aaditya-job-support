@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from 'react'
+import { useDispatch, } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -17,12 +18,15 @@ import {
     CardFooter,
   } from "reactstrap";
 
-import { createRule } from "../../redux/actions/rules"
-import { useNavigate } from 'react-router-dom';
+  import { updateRule } from "../../redux/actions/rules"
+
+import RulesService from "../../redux/services/rules.service";
 
 toast.configure();
 
-const AddRulesAndRegulations = () => {
+const EditFaq = () => {
+
+    const { id } = useParams();
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -31,6 +35,29 @@ const AddRulesAndRegulations = () => {
         rulesRegText: "",
     });
     const [rulesErr, setRulesErr] = useState("");
+
+    useEffect(() => {
+      const getRule = (id) => {
+            RulesService
+            .get(id)
+            .then((response) => {
+
+                console.log(response.data.rulInfo)
+                setCurrentRules(response.data.rulInfo);
+            })
+            .catch((error) => {
+              toast(error, {
+                transition: Slide,
+                closeButton: true,
+                autoClose: 3000,
+                position: "top-right",
+                type: "error",
+              });
+            });
+        };
+        getRule(id);
+      }, []);
+    
 
 
     const handleChange = (e) => {
@@ -63,7 +90,6 @@ const AddRulesAndRegulations = () => {
       const updateHandler = (event) => {
         event.preventDefault();
 
-        console.log(currentRules)
         let errorCount = 0;
         if (
           currentRules.rulesRegText === "" ||
@@ -75,16 +101,16 @@ const AddRulesAndRegulations = () => {
         }
 
         if ( currentRules.rulesRegText.length < 10 ) {
-          setRulesErr("Rules regulation must have minimum 10 character length !");
-          errorCount++;
-      }
+            setRulesErr("Rules regulation must have minimum 10 character length !");
+            errorCount++;
+        }
     
         if (errorCount > 0) {
           return;
         } else {
-          dispatch(createRule(currentRules))
+          dispatch(updateRule(id, currentRules))
             .then((response) => {
-              toast("Rule Created successfully!", {
+              toast("Role updated successfully!", {
                 transition: Slide,
     
                 closeButton: true,
@@ -120,7 +146,7 @@ const AddRulesAndRegulations = () => {
           <Card className="main-card mb-3">
             <CardHeader className="card-header-sm">
               <div className="card-header-title font-size-lg text-capitalize fw-normal">
-                Create New Rule
+                Update Rule
               </div>
             </CardHeader>
             <Form>
@@ -128,14 +154,15 @@ const AddRulesAndRegulations = () => {
                 <Row>
                   <Col md="12">
                     <FormGroup>
-                      <Label for="name">Add Rule</Label>
+                      <Label for="name">Update Rule</Label>
                       <Input
                         invalid={rulesErr !== "" ? true : false}
                         type="text"
                         name="rulesRegText"
                         id="rules"
+                        value={currentRules.rulesRegText}
                         onChange={handleChange}
-                        placeholder="Add Rule..."
+                        placeholder="Role Name here..."
                         // value={currentRole.name ? currentRole.name : ""}
                         onKeyUp={handleValidation}
                       />
@@ -155,7 +182,7 @@ const AddRulesAndRegulations = () => {
                   Cancel
                 </Button>
                 <Button size="lg" color="primary" onClick={updateHandler}>
-                  Add Rule
+                Update Rule
                 </Button>
               </CardFooter>
             </Form>
@@ -166,4 +193,4 @@ const AddRulesAndRegulations = () => {
   )
 }
 
-export default AddRulesAndRegulations
+export default EditFaq

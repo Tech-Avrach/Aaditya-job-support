@@ -27,15 +27,17 @@ export const retrieveRole =
     }
   };
 
-export const retrieveSingaleRole = () => async (dispatch) => {
+export const retrieveSingaleRole = (id) => async (dispatch) => {
   try {
-    const res = await RoleService.get();
-    dispatch({
-      type: RETRIEVE_SINGAL_ROLE,
-      payload: res.data.pageInfo,
-    });
+    const res = await RoleService.get(id);
+    // dispatch({
+    //   type: RETRIEVE_SINGAL_ROLE,
+    //   payload: res.data.pageInfo,
+    // });
+    return Promise.resolve(res?.data?.roleInfo)
   } catch (err) {
     console.log(err);
+    return Promise.reject(err?.response?.data?.message)
   }
 };
 

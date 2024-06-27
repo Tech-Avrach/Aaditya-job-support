@@ -9,6 +9,9 @@ import ProtectedRoutes from "../../../routes/ProtectedRoutes";
 import PublicRoutes from "../../../routes/PublicRoutes";
 import useTokenRefreshHook from "../../../hooks/getRefreshhook";
 import { handleRefreshTokenHelper } from "../../../hooks/refreshHelper";
+import AddFaq from "../../faq/AddFaq";
+import EditFaq from "../../faq/EditFaq";
+import FaqList from "../../faq/All";
 
 const Login = lazy(() => import("../../Login/"));
 const Dashboard = lazy(() => import("../../Dashboard/"));
@@ -125,13 +128,19 @@ const AppMain = () => {
           <Route path="permission" element={<Permissions />} />
           <Route path=":id" element={<ViewSingalRole />} />
         </Route>
+        <Route path="faq">
+          <Route path="list" element={<FaqList currentUser={currentUser} />} />
+          <Route path="add" element={<AddFaq currentUser={currentUser} />} />
+          <Route path=":id" element={<EditFaq currentUser={currentUser} />} />
+        </Route>
 
         <Route path="rules">
           <Route path="list" element={<RulesList currentUser={currentUser} />} />
           <Route path="add" element={<AddRules currentUser={currentUser} />} />
           <Route path=":id" element={<EditRules currentUser={currentUser} />} />
         </Route>
-      </Route>      
+      </Route>    
+        
 
       <Route element={<PublicRoutes isLoggedIn={isLoggedIn} />}>
         <Route path="login" element={<Login />} />

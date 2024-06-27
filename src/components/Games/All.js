@@ -40,7 +40,7 @@ const All = () => {
 
   const dispatch = useDispatch();
 
-  const { games: filteredGames, totalGamesCount: totalGame } = useSelector(
+  const { games: filteredGames, totalGameCount: totalGame } = useSelector(
     (state) => state.game
   );
 
@@ -252,12 +252,12 @@ const All = () => {
   
 
   const handlePageChange = (page) => {
-    // dispatch(retrieveUsers(filterText, page, perPage));
+    dispatch(retrieveGame(filterText, page, perPage));
     setCurrentPage(page);
   };
 
   const handlePerRowsChange = async (newPerPage, page) => {
-    // dispatch(retrieveUsers(filterText, page, newPerPage));
+    dispatch(retrieveGame(filterText, page, newPerPage));
     setPerPage(newPerPage);
   };
 

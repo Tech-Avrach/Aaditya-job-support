@@ -25,12 +25,12 @@ import { retrieveSingaleRole, updateRole } from "../../redux/actions/roles";
 //Configure toastify
 toast.configure();
 
-const RoleInformation = ({ roleDetail }) => {
+const RoleInformation = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const [currentRole, setcurrentRole] = useState(roleDetail);
+  const [currentRole, setcurrentRole] = useState(null);
 
   //states for handling validations
 
@@ -38,13 +38,16 @@ const RoleInformation = ({ roleDetail }) => {
 
   useEffect(() => {
     dispatch(retrieveSingaleRole(id))
+    .then(res => {
+      setcurrentRole(res);
+    })
   }, [])
 
-  useEffect(() => {
-    if (roleDetail !== undefined) {
-      setcurrentRole(roleDetail); //set user details in the state when roleDetail changes
-    }
-  }, [roleDetail]);
+  // useEffect(() => {
+  //   if (roleDetail !== undefined) {
+  //     setcurrentRole(roleDetail); //set user details in the state when roleDetail changes
+  //   }
+  // }, [roleDetail]);
 
   //input change handler
   const handleInputChange = (event) => {
@@ -99,7 +102,7 @@ const RoleInformation = ({ roleDetail }) => {
   ];
   return (
     <>
-      {roleDetail ? (
+      {currentRole ? (
         <Row>
           <Col md="12">
             <Card className="main-card mb-3">

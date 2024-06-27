@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 
 toast.configure();
 
-const AddRulesAndRegulations = () => {
+const CreateFaq = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -120,15 +120,31 @@ const AddRulesAndRegulations = () => {
           <Card className="main-card mb-3">
             <CardHeader className="card-header-sm">
               <div className="card-header-title font-size-lg text-capitalize fw-normal">
-                Create New Rule
+                Add a  Frequently Asked Question
               </div>
             </CardHeader>
             <Form>
               <CardBody>
                 <Row>
-                  <Col md="12">
+                  <Col md="6">
                     <FormGroup>
-                      <Label for="name">Add Rule</Label>
+                      <Label for="name">Question</Label>
+                      <Input
+                        invalid={rulesErr !== "" ? true : false}
+                        type="text"
+                        name="rulesRegText"
+                        id="rules"
+                        onChange={handleChange}
+                        placeholder="Add Rule..."
+                        // value={currentRole.name ? currentRole.name : ""}
+                        onKeyUp={handleValidation}
+                      />
+                      {rulesErr !== "" && <FormFeedback>{rulesErr}</FormFeedback>}
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="name">Answer</Label>
                       <Input
                         invalid={rulesErr !== "" ? true : false}
                         type="text"
@@ -166,4 +182,4 @@ const AddRulesAndRegulations = () => {
   )
 }
 
-export default AddRulesAndRegulations
+export default CreateFaq

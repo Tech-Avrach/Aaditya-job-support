@@ -362,7 +362,7 @@ const EditUserInformation = (props) => {
 
         dispatch(updateUser(id, formData))
         .then((response) => {
-            toast("User Added successfully!", {
+            toast("Profile Updated successfully!", {
               transition: Slide,
   
               closeButton: true,

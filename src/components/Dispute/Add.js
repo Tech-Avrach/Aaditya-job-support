@@ -152,7 +152,7 @@ const Add = () => {
                     </Col>
                     <Col md="6">
                       <FormGroup>
-                        <Label for="gameName">Game Name</Label>
+                        <Label for="gameName">Reason</Label>
                         <Input
                           invalid={reasonErr !== "" ? true : false}
                           type="text"

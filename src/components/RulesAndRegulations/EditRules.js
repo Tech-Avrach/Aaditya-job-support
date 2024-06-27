@@ -37,7 +37,7 @@ const EditRules = () => {
     const [rulesErr, setRulesErr] = useState("");
 
     useEffect(() => {
-        const getRule = (id) => {
+      const getRule = (id) => {
             RulesService
             .get(id)
             .then((response) => {
@@ -48,13 +48,9 @@ const EditRules = () => {
             .catch((error) => {
               toast(error, {
                 transition: Slide,
-    
                 closeButton: true,
-    
                 autoClose: 3000,
-    
                 position: "top-right",
-    
                 type: "error",
               });
             });

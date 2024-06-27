@@ -73,7 +73,7 @@ export const AdminNav = [
     ],
   },
   {
-    icon: "pe-7s-network",
+    icon: "pe-7s-display2",
     label: "Rules and Regulations",
     content: [
       {
@@ -83,6 +83,20 @@ export const AdminNav = [
       {
         label: "List",
         to: "/rules/list",
+      },
+    ],
+  },
+  {
+    icon: "pe-7s-display2",
+    label: "FAQ",
+    content: [
+      {
+        label: "Add",
+        to: "/faq/add",
+      },
+      {
+        label: "List",
+        to: "/faq/list",
       },
     ],
   },

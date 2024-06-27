@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -67,8 +68,129 @@ const GameInformation = () => {
   const [gameErr, setGameErr] = useState("");
 
   const [priceErr, setPriceErr] = useState("");
+  const [gameImgErr, setGameImgErr] = useState("");
+  const [selectedGameImg, setSelectedGameImg] = useState(null);
+
+  const [tradeImgErr, setTradeImgErr] = useState("");
+  const [selectedTradeImg, setSelectedTradeImg] = useState(null);
+  const [tradeImgPreview, setTradeImgPreview] = useState(""); 
 
   //input change handler
+
+  const removeTradeImage = (event) => {
+    event.preventDefault();
+    setTradeImgPreview(null);
+    setSelectedTradeImg(null);
+  };
+
+  const removeGameImg  = (event) => {
+    event.preventDefault();
+    setGameImgPreview(null);
+    setSelectedGameImg(null);
+  };
+
+  const handleFileInput = (event) => {
+    setGameImgErr("");
+
+    let fileSize = 0;
+
+    let errorCount = 0;
+
+    const file = event.target.files[0];
+
+    if (file) {
+      fileSize = file.size / 1024;
+
+      if (!file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        setGameImgErr("Only Images are allowed! ");
+
+        errorCount++;
+      }
+
+      //check if filesize is not more than 1MB
+      if (fileSize > 1024) {
+        setGameImgErr("Please upload a file of size less than 1MB!");
+
+        errorCount++;
+      }
+
+      if (errorCount === 0) {
+        const imageAsBase64 = URL.createObjectURL(file);
+
+        setSelectedGameImg(file);
+
+        setGameImgPreview();
+
+        const formData = new FormData();
+
+        formData.append("adImage", file);
+
+        gameService
+          .uploadadImage(formData)
+          .then((response) => {
+            console.log("game", response.data.imageUrl)
+            // setCurrentGame({ ...currentGame, adImage: response.data.imageUrl });
+            setGameImgPreview(response.data.imageUrl);
+          })
+          .catch((error) => {
+            toast(error.response.data.message, {
+              transition: Slide,
+              closeButton: true,
+              autoClose: 3000,
+              position: "top-right",
+              type: "error",
+            });
+          });
+
+      }
+    }
+  };
+
+  const handleTradeItemFileInput = (event) => {
+    setTradeImgErr("");
+    let fileSize = 0;
+    let errorCount = 0;
+    const file = event.target.files[0];
+
+    if (file) {
+      fileSize = file.size / 1024;
+
+      if (!file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        setTradeImgErr("Only Images are allowed!");
+        errorCount++;
+      }
+
+      if (fileSize > 1024) {
+        setTradeImgErr("Please upload a file of size less than 1MB!");
+        errorCount++;
+      }
+
+      if (errorCount === 0) {
+        const imageAsBase64 = URL.createObjectURL(file);
+        setSelectedTradeImg(file);
+        
+
+        const formData = new FormData();
+        formData.append("tradeItemPic", file);
+
+        gameService.uploadTradeItemPic(formData)
+          .then((response) => {
+            console.log("Trade", response.data.imageUrl);
+            setTradeImgPreview(response.data.imageUrl);
+          })
+          .catch((error) => {
+            toast(error.response.data.message, {
+              transition: Slide,
+              closeButton: true,
+              autoClose: 3000,
+              position: "top-right",
+              type: "error",
+            });
+          });
+
+      }
+    }
+  };
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -367,7 +489,7 @@ const GameInformation = () => {
                         name="gameImage"
                         id="gameImage"
                         accept="image/*"
-                        // onChange={handleFileInput}
+                        onChange={handleFileInput}
                       />
                       {gameImgPreview && (
                         <div
@@ -391,7 +513,7 @@ const GameInformation = () => {
                           <a
                             href="#"
                             className={styles.deleteIcon}
-                            // onClick={removeProfilePicture}
+                            onClick={removeGameImg}
                             style={{
                               position: "absolute",
                             }}
@@ -438,7 +560,7 @@ const GameInformation = () => {
                       </Col>
                       <Col md="6">
                     <FormGroup>
-                      <Label for="tradeItemCurrency">tradeItemCurrency</Label>
+                      <Label for="tradeItemCurrency">trade Item Currency</Label>
                       <Input
                         type="select"
                         name="tradeItemCurrency"
@@ -465,9 +587,9 @@ const GameInformation = () => {
                         name="tradeItemPic"
                         id="tradeItemPic"
                         accept="image/*"
-                        // onChange={handleTradeItemFileInput}
+                         onChange={handleTradeItemFileInput}
                       />
-                      {/* {tradeImgPreview && (
+                      {tradeImgPreview && (
                         <div
                           className={styles.previewContainer}
                           style={{
@@ -501,7 +623,7 @@ const GameInformation = () => {
                       )}
                        {tradeImgErr !== "" && (
                         <FormFeedback>{tradeImgErr}</FormFeedback>
-                      )} */}
+                      )}
                     </FormGroup>
                   </Col>
                   <Col md="6">

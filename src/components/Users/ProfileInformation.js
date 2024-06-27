@@ -178,8 +178,9 @@ const ProfileInformation = (props) => {
       dispatch(updateUser(currentUser.publicId, formData))
         .then((response) => {
           setCurrentUser({ ...currentUser });
+          navigate('/user/list')
 
-          toast("Profile updated successfully!", {
+          toast("User updated successfully!", {
             transition: Slide,
 
             closeButton: true,
