@@ -1,6 +1,6 @@
-
-import React, { useState } from 'react'
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from 'react'
+import { useDispatch, } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -18,40 +18,69 @@ import {
     CardFooter,
   } from "reactstrap";
 
-import { createFaq } from "../../redux/actions/faq"
-import { useNavigate } from 'react-router-dom';
+  import { updateRule } from "../../redux/actions/rules"
+
+import RulesService from "../../redux/services/rules.service";
 
 toast.configure();
 
-const CreateFaq = () => {
+const EditBanner = () => {
+
+    const { id } = useParams();
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [currentQuestion, setCurrentQuestion] = useState("");
-    const [currentAnswer, setCurrentAnswer] = useState("");
-    const [questionErr, setQuestionErr] = useState("");
-    const [answerErr, setAnswerErr] = useState("");
+    const [currentRules, setCurrentRules] = useState({
+        rulesRegText: "",
+    });
+    const [rulesErr, setRulesErr] = useState("");
 
+    useEffect(() => {
+      const getRule = (id) => {
+            RulesService
+            .get(id)
+            .then((response) => {
+
+                console.log(response.data.rulInfo)
+                setCurrentRules(response.data.rulInfo);
+            })
+            .catch((error) => {
+              toast(error, {
+                transition: Slide,
+                closeButton: true,
+                autoClose: 3000,
+                position: "top-right",
+                type: "error",
+              });
+            });
+        };
+        getRule(id);
+      }, []);
+    
+
+
+    const handleChange = (e) => {
+        e.preventDefault();
+        const { name, value } = e.target;
+        setCurrentRules((prev) => {
+          return {
+            ...prev,
+            [name]: value,
+          };
+        });
+      };
 
 
     const handleValidation = (event) => {
         const inputValue = event.target.value.trim();
     
         const inputFieldName = event.target.name;
-        if (inputFieldName === "question") {
+        if (inputFieldName === "rulesRegText") {
           if (inputValue.length < 1) {
-            setQuestionErr("Question is required!");
+            setRulesErr("Rule is required!");
           } else {
-            setQuestionErr("");
-          }
-        }
-
-        if (inputFieldName === "answer") {
-          if (inputValue.length < 1) {
-            setAnswerErr("Answer is required!");
-          } else {
-            setAnswerErr("");
+            setRulesErr("");
           }
         }
 
@@ -63,36 +92,25 @@ const CreateFaq = () => {
 
         let errorCount = 0;
         if (
-          currentQuestion === "" ||
-          currentQuestion === null ||
-          currentQuestion < 1
+          currentRules.rulesRegText === "" ||
+          currentRules.rulesRegText === null ||
+          currentRules.rulesRegText < 1
         ) {
-          setQuestionErr("Question is required!");
+          setRulesErr("Rule is required!");
           errorCount++;
         }
 
-        if(
-          currentAnswer === "" ||
-          currentAnswer === null ||
-          currentAnswer < 1
-        ) {
-          setAnswerErr("Answer is required!");
-          errorCount++;
-        } 
+        if ( currentRules.rulesRegText.length < 10 ) {
+            setRulesErr("Rules regulation must have minimum 10 character length !");
+            errorCount++;
+        }
     
         if (errorCount > 0) {
           return;
         } else {
-
-          const data = {
-            question: currentQuestion,
-            answer: currentAnswer
-          };
-
-          console.log(data);
-          dispatch(createFaq(data))
+          dispatch(updateRule(id, currentRules))
             .then((response) => {
-              toast("QNA Created successfully!", {
+              toast("Role updated successfully!", {
                 transition: Slide,
     
                 closeButton: true,
@@ -103,7 +121,7 @@ const CreateFaq = () => {
     
                 type: "success", // info/success/warning/error
               });
-              navigate("/faq/list");
+              navigate("/rules/list");
             })
             .catch((error) => {
               toast(error?.response?.data.message, {
@@ -128,42 +146,27 @@ const CreateFaq = () => {
           <Card className="main-card mb-3">
             <CardHeader className="card-header-sm">
               <div className="card-header-title font-size-lg text-capitalize fw-normal">
-                 Frequently Asked  & Question
+                Update Banner
               </div>
             </CardHeader>
             <Form>
               <CardBody>
                 <Row>
-                  <Col md="6">
+                  <Col md="12">
                     <FormGroup>
-                      <Label for="name">Question</Label>
+                      <Label for="name">Update Banner</Label>
                       <Input
-                        invalid={questionErr !== "" ? true : false}
-                        type="text"
-                        name="question"
-                        id="question"
-                        onChange={(e) => setCurrentQuestion(e.target.value)}
-                        placeholder="Question..."
-                        value={currentQuestion ? currentQuestion : ""}
-                        onKeyUp={handleValidation}
-                      />
-                      {questionErr !== "" && <FormFeedback>{questionErr}</FormFeedback>}
-                    </FormGroup>
-                  </Col>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label for="name">Answer</Label>
-                      <Input
-                        invalid={answerErr !== "" ? true : false}
-                        type="text"
+                        invalid={rulesErr !== "" ? true : false}
+                        type="file"
                         name="rulesRegText"
                         id="rules"
-                        onChange={(e) => setCurrentAnswer(e.target.value)}
-                        placeholder="Answer..."
-                        value={currentAnswer ? currentAnswer : ""}
+                        value={currentRules.rulesRegText}
+                        onChange={handleChange}
+                        placeholder="Role Name here..."
+                        // value={currentRole.name ? currentRole.name : ""}
                         onKeyUp={handleValidation}
                       />
-                      {answerErr !== "" && <FormFeedback>{answerErr}</FormFeedback>}
+                      {rulesErr !== "" && <FormFeedback>{rulesErr}</FormFeedback>}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -179,7 +182,7 @@ const CreateFaq = () => {
                   Cancel
                 </Button>
                 <Button size="lg" color="primary" onClick={updateHandler}>
-                  Add Rule
+                Update Banner
                 </Button>
               </CardFooter>
             </Form>
@@ -190,4 +193,4 @@ const CreateFaq = () => {
   )
 }
 
-export default CreateFaq;
+export default EditBanner

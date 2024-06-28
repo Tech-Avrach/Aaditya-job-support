@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
 
 toast.configure();
 
-const CreateFaq = () => {
+const CreateBanner = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -128,7 +128,7 @@ const CreateFaq = () => {
           <Card className="main-card mb-3">
             <CardHeader className="card-header-sm">
               <div className="card-header-title font-size-lg text-capitalize fw-normal">
-                 Frequently Asked  & Question
+                Add a Banner
               </div>
             </CardHeader>
             <Form>
@@ -136,7 +136,7 @@ const CreateFaq = () => {
                 <Row>
                   <Col md="6">
                     <FormGroup>
-                      <Label for="name">Question</Label>
+                      <Label for="name">Banner Name</Label>
                       <Input
                         invalid={questionErr !== "" ? true : false}
                         type="text"
@@ -152,7 +152,7 @@ const CreateFaq = () => {
                   </Col>
                   <Col md="6">
                     <FormGroup>
-                      <Label for="name">Answer</Label>
+                      <Label for="name">Banner</Label>
                       <Input
                         invalid={answerErr !== "" ? true : false}
                         type="text"
@@ -190,4 +190,4 @@ const CreateFaq = () => {
   )
 }
 
-export default CreateFaq;
+export default CreateBanner;

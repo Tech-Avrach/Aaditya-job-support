@@ -1,3 +1,4 @@
+
 export const AdminNav = [
   {
     icon: "pe-7s-graph2",
@@ -87,7 +88,7 @@ export const AdminNav = [
     ],
   },
   {
-    icon: "pe-7s-display2",
+    icon: "pe-7s-comment",
     label: "FAQ",
     content: [
       {
@@ -97,6 +98,20 @@ export const AdminNav = [
       {
         label: "List",
         to: "/faq/list",
+      },
+    ],
+  },
+  {
+    icon: "pe-7s-photo",
+    label: "Banner",
+    content: [
+      {
+        label: "Add",
+        to: "/banner/add",
+      },
+      {
+        label: "List",
+        to: "/banner/list",
       },
     ],
   },
@@ -159,7 +174,7 @@ const getNavItem = (moduleId) => {
     }
 
     case 5: return {
-      icon: "pe-7s-display2",
+      icon: "pe-7s-comment",
       label: "FAQ",
       content: [
         {

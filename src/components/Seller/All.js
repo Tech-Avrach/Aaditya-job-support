@@ -277,7 +277,7 @@ const All = (props) => {
     ];
 
     const renderActionCell = (row) => {
-      const isDeleted = row.deletedAt !== null;
+      const isDeleted = row.deletedAt && row.deletedAt !== null;
   
       if (isDeleted) {
         return permission.delete ? (

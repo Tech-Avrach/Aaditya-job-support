@@ -22,7 +22,6 @@ async (dispatch) => {
     });
   return Promise.resolve(res.data);
   } catch (err) {
-    return Promise.reject(err);
     console.log(err);
   }
 };

@@ -23,6 +23,7 @@ export const retrieveRole =
         payload: res.data.rolesList,
       });
     } catch (err) {
+      return Promise.reject(err)
       console.log(err);
     }
   };

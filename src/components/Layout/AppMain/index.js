@@ -12,6 +12,9 @@ import { handleRefreshTokenHelper } from "../../../hooks/refreshHelper";
 import AddFaq from "../../faq/AddFaq";
 import EditFaq from "../../faq/EditFaq";
 import FaqList from "../../faq/All";
+import BannerList from "../../banner/All";
+import CreateBanner from "../../banner/CreateBanner";
+import EditBanner from "../../banner/EditBanner";
 
 const Login = lazy(() => import("../../Login/"));
 const Dashboard = lazy(() => import("../../Dashboard/"));
@@ -132,6 +135,11 @@ const AppMain = () => {
           <Route path="list" element={<FaqList currentUser={currentUser} />} />
           <Route path="add" element={<AddFaq currentUser={currentUser} />} />
           <Route path=":id" element={<EditFaq currentUser={currentUser} />} />
+        </Route>
+        <Route path="banner">
+          <Route path="list" element={<BannerList currentUser={currentUser} />} />
+          <Route path="add" element={<CreateBanner currentUser={currentUser} />} />
+          <Route path=":id" element={<EditBanner currentUser={currentUser} />} />
         </Route>
 
         <Route path="rules">

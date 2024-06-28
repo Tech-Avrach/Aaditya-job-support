@@ -21,7 +21,7 @@ const InactiveIcon = Ionicons["IoIosCloseCircle"];
 
 toast.configure();
 
-const FaqList = () => {
+const BannerList = () => {
     const navigate = useNavigate();
     const { rules, totalRulecount } = useSelector((state) => state.rules);
     const { faqs } = useSelector((state) => state.faqs);
@@ -147,7 +147,7 @@ const FaqList = () => {
                 },
             },
             {
-                name: "Question",
+                name: "Banner Name ",
                 selector: (row) => row.question,
                 sortable: true,
                 headerStyle: {
@@ -155,7 +155,7 @@ const FaqList = () => {
                 },
             },
             {
-                name: "Answer",
+                name: "Banner",
                 selector: (row) => row.answer,
                 sortable: true,
                 headerStyle: {
@@ -309,4 +309,4 @@ const FaqList = () => {
     );
 };
 
-export default FaqList;
+export default BannerList;
