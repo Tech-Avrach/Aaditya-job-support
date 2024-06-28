@@ -187,6 +187,21 @@ const getNavItem = (moduleId) => {
         },
       ],
     }
+
+    case 18: return {
+      icon: "pe-7s-comment",
+      label: "banner",
+      content: [
+        {
+          label: "Add",
+          to: "/banner/add",
+        },
+        {
+          label: "List",
+          to: "/banner/list",
+        },
+      ],
+    }
     default: return null;
   }
 

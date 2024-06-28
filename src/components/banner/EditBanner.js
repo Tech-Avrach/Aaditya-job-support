@@ -1,143 +1,139 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState, useRef, useEffect } from 'react';
+import { useDispatch } from "react-redux";
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
-    Button,
-    Form,
-    FormGroup,
-    Label,
-    Input,
-    FormFeedback,
-    Row,
-    Col,
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-  } from "reactstrap";
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  FormFeedback,
+  Row,
+  Col,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+} from "reactstrap";
 
-  import { updateRule } from "../../redux/actions/rules"
-
-import RulesService from "../../redux/services/rules.service";
+import { updateBanner } from "../../redux/actions/banner";
+import bannerService from '../../redux/services/banner.service';
+import { useNavigate, useParams } from 'react-router-dom';
+import styles from "../../assets/preview.module.scss";
 
 toast.configure();
 
 const EditBanner = () => {
 
-    const { id } = useParams();
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const [bannerName, setBannerName] = useState("");
+  const [bannerUrl, setBannerUrl] = useState(null);
+  const [bannerPreviewUrl, setBannerPreviewUrl] = useState("");
+  const [bannerNameErr, setBannerNameErr] = useState("");
+  const [bannerUrlErr, setBannerUrlErr] = useState("");
 
-    const [currentRules, setCurrentRules] = useState({
-        rulesRegText: "",
-    });
-    const [rulesErr, setRulesErr] = useState("");
+  const handleValidation = (event) => {
+    const inputValue = event.target.value.trim();
+    const inputFieldName = event.target.name;
 
-    useEffect(() => {
-      const getRule = (id) => {
-            RulesService
-            .get(id)
-            .then((response) => {
+    if (inputFieldName === "bannerName") {
+      if (inputValue.length < 1) {
+        setBannerNameErr("Banner name is required!");
+      } else {
+        setBannerNameErr("");
+      }
+    }
+  };
 
-                console.log(response.data.rulInfo)
-                setCurrentRules(response.data.rulInfo);
-            })
-            .catch((error) => {
-              toast(error, {
-                transition: Slide,
-                closeButton: true,
-                autoClose: 3000,
-                position: "top-right",
-                type: "error",
-              });
-            });
-        };
-        getRule(id);
-      }, []);
-    
+  useEffect(() => {
+    bannerService.get(id).then((response) => {
+      setBannerName(response?.data?.bannerInfo?.bannerName);
+      setBannerUrl(response?.data?.bannerInfo?.bannerUrl);
+      setBannerPreviewUrl(response?.data?.bannerInfo?.bannerUrl);
+      console.log(response)
+    })
+  },[])
 
-
-    const handleChange = (e) => {
-        e.preventDefault();
-        const { name, value } = e.target;
-        setCurrentRules((prev) => {
-          return {
-            ...prev,
-            [name]: value,
-          };
+  const updateHandler = (event) => {
+    event.preventDefault();
+  
+    let errorCount = 0;
+    if (bannerName === "" || bannerName === null || bannerName.length < 1) {
+      setBannerNameErr("Banner name is required!");
+      errorCount++;
+    }
+  
+    if (bannerUrl === null) {
+      setBannerUrlErr("Banner image is required!");
+      errorCount++;
+    }
+  
+    if (errorCount > 0) {
+      return;
+    } else {
+      const formData = new FormData();
+      formData.append("bannerName", bannerName);
+      formData.append("banner", bannerUrl);
+  
+      console.log(...formData); // For debugging purposes
+      dispatch(updateBanner(id, formData))
+        .then((response) => {
+          toast("Banner Created successfully!", {
+            transition: Slide,
+            closeButton: true,
+            autoClose: 3000,
+            position: "top-right",
+            type: "success", // info/success/warning/error
+          });
+          navigate("/banner/list");
+        })
+        .catch((error) => {
+          toast(error?.response?.data.message, {
+            transition: Slide,
+            closeButton: true,
+            autoClose: 3000,
+            position: "top-right",
+            type: "error",
+          });
         });
-      };
+    }
+  };
+  
 
+  const handleFileChange = (event) => {
+    setBannerUrlErr("");
 
-    const handleValidation = (event) => {
-        const inputValue = event.target.value.trim();
-    
-        const inputFieldName = event.target.name;
-        if (inputFieldName === "rulesRegText") {
-          if (inputValue.length < 1) {
-            setRulesErr("Rule is required!");
-          } else {
-            setRulesErr("");
-          }
-        }
+    const file = event.target.files[0];
+    if (file) {
+      const fileSize = file.size / 1024;
 
-        // console.log(inputValue)
-      };
+      if (!file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        setBannerUrlErr("Only images are allowed!");
+        return;
+      }
 
-      const updateHandler = (event) => {
-        event.preventDefault();
+      if (fileSize > 1024) {
+        setBannerUrlErr("Please upload a file of size less than 1MB!");
+        return;
+      }
 
-        let errorCount = 0;
-        if (
-          currentRules.rulesRegText === "" ||
-          currentRules.rulesRegText === null ||
-          currentRules.rulesRegText < 1
-        ) {
-          setRulesErr("Rule is required!");
-          errorCount++;
-        }
+      setBannerUrl(file);
+      setBannerPreviewUrl(URL.createObjectURL(file));
+    }
+  };
 
-        if ( currentRules.rulesRegText.length < 10 ) {
-            setRulesErr("Rules regulation must have minimum 10 character length !");
-            errorCount++;
-        }
-    
-        if (errorCount > 0) {
-          return;
-        } else {
-          dispatch(updateRule(id, currentRules))
-            .then((response) => {
-              toast("Role updated successfully!", {
-                transition: Slide,
-    
-                closeButton: true,
-    
-                autoClose: 3000,
-    
-                position: "top-right",
-    
-                type: "success", // info/success/warning/error
-              });
-              navigate("/rules/list");
-            })
-            .catch((error) => {
-              toast(error?.response?.data.message, {
-                transition: Slide,
-    
-                closeButton: true,
-    
-                autoClose: 3000,
-    
-                position: "top-right",
-    
-                type: "error",
-              });
-            });
-        }
-      };
+  const handleDelete = () => {
+    setBannerUrl(null);
+    setBannerPreviewUrl("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   return (
     <>
@@ -146,27 +142,71 @@ const EditBanner = () => {
           <Card className="main-card mb-3">
             <CardHeader className="card-header-sm">
               <div className="card-header-title font-size-lg text-capitalize fw-normal">
-                Update Banner
+                Add a Banner
               </div>
             </CardHeader>
             <Form>
               <CardBody>
                 <Row>
-                  <Col md="12">
+                  <Col md="6">
                     <FormGroup>
-                      <Label for="name">Update Banner</Label>
+                      <Label for="bannerName">Banner Name</Label>
                       <Input
-                        invalid={rulesErr !== "" ? true : false}
-                        type="file"
-                        name="rulesRegText"
-                        id="rules"
-                        value={currentRules.rulesRegText}
-                        onChange={handleChange}
-                        placeholder="Role Name here..."
-                        // value={currentRole.name ? currentRole.name : ""}
+                        invalid={bannerNameErr !== "" ? true : false}
+                        type="text"
+                        name="bannerName"
+                        id="bannerName"
+                        onChange={(e) => setBannerName(e.target.value)}
+                        placeholder="Banner Name..."
+                        value={bannerName ? bannerName : ""}
                         onKeyUp={handleValidation}
                       />
-                      {rulesErr !== "" && <FormFeedback>{rulesErr}</FormFeedback>}
+                      {bannerNameErr !== "" && <FormFeedback>{bannerNameErr}</FormFeedback>}
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="bannerUrl">Game Image</Label>
+                      <Input
+                        type="file"
+                        name="bannerUrl"
+                        id="bannerUrl"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        innerRef={fileInputRef}
+                      />
+                      {bannerPreviewUrl && (
+                        <div
+                          className={styles.previewContainer}
+                          style={{
+                            position: "relative",
+                            display: "inline-block",
+                          }}
+                        >
+                          <img
+                            width={100}
+                            src={bannerPreviewUrl}
+                            alt="preview"
+                            onError={() =>
+                                `${process.env.REACT_APP_PROFILE_IMAGE_URL}` +
+                                  `user.png`
+                            }
+                          />
+                          <a
+                            href="#"
+                            className={styles.deleteIcon}
+                            onClick={handleDelete}
+                            style={{
+                              position: "absolute",
+                            }}
+                          >
+                            <i className="pe-7s-trash"></i>
+                          </a>
+                        </div>
+                      )}
+                      {bannerUrlErr !== "" && (
+                        <FormFeedback>{bannerUrlErr}</FormFeedback>
+                      )}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -175,14 +215,11 @@ const EditBanner = () => {
                 <Button
                   className="me-2"
                   color="link"
-                //   onClick={() => {
-                //     navigate(`/role/permission`);
-                //   }}
                 >
                   Cancel
                 </Button>
                 <Button size="lg" color="primary" onClick={updateHandler}>
-                Update Banner
+                  Add Banner
                 </Button>
               </CardFooter>
             </Form>
@@ -190,7 +227,7 @@ const EditBanner = () => {
         </Col>
       </Row>
     </>
-  )
+  );
 }
 
 export default EditBanner

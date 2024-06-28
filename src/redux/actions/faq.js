@@ -91,3 +91,20 @@ export const deleteFaq = (id, param) => async (dispatch) => {
       return Promise.reject(err);
     }
   };
+
+
+  export const updateFaq = (id, data) => async (dispatch) => {
+    try {
+      const res = await FaqService.update(id, data);
+  
+      console.log("update faq", res)
+      dispatch({
+        type: UPDATE_FAQ,
+        payload:  res.data.listFAQ,
+      });
+      return Promise.resolve(res.data);
+    } catch (err) {
+      console.log("faq update error",err)
+      return Promise.reject(err);
+    }
+  }

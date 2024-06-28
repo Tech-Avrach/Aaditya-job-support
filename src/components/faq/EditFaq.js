@@ -18,9 +18,9 @@ import {
     CardFooter,
   } from "reactstrap";
 
-  import { updateRule } from "../../redux/actions/rules"
+  import { updateFaq } from "../../redux/actions/faq"
 
-import RulesService from "../../redux/services/rules.service";
+import faqService from "../../redux/services/faq.service";
 
 toast.configure();
 
@@ -36,14 +36,22 @@ const EditFaq = () => {
     });
     const [rulesErr, setRulesErr] = useState("");
 
+    const [currentQuestion, setCurrentQuestion] = useState("");
+    const [currentAnswer, setCurrentAnswer] = useState("");
+    const [questionErr, setQuestionErr] = useState("");
+    const [answerErr, setAnswerErr] = useState("");
+
+    
+
     useEffect(() => {
       const getRule = (id) => {
-            RulesService
+          faqService
             .get(id)
             .then((response) => {
 
-                console.log(response.data.rulInfo)
-                setCurrentRules(response.data.rulInfo);
+                console.log(response.data)
+                setCurrentQuestion(response?.data?.faqInfo?.question);
+                setCurrentAnswer(response?.data?.faqInfo?.answer);
             })
             .catch((error) => {
               toast(error, {
@@ -59,28 +67,23 @@ const EditFaq = () => {
       }, []);
     
 
-
-    const handleChange = (e) => {
-        e.preventDefault();
-        const { name, value } = e.target;
-        setCurrentRules((prev) => {
-          return {
-            ...prev,
-            [name]: value,
-          };
-        });
-      };
-
-
-    const handleValidation = (event) => {
+      const handleValidation = (event) => {
         const inputValue = event.target.value.trim();
     
         const inputFieldName = event.target.name;
-        if (inputFieldName === "rulesRegText") {
+        if (inputFieldName === "question") {
           if (inputValue.length < 1) {
-            setRulesErr("Rule is required!");
+            setQuestionErr("Question is required!");
           } else {
-            setRulesErr("");
+            setQuestionErr("");
+          }
+        }
+
+        if (inputFieldName === "answer") {
+          if (inputValue.length < 1) {
+            setAnswerErr("Answer is required!");
+          } else {
+            setAnswerErr("");
           }
         }
 
@@ -92,25 +95,36 @@ const EditFaq = () => {
 
         let errorCount = 0;
         if (
-          currentRules.rulesRegText === "" ||
-          currentRules.rulesRegText === null ||
-          currentRules.rulesRegText < 1
+          currentQuestion === "" ||
+          currentQuestion === null ||
+          currentQuestion < 1
         ) {
-          setRulesErr("Rule is required!");
+          setQuestionErr("Question is required!");
           errorCount++;
         }
 
-        if ( currentRules.rulesRegText.length < 10 ) {
-            setRulesErr("Rules regulation must have minimum 10 character length !");
-            errorCount++;
-        }
+        if(
+          currentAnswer === "" ||
+          currentAnswer === null ||
+          currentAnswer < 1
+        ) {
+          setAnswerErr("Answer is required!");
+          errorCount++;
+        } 
     
         if (errorCount > 0) {
           return;
         } else {
-          dispatch(updateRule(id, currentRules))
+
+          const data = {
+            "question": currentQuestion,
+            "answer": currentAnswer,
+          };
+
+          console.log(data);
+          dispatch(updateFaq(id, data))
             .then((response) => {
-              toast("Role updated successfully!", {
+              toast("QNA Updated successfully!", {
                 transition: Slide,
     
                 closeButton: true,
@@ -121,7 +135,7 @@ const EditFaq = () => {
     
                 type: "success", // info/success/warning/error
               });
-              navigate("/rules/list");
+              navigate("/faq/list");
             })
             .catch((error) => {
               toast(error?.response?.data.message, {
@@ -146,27 +160,42 @@ const EditFaq = () => {
           <Card className="main-card mb-3">
             <CardHeader className="card-header-sm">
               <div className="card-header-title font-size-lg text-capitalize fw-normal">
-                Update Rule
+                 Frequently Asked  & Question
               </div>
             </CardHeader>
             <Form>
               <CardBody>
                 <Row>
-                  <Col md="12">
+                  <Col md="6">
                     <FormGroup>
-                      <Label for="name">Update Rule</Label>
+                      <Label for="name">Question</Label>
                       <Input
-                        invalid={rulesErr !== "" ? true : false}
+                        invalid={questionErr !== "" ? true : false}
+                        type="text"
+                        name="question"
+                        id="question"
+                        onChange={(e) => setCurrentQuestion(e.target.value)}
+                        placeholder="Question..."
+                        value={currentQuestion ? currentQuestion : ""}
+                        onKeyUp={handleValidation}
+                      />
+                      {questionErr !== "" && <FormFeedback>{questionErr}</FormFeedback>}
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="name">Answer</Label>
+                      <Input
+                        invalid={answerErr !== "" ? true : false}
                         type="text"
                         name="rulesRegText"
                         id="rules"
-                        value={currentRules.rulesRegText}
-                        onChange={handleChange}
-                        placeholder="Role Name here..."
-                        // value={currentRole.name ? currentRole.name : ""}
+                        onChange={(e) => setCurrentAnswer(e.target.value)}
+                        placeholder="Answer..."
+                        value={currentAnswer ? currentAnswer : ""}
                         onKeyUp={handleValidation}
                       />
-                      {rulesErr !== "" && <FormFeedback>{rulesErr}</FormFeedback>}
+                      {answerErr !== "" && <FormFeedback>{answerErr}</FormFeedback>}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -182,7 +211,7 @@ const EditFaq = () => {
                   Cancel
                 </Button>
                 <Button size="lg" color="primary" onClick={updateHandler}>
-                Update Rule
+                  Add Rule
                 </Button>
               </CardFooter>
             </Form>

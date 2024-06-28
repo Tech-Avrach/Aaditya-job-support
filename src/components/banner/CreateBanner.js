@@ -1,125 +1,127 @@
-
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react';
 import { useDispatch } from "react-redux";
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
-    Button,
-    Form,
-    FormGroup,
-    Label,
-    Input,
-    FormFeedback,
-    Row,
-    Col,
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-  } from "reactstrap";
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  FormFeedback,
+  Row,
+  Col,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+} from "reactstrap";
 
-import { createFaq } from "../../redux/actions/faq"
+import { createBanner } from "../../redux/actions/banner";
 import { useNavigate } from 'react-router-dom';
+import styles from "../../assets/preview.module.scss";
 
 toast.configure();
 
 const CreateBanner = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const [bannerName, setBannerName] = useState("");
+  const [bannerUrl, setBannerUrl] = useState(null);
+  const [bannerPreviewUrl, setBannerPreviewUrl] = useState("");
+  const [bannerNameErr, setBannerNameErr] = useState("");
+  const [bannerUrlErr, setBannerUrlErr] = useState("");
 
-    const [currentQuestion, setCurrentQuestion] = useState("");
-    const [currentAnswer, setCurrentAnswer] = useState("");
-    const [questionErr, setQuestionErr] = useState("");
-    const [answerErr, setAnswerErr] = useState("");
+  const handleValidation = (event) => {
+    const inputValue = event.target.value.trim();
+    const inputFieldName = event.target.name;
 
+    if (inputFieldName === "bannerName") {
+      if (inputValue.length < 1) {
+        setBannerNameErr("Banner name is required!");
+      } else {
+        setBannerNameErr("");
+      }
+    }
+  };
 
+  const updateHandler = (event) => {
+    event.preventDefault();
+  
+    let errorCount = 0;
+    if (bannerName === "" || bannerName === null || bannerName.length < 1) {
+      setBannerNameErr("Banner name is required!");
+      errorCount++;
+    }
+  
+    if (bannerUrl === null) {
+      setBannerUrlErr("Banner image is required!");
+      errorCount++;
+    }
+  
+    if (errorCount > 0) {
+      return;
+    } else {
+      const formData = new FormData();
+      formData.append("bannerName", bannerName);
+      formData.append("banner", bannerUrl);
+  
+      console.log(...formData); // For debugging purposes
+      dispatch(createBanner(formData))
+        .then((response) => {
+          toast("Banner Created successfully!", {
+            transition: Slide,
+            closeButton: true,
+            autoClose: 3000,
+            position: "top-right",
+            type: "success", // info/success/warning/error
+          });
+          navigate("/banner/list");
+        })
+        .catch((error) => {
+          toast(error?.response?.data.message, {
+            transition: Slide,
+            closeButton: true,
+            autoClose: 3000,
+            position: "top-right",
+            type: "error",
+          });
+        });
+    }
+  };
+  
 
-    const handleValidation = (event) => {
-        const inputValue = event.target.value.trim();
-    
-        const inputFieldName = event.target.name;
-        if (inputFieldName === "question") {
-          if (inputValue.length < 1) {
-            setQuestionErr("Question is required!");
-          } else {
-            setQuestionErr("");
-          }
-        }
+  const handleFileChange = (event) => {
+    setBannerUrlErr("");
 
-        if (inputFieldName === "answer") {
-          if (inputValue.length < 1) {
-            setAnswerErr("Answer is required!");
-          } else {
-            setAnswerErr("");
-          }
-        }
+    const file = event.target.files[0];
+    if (file) {
+      const fileSize = file.size / 1024;
 
-        // console.log(inputValue)
-      };
+      if (!file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        setBannerUrlErr("Only images are allowed!");
+        return;
+      }
 
-      const updateHandler = (event) => {
-        event.preventDefault();
+      if (fileSize > 1024) {
+        setBannerUrlErr("Please upload a file of size less than 1MB!");
+        return;
+      }
 
-        let errorCount = 0;
-        if (
-          currentQuestion === "" ||
-          currentQuestion === null ||
-          currentQuestion < 1
-        ) {
-          setQuestionErr("Question is required!");
-          errorCount++;
-        }
+      setBannerUrl(file);
+      setBannerPreviewUrl(URL.createObjectURL(file));
+    }
+  };
 
-        if(
-          currentAnswer === "" ||
-          currentAnswer === null ||
-          currentAnswer < 1
-        ) {
-          setAnswerErr("Answer is required!");
-          errorCount++;
-        } 
-    
-        if (errorCount > 0) {
-          return;
-        } else {
-
-          const data = {
-            question: currentQuestion,
-            answer: currentAnswer
-          };
-
-          console.log(data);
-          dispatch(createFaq(data))
-            .then((response) => {
-              toast("QNA Created successfully!", {
-                transition: Slide,
-    
-                closeButton: true,
-    
-                autoClose: 3000,
-    
-                position: "top-right",
-    
-                type: "success", // info/success/warning/error
-              });
-              navigate("/faq/list");
-            })
-            .catch((error) => {
-              toast(error?.response?.data.message, {
-                transition: Slide,
-    
-                closeButton: true,
-    
-                autoClose: 3000,
-    
-                position: "top-right",
-    
-                type: "error",
-              });
-            });
-        }
-      };
+  const handleDelete = () => {
+    setBannerUrl(null);
+    setBannerPreviewUrl("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   return (
     <>
@@ -136,34 +138,63 @@ const CreateBanner = () => {
                 <Row>
                   <Col md="6">
                     <FormGroup>
-                      <Label for="name">Banner Name</Label>
+                      <Label for="bannerName">Banner Name</Label>
                       <Input
-                        invalid={questionErr !== "" ? true : false}
+                        invalid={bannerNameErr !== "" ? true : false}
                         type="text"
-                        name="question"
-                        id="question"
-                        onChange={(e) => setCurrentQuestion(e.target.value)}
-                        placeholder="Question..."
-                        value={currentQuestion ? currentQuestion : ""}
+                        name="bannerName"
+                        id="bannerName"
+                        onChange={(e) => setBannerName(e.target.value)}
+                        placeholder="Banner Name..."
+                        value={bannerName ? bannerName : ""}
                         onKeyUp={handleValidation}
                       />
-                      {questionErr !== "" && <FormFeedback>{questionErr}</FormFeedback>}
+                      {bannerNameErr !== "" && <FormFeedback>{bannerNameErr}</FormFeedback>}
                     </FormGroup>
                   </Col>
                   <Col md="6">
                     <FormGroup>
-                      <Label for="name">Banner</Label>
+                      <Label for="bannerUrl">Game Image</Label>
                       <Input
-                        invalid={answerErr !== "" ? true : false}
-                        type="text"
-                        name="rulesRegText"
-                        id="rules"
-                        onChange={(e) => setCurrentAnswer(e.target.value)}
-                        placeholder="Answer..."
-                        value={currentAnswer ? currentAnswer : ""}
-                        onKeyUp={handleValidation}
+                        type="file"
+                        name="bannerUrl"
+                        id="bannerUrl"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        innerRef={fileInputRef}
                       />
-                      {answerErr !== "" && <FormFeedback>{answerErr}</FormFeedback>}
+                      {bannerPreviewUrl && (
+                        <div
+                          className={styles.previewContainer}
+                          style={{
+                            position: "relative",
+                            display: "inline-block",
+                          }}
+                        >
+                          <img
+                            width={100}
+                            src={bannerPreviewUrl}
+                            alt="preview"
+                            onError={() =>
+                                `${process.env.REACT_APP_PROFILE_IMAGE_URL}` +
+                                  `user.png`
+                            }
+                          />
+                          <a
+                            href="#"
+                            className={styles.deleteIcon}
+                            onClick={handleDelete}
+                            style={{
+                              position: "absolute",
+                            }}
+                          >
+                            <i className="pe-7s-trash"></i>
+                          </a>
+                        </div>
+                      )}
+                      {bannerUrlErr !== "" && (
+                        <FormFeedback>{bannerUrlErr}</FormFeedback>
+                      )}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -172,14 +203,11 @@ const CreateBanner = () => {
                 <Button
                   className="me-2"
                   color="link"
-                //   onClick={() => {
-                //     navigate(`/role/permission`);
-                //   }}
                 >
                   Cancel
                 </Button>
                 <Button size="lg" color="primary" onClick={updateHandler}>
-                  Add Rule
+                  Add Banner
                 </Button>
               </CardFooter>
             </Form>
@@ -187,7 +215,7 @@ const CreateBanner = () => {
         </Col>
       </Row>
     </>
-  )
-}
+  );
+};
 
 export default CreateBanner;

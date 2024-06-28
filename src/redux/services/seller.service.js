@@ -16,7 +16,7 @@ const getAll = (
       keyword: keyword,
       page: page,
       perPage: perPage,
-      active: active,
+      isActive: active,
     },
   });
 };

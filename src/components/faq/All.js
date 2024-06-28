@@ -23,8 +23,7 @@ toast.configure();
 
 const FaqList = () => {
     const navigate = useNavigate();
-    const { rules, totalRulecount } = useSelector((state) => state.rules);
-    const { faqs } = useSelector((state) => state.faqs);
+    const { faqs, totalFaqscount } = useSelector((state) => state.faqs);
     const { permissionMap: permissions } = useSelector((state) => state.auth);
     const currentModuleId = 5;
     const permission = permissions[currentModuleId];
@@ -295,7 +294,7 @@ const FaqList = () => {
                             data={faqs}
                             pagination
                             paginationServer
-                            paginationTotalRows={totalRulecount}
+                            paginationTotalRows={totalFaqscount}
                             paginationDefaultPage={currentPage}
                             onChangeRowsPerPage={handlePerRowsChange}
                             onChangePage={handlePageChange}

@@ -35,7 +35,7 @@ import {
           faqs: [...state.faqs, payload],
           totalFaqscount: state.faqs.length + 1,
           };
-  
+
         case DELETE_FAQ:
           // const remainData = state.role.map((item) =>
           //   item.id === payload.id ? payload : item
@@ -43,7 +43,7 @@ import {
           return {
             ...state,
             faqs: payload.rows,
-            totalRulecount: payload.count,
+            totalFaqscount: payload.count,
           };
   
         case RESTORE_FAQ:
@@ -53,14 +53,14 @@ import {
           return {
             ...state,
             faqs: payload.rows,
-            totalRulecount: payload.count,
+            totalFaqscount: payload.count,
           };
   
           case UPDATE_FAQ_STATUS:
             return {
               ...state,
               faqs: payload.rows,
-              totalRulecount: payload.count,
+              totalFaqscount: payload.count,
             };
   
       default:

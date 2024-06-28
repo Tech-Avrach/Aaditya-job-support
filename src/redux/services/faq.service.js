@@ -11,7 +11,7 @@ const getAll = (param) => {
   };
 
   const get = (id) => {
-    return axios.get(process.env.REACT_APP_API_URL + `faq/${id}`, {
+    return axios.get(process.env.REACT_APP_API_URL + `faq/view/${id}`, {
       headers: authHeader(),
     });
   };
@@ -37,8 +37,13 @@ const getAll = (param) => {
   };
 
   const update = (id, data) => {
-    return axios.put(process.env.REACT_APP_API_URL + `faq/update/${id}`, {
-      data: data,
+    console.log("faq update data", data)
+
+    const temp = {
+      question: "How to get benefit?",
+      answer: "By following below step"
+    }
+    return axios.put(`${process.env.REACT_APP_API_URL}faq/update/${id}`, temp, {
       headers: authHeader(),
     });
   };
