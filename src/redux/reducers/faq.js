@@ -25,7 +25,7 @@ import {
           return {
               ...state,
               faqs: state.faqs.map((item) =>
-                item.publicId === action.payload.publicId ? action.payload : item
+                item.publicId === action.payload?.publicId ? action.payload : item
               ),
             };
   
@@ -35,7 +35,7 @@ import {
           faqs: [...state.faqs, payload],
           totalFaqscount: state.faqs.length + 1,
           };
-
+  
         case DELETE_FAQ:
           // const remainData = state.role.map((item) =>
           //   item.id === payload.id ? payload : item

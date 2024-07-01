@@ -20,6 +20,7 @@ const createDispute = (transactionId, reason) => {
   });
 };
 
+
 const get = (id) => {
   return axios.get(process.env.REACT_APP_API_URL + `dispute/view/${id}`, {
     headers: authHeader(),
@@ -38,9 +39,25 @@ const updateStatus = (id, data) => {
   );
 };
 
+const deleteDispute = (id, param) => {
+  return axios.delete(process.env.REACT_APP_API_URL + `dispute/delete/${id}`, {
+    params: param,
+    headers: authHeader(),
+  });
+};
+
+const restoreDispute = (id, param) => {
+  return axios.get(process.env.REACT_APP_API_URL + `dispute/restore/${id}`, {
+    headers: authHeader(),
+  });
+};
+
+
 export default {
   getAll,
   get,
   updateStatus,
-  createDispute
+  createDispute,
+  deleteDispute,
+  restoreDispute
 };

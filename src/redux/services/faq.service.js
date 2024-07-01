@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { authHeader, multipartHeader } from "./auth-header";
 
@@ -37,13 +36,7 @@ const getAll = (param) => {
   };
 
   const update = (id, data) => {
-    console.log("faq update data", data)
-
-    const temp = {
-      question: "How to get benefit?",
-      answer: "By following below step"
-    }
-    return axios.put(`${process.env.REACT_APP_API_URL}faq/update/${id}`, temp, {
+    return axios.put(`${process.env.REACT_APP_API_URL}faq/update/${id}`, data, {
       headers: authHeader(),
     });
   };

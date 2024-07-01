@@ -211,7 +211,7 @@ const EditFaq = () => {
                   Cancel
                 </Button>
                 <Button size="lg" color="primary" onClick={updateHandler}>
-                  Add Rule
+                  Update FAQ
                 </Button>
               </CardFooter>
             </Form>

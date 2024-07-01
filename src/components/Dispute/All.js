@@ -23,9 +23,13 @@ import debounceFunction from "../../helpers/Debounce";
 import IconContainer from "../Common/IconContainer";
 import { FaEye } from "react-icons/fa";
 import {
+  deleteDispute,
+  restoreeDispute,
   retrieveDispute,
   updateDisputeStatus,
 } from "../../redux/actions/dispute";
+const RestoreIcon = Ionicons["IoIosRefresh"];
+const DeleteIcon = Ionicons["IoIosTrash"];
 
 toast.configure();
 
@@ -39,6 +43,7 @@ const All = (props) => {
   const { dispute, totalDisputeCount: totalUsers } = useSelector(
     (state) => state.dispute
   );
+  console.log(totalUsers);
 
   const { permissionMap: permissions } = useSelector((state) => state.auth);
 
@@ -55,10 +60,69 @@ const All = (props) => {
   const [filterText, setFilterText] = useState("");
 
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const param = {
+    keyword: filterText,
+    page: currentPage,
+    perPage: perPage,
+    all: true,
+    active: false,
+};
 
   useEffect(() => {
     dispatch(retrieveDispute(filterText, 1, perPage));
   }, []);
+
+  const fetchRules = useCallback(() => {
+    dispatch(retrieveDispute(param));
+}, [dispatch, filterText, currentPage, perPage]);
+
+const handleDelete = (e, id, action) => {
+  e.preventDefault();
+  if (action === "delete") {
+      dispatch(deleteDispute(id, param))
+          .then((res) => {
+              toast("Role deleted successfully!", {
+                  transition: Slide,
+                  closeButton: true,
+                  autoClose: 3000,
+                  position: "top-right",
+                  type: "success",
+              });
+              // fetchRules();
+          })
+          .catch((error) => {
+              console.log(error);
+              toast(error.response?.data?.message || "An error occurred", {
+                  transition: Slide,
+                  closeButton: true,
+                  autoClose: 3000,
+                  position: "top-right",
+                  type: "error",
+              });
+          });
+  } else {
+      dispatch(restoreeDispute(id, param))
+          .then(() => {
+              toast("Role restored successfully!", {
+                  transition: Slide,
+                  closeButton: true,
+                  autoClose: 3000,
+                  position: "top-right",
+                  type: "success",
+              });
+              fetchRules();
+          })
+          .catch((error) => {
+              toast(error.response?.data?.message || "An error occurred", {
+                  transition: Slide,
+                  closeButton: true,
+                  autoClose: 3000,
+                  position: "top-right",
+                  type: "error",
+              });
+          });
+  }
+};
 
   //status handler
   const handleStatusChange = (e, id, status) => {
@@ -85,6 +149,9 @@ const All = (props) => {
     //dispatch to update the status of the user
     // updateUserStatus(all, keyword, page, perPage, id, data)
     //
+
+
+
 
     dispatch(updateDisputeStatus(id, data))
       .then((response) => {
@@ -143,6 +210,18 @@ const All = (props) => {
     ];
 
     const renderActionCell = (row) => {
+      const isDeleted = row.deletedAt && row.deletedAt !== null;
+      if (isDeleted) {
+          return permission?.delete ? (
+              <IconContainer
+                  id={"restore-icon"}
+                  Icon={RestoreIcon}
+                  handleOnClick={(e) => handleDelete(e, row.publicId, "restore")}
+                  text={"Restore"}
+                  iconColor={"#3ac47d"}
+              />
+          ) : null;
+      }
       return (
         <>
           {permission.read ? (
@@ -167,6 +246,15 @@ const All = (props) => {
             <option value="resolved">Resolved</option>
           </Input>
           ) : null}
+          {permission?.delete ? (
+                        <IconContainer
+                            id={"delete-icon"}
+                            Icon={DeleteIcon}
+                            handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
+                            text={"Delete"}
+                            iconColor={"#d92550"}
+                        />
+                    ) : null}
         </>
       );
     };

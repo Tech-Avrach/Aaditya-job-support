@@ -202,6 +202,7 @@ const getNavItem = (moduleId) => {
         },
       ],
     }
+    
     default: return null;
   }
 

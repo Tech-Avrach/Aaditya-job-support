@@ -15,6 +15,7 @@ import FaqList from "../../faq/All";
 import BannerList from "../../banner/All";
 import CreateBanner from "../../banner/CreateBanner";
 import EditBanner from "../../banner/EditBanner";
+import AddBanner from "../../banner/AddBanner";
 
 const Login = lazy(() => import("../../Login/"));
 const Dashboard = lazy(() => import("../../Dashboard/"));
@@ -138,7 +139,7 @@ const AppMain = () => {
         </Route>
         <Route path="banner">
           <Route path="list" element={<BannerList currentUser={currentUser} />} />
-          <Route path="add" element={<CreateBanner currentUser={currentUser} />} />
+          <Route path="add" element={<AddBanner currentUser={currentUser} />} />
           <Route path=":id" element={<EditBanner currentUser={currentUser} />} />
         </Route>
 

@@ -24,7 +24,7 @@ const reducers = combineReducers({
   dispute,
   rules,
   faqs,
-  banners,
+  banners
 });
 
 export default reducers;

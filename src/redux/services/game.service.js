@@ -67,7 +67,6 @@ const restore = (id, data) => {
 };
 
 const uploadadImage = (formImage) => {
-  console.log('first', formImage)
   return axios.post(process.env.REACT_APP_API_URL + `adImage/upload`, formImage, {
     headers: multipartHeader(),
   })

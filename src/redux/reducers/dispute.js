@@ -1,4 +1,4 @@
-import { CREATE_DISPUTE, RETRIEVE_DISPUTE, UPDATE_DISPUTE_STATUS } from "../actions/types";
+import { CREATE_DISPUTE, DELETE_DISPUTE, RESTORE_DISPUTE, RETRIEVE_DISPUTE, UPDATE_DISPUTE_STATUS } from "../actions/types";
 
 const initialState = { dispute: [], totalDisputeCount: 0 };
 
@@ -17,7 +17,19 @@ const disputeReducer = (state = initialState, action) => {
         dispute: payload.rows,
         totalDisputeCount: payload.count,
       }
-
+      case DELETE_DISPUTE:
+        console.log(payload);
+        return {
+          dispute: payload.rows,
+          totalDisputeCount: payload.count,
+        }
+        case RESTORE_DISPUTE:
+          return {
+            dispute: payload.rows,
+            totalDisputeCount: payload.count,
+          }
+    
+  
     default:
       return state;
   }

@@ -92,12 +92,11 @@ export const deleteFaq = (id, param) => async (dispatch) => {
     }
   };
 
-
   export const updateFaq = (id, data) => async (dispatch) => {
     try {
       const res = await FaqService.update(id, data);
-  
       console.log("update faq", res)
+      
       dispatch({
         type: UPDATE_FAQ,
         payload:  res.data.listFAQ,

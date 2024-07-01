@@ -1,4 +1,4 @@
-import { CREATE_DISPUTE, RETRIEVE_DISPUTE, UPDATE_DISPUTE_STATUS } from "./types";
+import { CREATE_DISPUTE, RETRIEVE_DISPUTE, UPDATE_DISPUTE_STATUS ,DELETE_DISPUTE, RESTORE_DISPUTE } from "./types";
 
 import DisputeService from "../../redux/services/dispute";
 
@@ -39,6 +39,36 @@ export const updateDisputeStatus = (id, data) => async (dispatch) => {
     
     dispatch({
       type: UPDATE_DISPUTE_STATUS,
+      payload: res.data?.listDispute,
+    });
+
+    return Promise.resolve(res.data);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+
+
+export const deleteDispute = (id, data) => async (dispatch) => {
+  try {
+    const res = await DisputeService.deleteDispute(id, data);
+    
+    dispatch({
+      type: DELETE_DISPUTE,
+      payload: res.data?.listDispute,
+    });
+
+    return Promise.resolve(res.data);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+export const restoreeDispute = (id, data) => async (dispatch) => {
+  try {
+    const res = await DisputeService.restoreDispute(id, data);
+    
+    dispatch({
+      type: RESTORE_DISPUTE,
       payload: res.data?.listDispute,
     });
 
