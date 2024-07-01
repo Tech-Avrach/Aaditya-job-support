@@ -6,7 +6,6 @@ import IconContainer from "../Common/IconContainer";
 import * as Ionicons from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { retrieveFaqs, deleteFaq, restoreFaq, activeStatusFaq } from "../../redux/actions/faq";
 import { retrieveInsaurance, deleteInsurance, restoreInsurance } from "../../redux/actions/insurance";
 import { toast, Slide } from "react-toastify";
 import FilterComponent from "../../helpers/FilterComponent";
@@ -43,15 +42,17 @@ const InsuranceList = () => {
     };
 
 
-    const fetchRules = useCallback(() => {
+    const fetchInsurance = useCallback(() => {
         dispatch(retrieveInsaurance(param));
     }, [dispatch, filterText, currentPage, perPage]);
 
     useEffect(() => {
-        fetchRules();
-    }, [fetchRules, currentPage, perPage, filterText]);
+        fetchInsurance();
+    }, [fetchInsurance, currentPage, perPage, filterText]);
 
     const handleViewClick = (row) => navigate(`/insurance/${row.publicId}`);
+
+    console.log(totalInsurancecount);
 
 
     // const handleStatusToggle = (e, id, isActive) => {
@@ -65,7 +66,7 @@ const InsuranceList = () => {
     //                 position: "top-right",
     //                 type: "success",
     //             });
-    //             fetchRules();
+    //             fetchInsurance();
     //         })
     //         .catch((error) => {
     //             toast(error.response?.data?.message || "An error occurred", {
@@ -90,7 +91,7 @@ const InsuranceList = () => {
                         position: "top-right",
                         type: "success",
                     });
-                    fetchRules();
+                    fetchInsurance();
                 })
                 .catch((error) => {
                     console.log(error);
@@ -112,7 +113,7 @@ const InsuranceList = () => {
                         position: "top-right",
                         type: "success",
                     });
-                    fetchRules();
+                    fetchInsurance();
                 })
                 .catch((error) => {
                     toast(error.response?.data?.message || "An error occurred", {
@@ -246,9 +247,9 @@ const InsuranceList = () => {
 
     const debounceSearch = useCallback(
         debounceFunction((nextValue) => {
-            fetchRules();
+            fetchInsurance();
         }, 1000),
-        [fetchRules]
+        [fetchInsurance]
     );
 
     const subHeaderComponent = useMemo(() => {
