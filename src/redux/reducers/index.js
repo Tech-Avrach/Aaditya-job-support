@@ -11,6 +11,7 @@ import dispute from "./dispute";
 import rules from "./rules";
 import faqs from "./faq";
 import banners from "./banner";
+import insurance from "./insurance";
 
 const reducers = combineReducers({
   auth,
@@ -24,7 +25,8 @@ const reducers = combineReducers({
   dispute,
   rules,
   faqs,
-  banners
+  banners,
+  insurance
 });
 
 export default reducers;

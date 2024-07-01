@@ -69,7 +69,7 @@ const All = (props) => {
 };
 
   useEffect(() => {
-    dispatch(retrieveDispute(filterText, 1, perPage));
+    dispatch(retrieveDispute(param));
   }, []);
 
   const fetchRules = useCallback(() => {
@@ -79,7 +79,8 @@ const All = (props) => {
 const handleDelete = (e, id, action) => {
   e.preventDefault();
   if (action === "delete") {
-      dispatch(deleteDispute(id, param))
+      let data = { all: "true", page: currentPage, perPage: perPage };
+      dispatch(deleteDispute(id, data))
           .then((res) => {
               toast("Role deleted successfully!", {
                   transition: Slide,

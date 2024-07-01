@@ -2,10 +2,10 @@ import { CREATE_DISPUTE, RETRIEVE_DISPUTE, UPDATE_DISPUTE_STATUS ,DELETE_DISPUTE
 
 import DisputeService from "../../redux/services/dispute";
 
-export const retrieveDispute = (filterText, page, perPage) => async (dispatch) => {
+export const retrieveDispute = (param) => async (dispatch) => {
   try {
-    const res = await DisputeService.getAll(filterText, page, perPage);
-    console.log(filterText, page, perPage);
+    const res = await DisputeService.getAll(param);
+    console.log(param);
     dispatch({
       type: RETRIEVE_DISPUTE,
       payload: res.data.listDispute,

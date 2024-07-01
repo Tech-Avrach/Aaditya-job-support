@@ -47,6 +47,10 @@ const AddRules = lazy(() => import("./../../RulesAndRegulations/AddRules"));
 const RulesList = lazy(() => import("./../../RulesAndRegulations/All"));
 const EditRules = lazy(() => import("./../../RulesAndRegulations/EditRules"));
 
+const AddInsurance = lazy(() => import("./../../insurancePlan/AddInsurance"));
+const InsuranceList = lazy(() => import("./../../insurancePlan/All"));
+const EditInsurance = lazy(() => import("./../../insurancePlan/EditInsurance"));
+
 const PageNotFound = lazy(() => import("../../PageNotFound"));
 const ForbiddenPage = lazy(()=> import ("../../Forbidden"))
 
@@ -147,6 +151,12 @@ const AppMain = () => {
           <Route path="list" element={<RulesList currentUser={currentUser} />} />
           <Route path="add" element={<AddRules currentUser={currentUser} />} />
           <Route path=":id" element={<EditRules currentUser={currentUser} />} />
+        </Route>
+
+        <Route path="insurance">
+          <Route path="list" element={<InsuranceList currentUser={currentUser} />} />
+          <Route path="add" element={<AddInsurance currentUser={currentUser} />} />
+          <Route path=":id" element={<EditInsurance currentUser={currentUser} />} />
         </Route>
       </Route>    
         

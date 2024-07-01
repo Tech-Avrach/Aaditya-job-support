@@ -1,11 +1,11 @@
 import axios from "axios";
 import { authHeader, multipartHeader } from "./auth-header";
 
-const getAll = (filterText, page, perPage) => {
-  return axios.get(process.env.REACT_APP_API_URL + "dispute/list" + `?all=true&page=${page}&perPage=${perPage}`, {
+const getAll = (param) => {
+  return axios.get(process.env.REACT_APP_API_URL + "dispute/list", {
     headers: authHeader(),
     data: {},
-    params: {},
+    params: param,
   });
 };
 

@@ -115,6 +115,20 @@ export const AdminNav = [
       },
     ],
   },
+  {
+    icon: "pe-7s-photo",
+    label: "Insurance",
+    content: [
+      {
+        label: "Add",
+        to: "/insurance/add",
+      },
+      {
+        label: "List",
+        to: "/insurance/list",
+      },
+    ],
+  },
 ];
 
 const getNavItem = (moduleId) => {
@@ -190,7 +204,7 @@ const getNavItem = (moduleId) => {
 
     case 18: return {
       icon: "pe-7s-comment",
-      label: "banner",
+      label: "Banner",
       content: [
         {
           label: "Add",
@@ -199,6 +213,21 @@ const getNavItem = (moduleId) => {
         {
           label: "List",
           to: "/banner/list",
+        },
+      ],
+    }
+
+    case 17: return {
+      icon: "pe-7s-comment",
+      label: "Insurance Plan",
+      content: [
+        {
+          label: "Add",
+          to: "/insurance/add",
+        },
+        {
+          label: "List",
+          to: "/insurance/list",
         },
       ],
     }
