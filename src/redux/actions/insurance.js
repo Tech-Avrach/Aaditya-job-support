@@ -31,10 +31,10 @@ export const createInsurance = (data) => async (dispatch) => {
     try {
       const res = await insuranceService.create(data);
       console.log(res.data);
-      dispatch({
-        type: CREATE_INSURANCE,
-        payload: res.data.roleInfo,
-      });
+      // dispatch({
+      //   type: CREATE_INSURANCE,
+      //   payload: res.data.insuranceInfo,
+      // });
       return Promise.resolve(res.data);
     } catch (err) {
       return Promise.reject(err);

@@ -65,14 +65,14 @@ const All = (props) => {
     page: currentPage,
     perPage: perPage,
     all: true,
-    active: false,
+    // active: false,
 };
 
   useEffect(() => {
     dispatch(retrieveDispute(param));
   }, []);
 
-  const fetchRules = useCallback(() => {
+  const fetchDispute = useCallback(() => {
     dispatch(retrieveDispute(param));
 }, [dispatch, filterText, currentPage, perPage]);
 
@@ -82,14 +82,14 @@ const handleDelete = (e, id, action) => {
       let data = { all: "true", page: currentPage, perPage: perPage };
       dispatch(deleteDispute(id, data))
           .then((res) => {
-              toast("Role deleted successfully!", {
+              toast("Dispute deleted successfully!", {
                   transition: Slide,
                   closeButton: true,
                   autoClose: 3000,
                   position: "top-right",
                   type: "success",
               });
-              // fetchRules();
+              // fetchDispute();
           })
           .catch((error) => {
               console.log(error);
@@ -104,14 +104,14 @@ const handleDelete = (e, id, action) => {
   } else {
       dispatch(restoreeDispute(id, param))
           .then(() => {
-              toast("Role restored successfully!", {
+              toast("Dispute restored successfully!", {
                   transition: Slide,
                   closeButton: true,
                   autoClose: 3000,
                   position: "top-right",
                   type: "success",
               });
-              fetchRules();
+              fetchDispute();
           })
           .catch((error) => {
               toast(error.response?.data?.message || "An error occurred", {

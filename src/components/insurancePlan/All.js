@@ -6,12 +6,14 @@ import IconContainer from "../Common/IconContainer";
 import * as Ionicons from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { retrieveFaqs, deleteFaq, restoreFaq, activeStatusFaq } from "../../redux/actions/faq";
 import { retrieveInsaurance, deleteInsurance, restoreInsurance } from "../../redux/actions/insurance";
 import { toast, Slide } from "react-toastify";
 import FilterComponent from "../../helpers/FilterComponent";
 import debounceFunction from "../../helpers/Debounce";
 import 'react-toastify/dist/ReactToastify.css';
 import { format } from 'date-fns';
+import Loader from "react-loaders";
 
 const EditIcon = Ionicons["IoIosCreate"];
 const DeleteIcon = Ionicons["IoIosTrash"];
@@ -52,8 +54,6 @@ const InsuranceList = () => {
 
     const handleViewClick = (row) => navigate(`/insurance/${row.publicId}`);
 
-    console.log(totalInsurancecount);
-
 
     // const handleStatusToggle = (e, id, isActive) => {
     //     e.preventDefault();
@@ -91,7 +91,7 @@ const InsuranceList = () => {
                         position: "top-right",
                         type: "success",
                     });
-                    fetchInsurance();
+                    // fetchInsurance();
                 })
                 .catch((error) => {
                     console.log(error);
