@@ -41,13 +41,14 @@ const updateStatus = (id, data) => {
 
 const deleteDispute = (id, param) => {
   return axios.delete(process.env.REACT_APP_API_URL + `dispute/delete/${id}`, {
-    params: param,
+    data: param,
     headers: authHeader(),
   });
 };
 
 const restoreDispute = (id, param) => {
   return axios.get(process.env.REACT_APP_API_URL + `dispute/restore/${id}`, {
+    params: param,
     headers: authHeader(),
   });
 };
