@@ -12,6 +12,7 @@ import rules from "./rules";
 import faqs from "./faq";
 import banners from "./banner";
 import insurance from "./insurance";
+import cms from "./cms";
 
 const reducers = combineReducers({
   auth,
@@ -26,7 +27,8 @@ const reducers = combineReducers({
   rules,
   faqs,
   banners,
-  insurance
+  insurance,
+  cms,
 });
 
 export default reducers;

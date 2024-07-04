@@ -51,6 +51,10 @@ const AddInsurance = lazy(() => import("./../../insurancePlan/AddInsurance"));
 const InsuranceList = lazy(() => import("./../../insurancePlan/All"));
 const EditInsurance = lazy(() => import("./../../insurancePlan/EditInsurance"));
 
+const AddCms = lazy(() => import("./../../Cms/AddCms"));
+const CmsList = lazy(() => import("./../../Cms/All"));
+const EditCms = lazy(() => import("./../../Cms/EditCms"));
+
 const PageNotFound = lazy(() => import("../../PageNotFound"));
 const ForbiddenPage = lazy(()=> import ("../../Forbidden"))
 
@@ -157,6 +161,12 @@ const AppMain = () => {
           <Route path="list" element={<InsuranceList currentUser={currentUser} />} />
           <Route path="add" element={<AddInsurance currentUser={currentUser} />} />
           <Route path=":id" element={<EditInsurance currentUser={currentUser} />} />
+        </Route>
+
+        <Route path="cms">
+          <Route path="list" element={<CmsList currentUser={currentUser} />} />
+          <Route path="add" element={<AddCms currentUser={currentUser} />} />
+          <Route path=":id" element={<EditCms currentUser={currentUser} />} />
         </Route>
       </Route>    
         

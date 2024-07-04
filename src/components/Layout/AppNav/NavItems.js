@@ -116,7 +116,7 @@ export const AdminNav = [
     ],
   },
   {
-    icon: "pe-7s-photo",
+    icon: "pe-7s-note2",
     label: "Insurance",
     content: [
       {
@@ -126,6 +126,20 @@ export const AdminNav = [
       {
         label: "List",
         to: "/insurance/list",
+      },
+    ],
+  },
+  {
+    icon: "pe-7s-browser",
+    label: "CMS",
+    content: [
+      {
+        label: "Add",
+        to: "/cms/add",
+      },
+      {
+        label: "List",
+        to: "/cms/list",
       },
     ],
   },
