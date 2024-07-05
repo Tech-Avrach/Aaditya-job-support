@@ -38,3 +38,12 @@ const restore = (id) => {
         headers: authHeader(),
     });
 };
+
+export default {
+    getAll,
+    get,
+    create,
+    update,
+    deleteBoosterplan,
+    restore
+}

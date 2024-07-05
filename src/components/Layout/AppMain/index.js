@@ -9,13 +9,13 @@ import ProtectedRoutes from "../../../routes/ProtectedRoutes";
 import PublicRoutes from "../../../routes/PublicRoutes";
 import useTokenRefreshHook from "../../../hooks/getRefreshhook";
 import { handleRefreshTokenHelper } from "../../../hooks/refreshHelper";
-import AddFaq from "../../faq/AddFaq";
-import EditFaq from "../../faq/EditFaq";
-import FaqList from "../../faq/All";
-import BannerList from "../../banner/All";
-import CreateBanner from "../../banner/CreateBanner";
-import EditBanner from "../../banner/EditBanner";
-import AddBanner from "../../banner/AddBanner";
+import AddFaq from "../../Faq/AddFaq";
+import EditFaq from "../../Faq/EditFaq";
+import FaqList from "../../Faq/All";
+import BannerList from "../../Banner/All";
+import CreateBanner from "../../Banner/CreateBanner";
+import EditBanner from "../../Banner/EditBanner";
+import AddBanner from "../../Banner/AddBanner";
 
 const Login = lazy(() => import("../../Login/"));
 const Dashboard = lazy(() => import("../../Dashboard/"));
@@ -47,12 +47,16 @@ const AddRules = lazy(() => import("./../../RulesAndRegulations/AddRules"));
 const RulesList = lazy(() => import("./../../RulesAndRegulations/All"));
 const EditRules = lazy(() => import("./../../RulesAndRegulations/EditRules"));
 
-const AddInsurance = lazy(() => import("./../../insurancePlan/AddInsurance"));
-const InsuranceList = lazy(() => import("./../../insurancePlan/All"));
-const EditInsurance = lazy(() => import("./../../insurancePlan/EditInsurance"));
-const AddCms = lazy(() => import("./../../Cms/AddCms"));
-const CmsList = lazy(() => import("./../../Cms/All"));
-const EditCms = lazy(() => import("./../../Cms/EditCms"));
+const AddInsurance = lazy(() => import("../../InsurancePlan/AddInsurance"));
+const InsuranceList = lazy(() => import("../../InsurancePlan/All"));
+const EditInsurance = lazy(() => import("../../InsurancePlan/EditInsurance"));
+const AddCms = lazy(() => import("../../CMS/AddCms"));
+const CmsList = lazy(() => import("../../CMS/All"));
+const EditCms = lazy(() => import("../../CMS/EditCms"));
+
+const AddBooster = lazy(() => import("./../../BoosterPlan/AddBooster"));
+const BoosterList = lazy(() => import("./../../BoosterPlan/All"));
+const EditBooster = lazy(() => import("./../../BoosterPlan/EditBooster"));
 
 const PageNotFound = lazy(() => import("../../PageNotFound"));
 const ForbiddenPage = lazy(()=> import ("../../Forbidden"))
@@ -168,6 +172,11 @@ const AppMain = () => {
           <Route path=":id" element={<EditCms currentUser={currentUser} />} />
         </Route>
         
+        <Route path="booster">
+          <Route path="list" element={<BoosterList currentUser={currentUser} />} />
+          <Route path="add" element={<AddBooster currentUser={currentUser} />} />
+          <Route path=":id" element={<EditBooster currentUser={currentUser} />} />
+        </Route>
       </Route>    
         
       <Route element={<PublicRoutes isLoggedIn={isLoggedIn} />}>

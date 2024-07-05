@@ -144,6 +144,20 @@ export const AdminNav = [
       },
     ],
   },
+  {
+    icon: "pe-7s-rocket",
+    label: "Booster Plan",
+    content: [
+      {
+        label: "Add",
+        to: "/booster/add",
+      },
+      {
+        label: "List",
+        to: "/booster/list",
+      },
+    ],
+  },
 ];
 
 const getNavItem = (moduleId) => {
@@ -243,6 +257,21 @@ const getNavItem = (moduleId) => {
         {
           label: "List",
           to: "/insurance/list",
+        },
+      ],
+    }
+
+    case 22: return {
+      icon: "pe-7s-rocket",
+      label: "Booster Plan",
+      content: [
+        {
+          label: "Add",
+          to: "/booster/add",
+        },
+        {
+          label: "List",
+          to: "/booster/list",
         },
       ],
     }

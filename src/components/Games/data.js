@@ -32,7 +32,7 @@ export const regions = [
   { code: "Brazil", name: "Brazil" },
   { code: "Chile", name: "Chile" },
   { code: "Colombia", name: "Colombia" },
-  { code: "GLOBAL", name: "Global" },
+  { code: "Global", name: "Global" },
   { code: "Hong Kong", name: "Hong Kong" },
   { code: "Indonesia", name: "Indonesia" },
   { code: "Italy", name: "Italy" },

@@ -248,6 +248,8 @@ const AddGameInformation = () => {
           "adImage":gameImgPreview,
           ...currentGame
         }
+
+        console.log(gameData);
         dispatch(createGame(gameData))
         .then((response) => {
           setCurrentGame({ ...currentGame });
