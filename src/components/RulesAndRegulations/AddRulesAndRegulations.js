@@ -123,7 +123,7 @@ const AddRulesAndRegulations = () => {
                 Create New Rule
               </div>
             </CardHeader>
-            <Form>
+            <Form onSubmit={updateHandler}>
               <CardBody>
                 <Row>
                   <Col md="12">
@@ -154,7 +154,7 @@ const AddRulesAndRegulations = () => {
                 >
                   Cancel
                 </Button>
-                <Button size="lg" color="primary" onClick={updateHandler}>
+                <Button type='submit' size="lg" color="primary" >
                   Add Rule
                 </Button>
               </CardFooter>

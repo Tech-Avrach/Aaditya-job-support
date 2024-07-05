@@ -13,6 +13,7 @@ import FilterComponent from "../../helpers/FilterComponent";
 import debounceFunction from "../../helpers/Debounce";
 import 'react-toastify/dist/ReactToastify.css';
 import { format } from 'date-fns';
+import PageContainer from "../Layout/PageContainer";
 
 const EditIcon = Ionicons["IoIosCreate"];
 const DeleteIcon = Ionicons["IoIosTrash"];
@@ -281,31 +282,32 @@ const CmsList = () => {
     };
 
     return (
-        <Row>
-            <Col>
-                <Card className="main-card mb-3">
-                    <CardHeader className="card-header-sm">
-                        <div className="card-header-title font-size-lg text-capitalize fw-normal">
-                            CMS
-                        </div>
-                    </CardHeader>
-                    <CardBody>
-                        <DataTable
-                            columns={columns}
-                            data={cms}
-                            pagination
-                            paginationServer
-                            paginationTotalRows={totalCmscount}
-                            paginationDefaultPage={currentPage}
-                            onChangeRowsPerPage={handlePerRowsChange}
-                            onChangePage={handlePageChange}
-                            subHeader
-                            subHeaderComponent={subHeaderComponent}
-                        />
-                    </CardBody>
-                </Card>
-            </Col>
-        </Row>
+        <PageContainer
+            pageTitleIcon="pe-7s-browser icon-gradient bg-plum-plate"
+            pageHeading={"Content Management System"}
+            pageSubTitle={"Listing all the CMS on the system"}
+        >
+            <Row>
+                <Col>
+                    <Card className="main-card mb-3">
+                        <CardBody>
+                            <DataTable
+                                columns={columns}
+                                data={cms}
+                                pagination
+                                paginationServer
+                                paginationTotalRows={totalCmscount}
+                                paginationDefaultPage={currentPage}
+                                onChangeRowsPerPage={handlePerRowsChange}
+                                onChangePage={handlePageChange}
+                                subHeader
+                                subHeaderComponent={subHeaderComponent}
+                            />
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Row>
+        </PageContainer>
     );
 };
 

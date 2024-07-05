@@ -6,7 +6,7 @@ const AddBanner = () => {
   return (
     <PageContainer
       pageTitleIcon="pe-7s-photo icon-gradient bg-plum-plate"
-      pageHeading={"Add FAQ"}
+      pageHeading={"Add Banner"}
       pageSubTitle={"Add the Banner"}
     >
       <CreateBanner />

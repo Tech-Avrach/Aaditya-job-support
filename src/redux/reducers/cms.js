@@ -58,3 +58,4 @@ const cmsReducer = (state = initialState, action) => {
 }
 
 export default cmsReducer
+

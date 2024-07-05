@@ -13,7 +13,6 @@ import faqs from "./faq";
 import banners from "./banner";
 import insurance from "./insurance";
 import cms from "./cms";
-
 const reducers = combineReducers({
   auth,
   message,

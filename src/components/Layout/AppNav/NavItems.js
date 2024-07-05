@@ -129,7 +129,8 @@ export const AdminNav = [
       },
     ],
   },
-  {
+  
+   {
     icon: "pe-7s-browser",
     label: "CMS",
     content: [

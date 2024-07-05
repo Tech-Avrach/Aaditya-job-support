@@ -1,3 +1,4 @@
+
 import React from "react";
 import styles from "./styles/View.module.scss";
 import { Col, Row, Card, CardBody } from "reactstrap";

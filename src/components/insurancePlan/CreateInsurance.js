@@ -144,7 +144,7 @@ const CreateInsurance = () => {
                                 Insurance Plan
                             </div>
                         </CardHeader>
-                        <Form>
+                        <Form onSubmit={updateHandler}> 
                             <CardBody>
                                 <Row>
                                     <Col md="6">
@@ -219,7 +219,7 @@ const CreateInsurance = () => {
                                 >
                                     Cancel
                                 </Button>
-                                <Button size="lg" color="primary" onClick={updateHandler}>
+                                <Button size="lg" color="primary" type="submit">
                                     Add 
                                 </Button>
                             </CardFooter>

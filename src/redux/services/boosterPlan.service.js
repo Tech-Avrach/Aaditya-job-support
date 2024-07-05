@@ -38,4 +38,3 @@ const restore = (id) => {
         headers: authHeader(),
     });
 };
-

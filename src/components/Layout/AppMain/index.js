@@ -50,7 +50,6 @@ const EditRules = lazy(() => import("./../../RulesAndRegulations/EditRules"));
 const AddInsurance = lazy(() => import("./../../insurancePlan/AddInsurance"));
 const InsuranceList = lazy(() => import("./../../insurancePlan/All"));
 const EditInsurance = lazy(() => import("./../../insurancePlan/EditInsurance"));
-
 const AddCms = lazy(() => import("./../../Cms/AddCms"));
 const CmsList = lazy(() => import("./../../Cms/All"));
 const EditCms = lazy(() => import("./../../Cms/EditCms"));
@@ -168,9 +167,9 @@ const AppMain = () => {
           <Route path="add" element={<AddCms currentUser={currentUser} />} />
           <Route path=":id" element={<EditCms currentUser={currentUser} />} />
         </Route>
+        
       </Route>    
         
-
       <Route element={<PublicRoutes isLoggedIn={isLoggedIn} />}>
         <Route path="login" element={<Login />} />
         <Route path="forgot-password" element={<ForgotPassword />} />

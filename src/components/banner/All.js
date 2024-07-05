@@ -16,6 +16,7 @@ import debounceFunction from "../../helpers/Debounce";
 import "react-toastify/dist/ReactToastify.css";
 import { format } from "date-fns";
 import styles from "../../assets/preview.module.scss";
+import PageContainer from "../Layout/PageContainer";
 
 const EditIcon = Ionicons["IoIosCreate"];
 const DeleteIcon = Ionicons["IoIosTrash"];
@@ -302,31 +303,32 @@ const BannerList = () => {
     };
 
     return (
-        <Row>
-            <Col>
-                <Card className="main-card mb-3">
-                    <CardHeader className="card-header-sm">
-                        <div className="card-header-title font-size-lg text-capitalize fw-normal">
-                            Banners
-                        </div>
-                    </CardHeader>
-                    <CardBody>
-                        <DataTable
-                            columns={columns}
-                            data={banners}
-                            pagination
-                            paginationServer
-                            paginationTotalRows={totalBannercount}
-                            paginationDefaultPage={currentPage}
-                            onChangeRowsPerPage={handlePerRowsChange}
-                            onChangePage={handlePageChange}
-                            subHeader
-                            subHeaderComponent={subHeaderComponent}
-                        />
-                    </CardBody>
-                </Card>
-            </Col>
-        </Row>
+        <PageContainer
+            pageTitleIcon="pe-7s-photo icon-gradient bg-plum-plate"
+            pageHeading={"Banners"}
+            pageSubTitle={"List of all banners in the system"}
+        >
+            <Row>
+                <Col>
+                    <Card className="main-card mb-3">
+                        <CardBody>
+                            <DataTable
+                                columns={columns}
+                                data={banners}
+                                pagination
+                                paginationServer
+                                paginationTotalRows={totalBannercount}
+                                paginationDefaultPage={currentPage}
+                                onChangeRowsPerPage={handlePerRowsChange}
+                                onChangePage={handlePageChange}
+                                subHeader
+                                subHeaderComponent={subHeaderComponent}
+                            />
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Row>
+        </PageContainer>
     );
 };
 
