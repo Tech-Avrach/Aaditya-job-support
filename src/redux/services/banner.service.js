@@ -18,7 +18,7 @@ const get = (id) => {
 
 const create = (data) => {
 
-    return axios.post(process.env.REACT_APP_API_URL + "banner/upload", data, {
+    return axios.post(process.env.REACT_APP_API_URL + "banner/create", data, {
         headers: multipartHeader(),
     });
 };
@@ -42,6 +42,11 @@ const restore = (id) => {
         headers: authHeader(),
     });
 };
+const uploadadImage = (formImage) => {
+    return axios.post(process.env.REACT_APP_API_URL + `banner/upload`, formImage, {
+      headers: multipartHeader(),
+    })
+  }
 
 export default {
     getAll,
@@ -50,4 +55,5 @@ export default {
     update,
     deleteBanner,
     restore,
+    uploadadImage
 }

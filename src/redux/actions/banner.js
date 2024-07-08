@@ -27,10 +27,10 @@ export const createBanner = (data) => async (dispatch) => {
     try {
       const res = await BannerService.create(data);
       console.log('create banner',res.data);
-      dispatch({
-        type: CREATE_BANNER,
-        payload: res.data.bannerData,
-      });
+      // dispatch({
+      //   type: CREATE_BANNER,
+      //   payload: res.data.bannerData,
+      // });
       return Promise.resolve(res.data);
     } catch (err) {
       return Promise.reject(err);

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Card, CardBody, CardHeader, Col, Row } from "reactstrap";
+import { Card, CardBody, Col, Row } from "reactstrap";
 import DataTable from "react-data-table-component";
 import IconContainer from "../Common/IconContainer";
 import * as Ionicons from "react-icons/io";
@@ -21,14 +21,13 @@ import PageContainer from "../Layout/PageContainer";
 const EditIcon = Ionicons["IoIosCreate"];
 const DeleteIcon = Ionicons["IoIosTrash"];
 const RestoreIcon = Ionicons["IoIosRefresh"];
-// const ActiveIcon = Ionicons["IoIosCheckmarkCircleOutline"];
-// const InactiveIcon = Ionicons["IoIosCloseCircle"];
 
 toast.configure();
 
 const BannerList = () => {
     const navigate = useNavigate();
-    const { banners, totalBannercount } = useSelector((state) => state.banners);
+    const { banners = [], totalBannercount = 0 } = useSelector((state) => state.banners);
+    console.log(banners);
     const { permissionMap: permissions } = useSelector((state) => state.auth);
     const currentModuleId = 18;
     const permission = permissions[currentModuleId];
@@ -46,111 +45,58 @@ const BannerList = () => {
         active: true,
     };
 
-    const fetchBanners = useCallback(() => {
-        dispatch(retrieveBanners(param));
-    }, [dispatch, filterText, currentPage, perPage]);
+    const fetchBanners = useCallback(async () => {
+        try {
+            await dispatch(retrieveBanners(param));
+        } catch (error) {
+            console.error("Failed to fetch banners:", error);
+            toast(error.response?.data?.message || "An error occurred", {
+                transition: Slide,
+                closeButton: true,
+                autoClose: 3000,
+                position: "top-right",
+                type: "error",
+            });
+        }
+    }, [dispatch, param]);
 
     useEffect(() => {
         fetchBanners();
-    }, [fetchBanners, currentPage, perPage, filterText]);
+    }, []);
 
     const handleViewClick = (row) => navigate(`/banner/${row.publicId}`);
 
-    // const handleStatusToggle = (e, id, isActive) => {
-    //     e.preventDefault();
-    //     dispatch(activeStatusFaq(id, isActive, param))
-    //         .then(() => {
-    //             toast(`Account ${isActive ? "activated" : "deactivated"} successfully!`, {
-    //                 transition: Slide,
-    //                 closeButton: true,
-    //                 autoClose: 3000,
-    //                 position: "top-right",
-    //                 type: "success",
-    //             });
-    //             fetchBanners();
-    //         })
-    //         .catch((error) => {
-    //             toast(error.response?.data?.message || "An error occurred", {
-    //                 transition: Slide,
-    //                 closeButton: true,
-    //                 autoClose: 3000,
-    //                 position: "top-right",
-    //                 type: "error",
-    //             });
-    //         });
-    // };
-
     const handleDelete = (e, id, action) => {
         e.preventDefault();
-        if (action === "delete") {
-            dispatch(deleteBanner(id, param))
-                .then((res) => {
-                    toast("Banner deleted successfully!", {
-                        transition: Slide,
-                        closeButton: true,
-                        autoClose: 3000,
-                        position: "top-right",
-                        type: "success",
-                    });
-                    fetchBanners();
-                })
-                .catch((error) => {
-                    console.log(error);
-                    toast(error.response?.data?.message || "An error occurred", {
-                        transition: Slide,
-                        closeButton: true,
-                        autoClose: 3000,
-                        position: "top-right",
-                        type: "error",
-                    });
+        const handleAction = action === "delete" ? deleteBanner : restoreBanner;
+        dispatch(handleAction(id, param))
+            .then(() => {
+                toast(`Banner ${action}d successfully!`, {
+                    transition: Slide,
+                    closeButton: true,
+                    autoClose: 3000,
+                    position: "top-right",
+                    type: "success",
                 });
-        } else {
-            dispatch(restoreBanner(id))
-                .then(() => {
-                    toast("Banner restored successfully!", {
-                        transition: Slide,
-                        closeButton: true,
-                        autoClose: 3000,
-                        position: "top-right",
-                        type: "success",
-                    });
-                    fetchBanners();
-                })
-                .catch((error) => {
-                    toast(error.response?.data?.message || "An error occurred", {
-                        transition: Slide,
-                        closeButton: true,
-                        autoClose: 3000,
-                        position: "top-right",
-                        type: "error",
-                    });
+                fetchBanners();
+            })
+            .catch((error) => {
+                console.error(`Failed to ${action} banner:`, error);
+                toast(error.response?.data?.message || "An error occurred", {
+                    transition: Slide,
+                    closeButton: true,
+                    autoClose: 3000,
+                    position: "top-right",
+                    type: "error",
                 });
-        }
+            });
     };
 
     const columns = useMemo(() => {
         const commonColumns = [
-            // {
-            //     name: "Id",
-            //     selector: (row) => row.id,
-            //     sortable: true,
-            //     width: "100px",
-            //     headerStyle: {
-            //         textAlign: "center",
-            //     },
-            // },
-            {
-                name: "Public Id",
-                selector: (row) => row?.publicId,
-                sortable: true,
-                width: "100px",
-                headerStyle: {
-                    textAlign: "center",
-                },
-            },
             {
                 name: "Banner Name ",
-                selector: (row) => row?.bannerName,
+                selector: (row) => row?.bannerName || 'N/A',
                 sortable: true,
                 headerStyle: {
                     textAlign: "center",
@@ -168,11 +114,12 @@ const BannerList = () => {
                     >
                         <img
                             width={100}
-                            src={row?.bannerUrl}
+                            src={row?.bannerUrl || 'default.jpg'}
                             alt="preview"
-                            onError={() =>
-                                `${process.env.REACT_APP_PROFILE_IMAGE_URL}` + `user.png`
-                            }
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = `${process.env.REACT_APP_PROFILE_IMAGE_URL}` + `user.png`;
+                            }}
                         />
                     </div>
                 ),
@@ -181,15 +128,33 @@ const BannerList = () => {
                     textAlign: "center",
                 },
             },
-            // {
-            //     name: "Status",
-            //     selector: (row) => (row.isActive ? "Active" : "Inactive"),
-            //     sortable: true,
-            //     width: "150px",
-            //     headerStyle: {
-            //         textAlign: "center",
-            //     },
-            // },
+            {
+                name: "Original Price",
+                selector: (row) => `${row?.originalPrice}`,
+                sortable: true,
+                width: "230px",
+                headerStyle: {
+                    textAlign: "center",
+                },
+            },
+            {
+                name: "Discount Price",
+                selector: (row) => `${row?.discountedPrice}`,
+                sortable: true,
+                width: "230px",
+                headerStyle: {
+                    textAlign: "center",
+                },
+            },
+            {
+                name: "Currency",
+                selector: (row) => `${row?.currency}`,
+                sortable: true,
+                width: "230px",
+                headerStyle: {
+                    textAlign: "center",
+                },
+            },
             {
                 name: "Created At",
                 selector: (row) => format(new Date(row?.createdAt), 'PPpp'),
@@ -199,6 +164,7 @@ const BannerList = () => {
                     textAlign: "center",
                 },
             },
+          
         ];
 
         const renderActionCell = (row) => {
@@ -234,15 +200,6 @@ const BannerList = () => {
                             iconColor={"#d92550"}
                         />
                     ) : null}
-                    {/* {permission?.statusUpdate ? (
-                        <IconContainer
-                            id={"subadmin-active-icon"}
-                            Icon={row.isActive ? ActiveIcon : InactiveIcon}
-                            text={row.isActive ? "Active" : "Inactive"}
-                            iconColor={row.isActive ? "#3ac47d" : "#d92550"}
-                            handleOnClick={(e) => handleStatusToggle(e, row.publicId, !row.isActive)}
-                        />
-                    ) : null} */}
                 </>
             );
         };
@@ -268,6 +225,7 @@ const BannerList = () => {
 
     const debounceSearch = useCallback(
         debounceFunction((nextValue) => {
+            setFilterText(nextValue);
             fetchBanners();
         }, 1000),
         [fetchBanners]
@@ -278,28 +236,27 @@ const BannerList = () => {
             if (filterText) {
                 setResetPaginationToggle(!resetPaginationToggle);
                 setFilterText("");
-                dispatch(retrieveBanners({ ...param, keyword: "", page: 1 }));
+                fetchBanners();
             }
         };
 
         return (
             <FilterComponent
-                onFilter={(event) => {
-                    setFilterText(event.target.value);
-                    debounceSearch(event.target.value);
-                }}
+                onFilter={(event) => debounceSearch(event.target.value)}
                 onClear={handleClear}
                 filterText={filterText}
             />
         );
-    }, [filterText, debounceSearch, resetPaginationToggle, dispatch, param]);
+    }, [filterText, debounceSearch, resetPaginationToggle, fetchBanners]);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
+        fetchBanners();
     };
 
     const handlePerRowsChange = (newPerPage) => {
         setPerPage(newPerPage);
+        fetchBanners();
     };
 
     return (
@@ -312,6 +269,7 @@ const BannerList = () => {
                 <Col>
                     <Card className="main-card mb-3">
                         <CardBody>
+                            {console.log("Datatable")}
                             <DataTable
                                 columns={columns}
                                 data={banners}
