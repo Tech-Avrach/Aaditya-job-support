@@ -42,6 +42,7 @@ const BoosterList = () => {
         active: true,
     };
 
+
     const fetchBooster = useCallback(() => {
         dispatch(retrieveBoosterplan(param));
         console.log("okay")

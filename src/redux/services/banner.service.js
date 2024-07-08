@@ -23,9 +23,9 @@ const create = (data) => {
     });
 };
 
-const update = (id, data) => {
+const update = (id, data, param) => {
 
-    return axios.put(process.env.REACT_APP_API_URL + `banner/update/${id}`, data, {
+    return axios.put(process.env.REACT_APP_API_URL + `banner/update/${id}?currency=${param.currency}`, data, {
         headers: multipartHeader(),
     });
 };

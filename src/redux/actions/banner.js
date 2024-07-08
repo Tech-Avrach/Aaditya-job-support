@@ -37,18 +37,17 @@ export const createBanner = (data) => async (dispatch) => {
     }
   };
 
-  export const updateBanner = (id, data) => async (dispatch) => {
+  export const updateBanner = (id, data, param) => async (dispatch) => {
     try {
-      const res = await BannerService.update(id, data);
+      const res = await BannerService.update(id, data, param);
   
       console.log("update banner", res)
       dispatch({
         type: UPDATE_BANNER,
-        payload:  res.data.bannerData,
+        payload:  res.data.bannerUrl,
       });
       return Promise.resolve(res.data);
     } catch (err) {
-
       return Promise.reject(err);
     }
   };

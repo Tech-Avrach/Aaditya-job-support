@@ -9,9 +9,9 @@ import {
 
 import BoosterplanService from "../services/boosterPlan.service";
 
-export const createBoosterplan = (data) => async (dispatch) => {
+export const createBoosterplan = (data, param) => async (dispatch) => {
     try {
-        const res = await BoosterplanService.create(data);
+        const res = await BoosterplanService.create(data, param);
         dispatch({
             type: CREATE_BOOSTERPLAN,
             payload: res.data.listBoosterPlan,
@@ -36,9 +36,10 @@ export const retrieveBoosterplan = (param) => async (dispatch) => {
     }
 };
 
-export const updateBoosterplan = (id, data) => async (dispatch) => {
+export const updateBoosterplan = (id, data, param) => async (dispatch) => {
     try {
-        const res = await BoosterplanService.update(id, data);
+        const res = await BoosterplanService.update(id, data, param);
+        console.log("update booster plan", res)
         dispatch({
             type: UPDATE_BOOSTERPLAN,
             payload: res.data.listBoosterPlan,

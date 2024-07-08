@@ -64,6 +64,8 @@ const AddGameInformation = () => {
 
   const [tradeItemTitle, setTradeItemTitle] = useState("");
 
+  const [buttonDisable, setButtonDisable] = useState(false);
+
   //input change handler
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -112,6 +114,7 @@ const AddGameInformation = () => {
 
   const handleTradeItemFileInput = (event) => {
     setTradeImgErr("");
+    setButtonDisable(true);
     let fileSize = 0;
     let errorCount = 0;
     const file = event.target.files[0];
@@ -140,6 +143,8 @@ const AddGameInformation = () => {
           .then((response) => {
             console.log("Trade", response.data.imageUrl);
             setTradeImgPreview(response.data.imageUrl);
+            setButtonDisable(false);
+
           })
           .catch((error) => {
             toast(error.response.data.message, {
@@ -149,6 +154,7 @@ const AddGameInformation = () => {
               position: "top-right",
               type: "error",
             });
+            setButtonDisable(false);
           });
       }
     }
@@ -156,6 +162,7 @@ const AddGameInformation = () => {
 
   const handleFileInput = (event) => {
     setGameImgErr("");
+    setButtonDisable(true);
 
     let fileSize = 0;
 
@@ -196,6 +203,8 @@ const AddGameInformation = () => {
             console.log("game", response.data.imageUrl)
             // setCurrentGame({ ...currentGame, adImage: response.data.imageUrl });
             setGameImgPreview(response.data.imageUrl);
+            setButtonDisable(false);
+
           })
           .catch((error) => {
             toast(error.response.data.message, {
@@ -205,6 +214,7 @@ const AddGameInformation = () => {
               position: "top-right",
               type: "error",
             });
+              setButtonDisable(false);
           });
 
         setRemoveGameImg(false);
@@ -743,7 +753,7 @@ const AddGameInformation = () => {
                 >
                   Cancel
                 </Button>
-                <Button size="lg" color="primary" onClick={updateHandler}>
+                <Button size="lg" color="primary" onClick={updateHandler} disabled={buttonDisable}>
                   Add Games
                 </Button>
               </CardFooter>

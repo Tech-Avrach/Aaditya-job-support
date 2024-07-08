@@ -109,8 +109,12 @@ const CreateBoosterplan = () => {
                 price: price
             };
 
+            const param = {
+                currency: currency
+            }
+
             console.log(data);
-            dispatch(createBoosterplan(data))
+            dispatch(createBoosterplan(data, param))
                 .then((response) => {
                     toast("Boosterplan Created successfully!", {
                         transition: Slide,
@@ -119,7 +123,7 @@ const CreateBoosterplan = () => {
                         position: "top-right",
                         type: "success",
                     });
-                    navigate("/boosterplan/list");
+                    navigate("/booster/list");
                 })
                 .catch((error) => {
                     toast(error?.response?.data.message, {

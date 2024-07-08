@@ -220,7 +220,7 @@ const CreateBanner = () => {
         bannerService
           .uploadadImage(formData)
           .then((response) => {
-            console.log("game", response.data.bannerUrl)
+            console.log("banner", response.data.bannerUrl)
             // setCurrentGame({ ...currentGame, adImage: response.data.imageUrl });
             setBannerPreviewUrl(response.data.bannerUrl);
             setBannerUrlErr("")

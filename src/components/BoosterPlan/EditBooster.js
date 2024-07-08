@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 
 import { useNavigate, useParams } from 'react-router-dom';
-import { createBoosterplan } from '../../redux/actions/boosterplan';
+import { updateBoosterplan } from '../../redux/actions/boosterplan';
 import { currencies } from '../Games/data';
 import boosterPlanService from '../../redux/services/boosterPlan.service';
 toast.configure();
@@ -38,6 +38,7 @@ const EditBoosterplan = () => {
     const [boostErr, setBoostErr] = useState("");
     const [durationErr, setDurationErr] = useState("");
     const [priceErr, setPriceErr] = useState("");
+    const [currencyErr, setCurrencyErr] = useState("");
 
 
     useEffect(() => {
@@ -116,6 +117,11 @@ const EditBoosterplan = () => {
             errorCount++;
         }
 
+        if (currency === "Select Currency") {
+            setCurrencyErr("Currency is required!");
+            errorCount++;
+        }
+
         if (errorCount > 0) {
             return;
         } else {
@@ -125,18 +131,22 @@ const EditBoosterplan = () => {
                 duration: duration,
                 price: price
             };
+            const param = {
+                currency: currency
+            }
 
-            console.log(data);
-            dispatch(createBoosterplan(data))
+            console.log('data',data);
+            console.log("param", param);
+            dispatch(updateBoosterplan(id, data, param))
                 .then((response) => {
-                    toast("Boosterplan Created successfully!", {
+                    toast("Boosterplan Updated successfully!", {
                         transition: Slide,
                         closeButton: true,
                         autoClose: 3000,
                         position: "top-right",
                         type: "success",
                     });
-                    navigate("/boosterplan/list");
+                    navigate("/booster/list");
                 })
                 .catch((error) => {
                     toast(error?.response?.data.message, {
@@ -245,6 +255,7 @@ const EditBoosterplan = () => {
                             </option>
                           ))}
                       </Input>
+                      {currencyErr !== "" && <FormFeedback>{currencyErr}</FormFeedback>}
                     </FormGroup>
                   </Col>
                                 </Row>

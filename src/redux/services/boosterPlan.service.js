@@ -14,15 +14,14 @@ const get = (id) => {
     });
 };
 
-const create = (data) => {
-    return axios.post(process.env.REACT_APP_API_URL + "boosterPlan/create", data, {
+const create = (data, param) => {
+    return axios.post(process.env.REACT_APP_API_URL + `boosterPlan/create??currency=${param.currency} `, data, {
         headers: authHeader(),
-        params: {},
     });
 };
 
-const update = (id, data) => {
-    return axios.post(process.env.REACT_APP_API_URL + `boosterPlan/update/${id}`, data, {
+const update = (id, data, param) => {
+    return axios.put(process.env.REACT_APP_API_URL + `boosterPlan/update/${id}?currency=${param.currency}`, data, {
         headers: authHeader(),
     });
 };
