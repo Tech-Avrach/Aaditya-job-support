@@ -219,6 +219,12 @@ const All = () => {
         sortable: true,
         headerStyle: { textAlign: "center" },
       },
+      {
+        name: "Region",
+        selector: (row) => row.region,
+        sortable: true,
+        headerStyle: { textAlign: "center" },
+      },
     ];
 
     const renderActionCell = (row) => {
