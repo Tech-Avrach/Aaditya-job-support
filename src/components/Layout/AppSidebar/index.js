@@ -18,9 +18,9 @@ function AppSidebar(props) {
     enableSidebarShadow,
     backgroundImage,
     backgroundImageOpacity,
-    authDetails,
     enableMobileMenu,
     setEnableMobileMenu,
+    permission,
   } = props;
 
   const toggleMobileSidebar = () => {
@@ -45,7 +45,7 @@ function AppSidebar(props) {
             <HeaderLogo />
             <PerfectScrollbar>
               <div className="app-sidebar__inner">
-                <Nav authDetails={authDetails} />
+                <Nav permission={permission}/>
               </div>
             </PerfectScrollbar>
             <div

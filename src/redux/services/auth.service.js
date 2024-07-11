@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 
 const login = (email, password, rememberMe) => {
   return axios
@@ -23,10 +24,15 @@ const login = (email, password, rememberMe) => {
           email: response.data?.data?.userInfo?.email,
           profileImage: response.data?.data?.userInfo?.profileImage,
           publicId: response.data?.data?.userInfo?.publicId,
-          permission: response.data?.permission
+          // permission: response.data?.permission
         };
 
         localStorage.setItem("_gmp", JSON.stringify(userObj));
+        
+        Cookies.set('ENCRYPTED_ASE_KEY', response.data?.testPermission?.encryptedAESKey);
+        Cookies.set('PERMISSION_DATA', response.data?.testPermission?.permissionData);
+        Cookies.set('IV', response.data?.testPermission?.iv);
+
       }
       return response.data;
     });
@@ -65,6 +71,11 @@ const refreshToken = (userId, refreshToken, rememberMe) => {
 
 const logout = () => {
   localStorage.removeItem("_gmp");
+
+  Cookies.remove('ENCRYPTED_ASE_KEY');
+  Cookies.remove('PERMISSION_DATA');
+  Cookies.remove('IV');
+
   <Navigate to="/login" />;
 };
 

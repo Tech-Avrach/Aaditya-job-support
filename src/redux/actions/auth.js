@@ -78,6 +78,7 @@ export const refreshToken = (userId, refreshToken) => (dispatch) => {
 export const logout = () => (dispatch) => {
   AuthService.logout();
 
+
   dispatch({
     type: LOGOUT,
   });

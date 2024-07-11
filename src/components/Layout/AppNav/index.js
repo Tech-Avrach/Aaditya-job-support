@@ -9,7 +9,8 @@ import {
 import withRouter from "../../../hooks/withRouter";
 
 function Nav(props) {
-  const { enableMobileMenu, setEnableMobileMenu, authDetails } = props;
+  const { enableMobileMenu, setEnableMobileMenu, permission } = props;
+
 
   const toggleMobileSidebar = () => {
     setEnableMobileMenu(!enableMobileMenu);
@@ -19,7 +20,7 @@ function Nav(props) {
     <>
       <h5 className="app-sidebar__heading"></h5>
         <MetisMenu
-          content={authDetails.permission?.[0].roleId == 1 ? AdminNav : createNavItems(authDetails.permission)}
+          content={permission?.[0].roleId == 1 ? AdminNav : createNavItems(permission)}
           // content={AdminNav}
 
           onSelected={toggleMobileSidebar}

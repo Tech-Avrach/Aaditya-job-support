@@ -5,13 +5,13 @@ import AppSidebar from "./AppSidebar";
 
 const Layout = (props) => {
 
-    const { user: authDetails } = useSelector((state) => state.auth);
+    const { user: authDetails, permissionMap: permission } = useSelector((state) => state.auth);
     
     return (
         <Fragment>
         <AppHeader authDetails={authDetails} />
             <div className="app-main">
-                <AppSidebar authDetails={authDetails} />
+                <AppSidebar permission={permission} />
                 <div className="app-main__outer">
                     <div className="app-main__inner">
                         {props.children}
