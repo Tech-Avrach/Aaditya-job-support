@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,6 +20,7 @@ import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 //import users action
 import { updateUser, retrieveSingleUser } from "../../redux/actions/users";
+import { regions } from "../Games/data";
 //import states action
 
 //Configure toastify
@@ -64,7 +66,7 @@ const ProfileInformation = (props) => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setCurrentUser({ ...currentUser, [name]: value });
-  };
+}
 
   //validation handler
   const handleValidation = (event) => {
@@ -171,10 +173,15 @@ const ProfileInformation = (props) => {
       formData.append("companyAddress", currentUser.companyAddress);
     }
 
+    if(currentUser.region !== null && currentUser.region !== undefined && currentUser.region !== "Select Region") {
+      formData.append("region", currentUser.region);
+    } else {
+      errorCount++;
+    }
+
     if (errorCount > 0) {
       return;
     } else {
-      //dispatch to update the user
       dispatch(updateUser(currentUser.publicId, formData))
         .then((response) => {
           setCurrentUser({ ...currentUser });
@@ -375,6 +382,26 @@ const ProfileInformation = (props) => {
                         />
                       </FormGroup>
                     </Col>
+                    <Col md="6">
+                    <FormGroup>
+                      <Label for="region">Region</Label>
+                      <Input
+                        type="select"
+                        name="region"
+                        id="region"
+                        value={currentUser.region ? currentUser.region : ""}
+                        onChange={handleInputChange}
+                      >
+                        <option value=""> Select Region </option>
+                        {regions &&
+                          regions.map((region, index) => (
+                            <option key={index} value={region.code}>
+                              {region.name}
+                            </option>
+                          ))}
+                      </Input>
+                    </FormGroup>
+                  </Col>
                   </Row>
                   {/* <Row>
                     <FormGroup>

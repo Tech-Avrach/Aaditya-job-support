@@ -16,7 +16,7 @@ export const categories = [
 
 export const regions = [
   { code: "US", name: "US" },
-  { code: "EU", name: "EU" },
+  { code: "Europe", name: "Europe" },
   { code: "Great Britain", name: "Great Britain" },
   { code: "South Korea", name: "South Korea" },
   { code: "Russia", name: "Russia" },
@@ -32,9 +32,10 @@ export const regions = [
   { code: "Brazil", name: "Brazil" },
   { code: "Chile", name: "Chile" },
   { code: "Colombia", name: "Colombia" },
-  { code: "Global", name: "Global" },
+  { code: "GLOBAL", name: "Global" },
   { code: "Hong Kong", name: "Hong Kong" },
-  { code: "Indonesia", name: "Indonesia" },
+  { code: "Indonesia", name: "Indonesia" }, 
+  {code:"India",name:"India"},
   { code: "Italy", name: "Italy" },
   { code: "Japan", name: "Japan" },
   { code: "Mexico", name: "Mexico" },
@@ -47,7 +48,7 @@ export const regions = [
   { code: "Turkey", name: "Turkey" },
   { code: "Taiwan", name: "Taiwan" },
   { code: "Ukraine", name: "Ukraine" },
-  { code: "Saudi ArabiaSA", name: "Saudi Arabia" },
+  { code: "Saudi Arabia", name: "Saudi Arabia" },
 ];
 
 export const currencies = [

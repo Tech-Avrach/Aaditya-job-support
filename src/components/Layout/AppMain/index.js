@@ -9,9 +9,9 @@ import ProtectedRoutes from "../../../routes/ProtectedRoutes";
 import PublicRoutes from "../../../routes/PublicRoutes";
 import useTokenRefreshHook from "../../../hooks/getRefreshhook";
 import { handleRefreshTokenHelper } from "../../../hooks/refreshHelper";
-import AddFaq from "../../Faq/AddFaq";
-import EditFaq from "../../Faq/EditFaq";
-import FaqList from "../../Faq/All";
+import AddFaq from "../../FAQ/AddFaq";
+import EditFaq from "../../FAQ/EditFaq";
+import FaqList from "../../FAQ/All";
 import BannerList from "../../Banner/All";
 import CreateBanner from "../../Banner/CreateBanner";
 import EditBanner from "../../Banner/EditBanner";
@@ -145,7 +145,7 @@ const AppMain = () => {
         </Route>
         <Route path="faq">
           <Route path="list" element={<FaqList currentUser={currentUser} />} />
-          <Route path="add" element={<AddFaq currentUser={currentUser} />} />
+          <Route path="add" element={<AddFaq  currentUser={currentUser} />} />
           <Route path=":id" element={<EditFaq currentUser={currentUser} />} />
         </Route>
         <Route path="banner">

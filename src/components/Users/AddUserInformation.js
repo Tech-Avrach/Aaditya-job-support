@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -19,6 +20,7 @@ import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 //import users action
 import { AddUserSuperAdmin, updateUser } from "../../redux/actions/users";
+import { regions } from "../Games/data";
 import ModuleIdMap from "../Common/ModuleIdMap";
 //import states action
 // import { retrieveStates } from "../../redux/actions/states";
@@ -55,6 +57,8 @@ const ProfileInformation = () => {
 
   const [profileImgErr, setProfileImgErr] = useState("");
 
+  const [regionErr, setRegionErr] = useState("");
+
   const permissionMap = useSelector(state => state.auth.permissionMap)
 
   const permission = permissionMap[ModuleIdMap.user];
@@ -71,7 +75,7 @@ const ProfileInformation = () => {
   //input change handler
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-
+    
     setCurrentUser({ ...currentUser, [name]: value });
   };
 
@@ -274,7 +278,6 @@ const ProfileInformation = () => {
 
       setEmailErr("");
     }
-    console.log("currentUser.dateOfBirth", currentUser.dateOfBirth);
     if (currentUser.dateOfBirth === "" || currentUser.dateOfBirth === null) {
       setDobErr("Please enter a valid date!");
 
@@ -370,6 +373,14 @@ const ProfileInformation = () => {
       )
         formData.append("password", currentUser.newPassword);
     }
+
+    if(currentUser.region !== null && currentUser.region !== undefined && currentUser.region !== "Select Region") {
+      formData.append("region", currentUser.region);
+    } else {
+      errorCount++;
+    }
+
+    // console.log(currentUser.region)
 
     if (errorCount > 0) {
       return;
@@ -497,7 +508,7 @@ const ProfileInformation = () => {
                       )}
                     </FormGroup>
                   </Col>
-                  <Col md="12">
+                  <Col md="6">
                     <FormGroup>
                       <Label for="email">Email</Label>
                       <Input
@@ -513,6 +524,26 @@ const ProfileInformation = () => {
                       {emailErr !== "" && (
                         <FormFeedback>{emailErr}</FormFeedback>
                       )}
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="region">Region</Label>
+                      <Input
+                        type="select"
+                        name="region"
+                        id="region"
+                        value={currentUser.region ? currentUser.region : ""}
+                        onChange={handleInputChange}
+                      >
+                        <option value=""> Select Region </option>
+                        {regions &&
+                          regions.map((region, index) => (
+                            <option key={index} value={region.code}>
+                              {region.name}
+                            </option>
+                          ))}
+                      </Input>
                     </FormGroup>
                   </Col>
                 </Row>

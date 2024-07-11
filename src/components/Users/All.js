@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -216,6 +217,12 @@ const All = () => {
       {
         name: "Phone Number",
         selector: (row) => row.contactNumber,
+        sortable: true,
+        headerStyle: { textAlign: "center" },
+      },
+      {
+        name: "Region",
+        selector: (row) => row.region,
         sortable: true,
         headerStyle: { textAlign: "center" },
       },

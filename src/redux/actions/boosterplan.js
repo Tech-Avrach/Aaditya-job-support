@@ -12,10 +12,10 @@ import BoosterplanService from "../services/boosterPlan.service";
 export const createBoosterplan = (data, param) => async (dispatch) => {
     try {
         const res = await BoosterplanService.create(data, param);
-        dispatch({
-            type: CREATE_BOOSTERPLAN,
-            payload: res.data.listBoosterPlan,
-        });
+        // dispatch({
+        //     type: CREATE_BOOSTERPLAN,
+        //     payload: res.data.listBoosterPlan,
+        // });
         return Promise.resolve(res.data);
     } catch (err) {
         return Promise.reject(err);
