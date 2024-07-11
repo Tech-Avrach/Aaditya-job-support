@@ -26,8 +26,6 @@ const login = (email, password, rememberMe) => {
           permission: response.data?.permission
         };
 
-        console.log("login",response.data);
-
         localStorage.setItem("_gmp", JSON.stringify(userObj));
       }
       return response.data;
