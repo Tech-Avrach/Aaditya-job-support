@@ -49,7 +49,7 @@ const All = (props) => {
 
   const currentModuleId = 7;
 
-  const permission = permissions[currentModuleId];
+  const permission = permissions.find(perm => perm.moduleId === currentModuleId);
 
   const [perPage, setPerPage] = useState(10);
 
@@ -67,6 +67,9 @@ const All = (props) => {
     all: true,
     // active: false,
 };
+
+console.log("Dispute permission", permissions)
+
 
   useEffect(() => {
     dispatch(retrieveDispute(param));

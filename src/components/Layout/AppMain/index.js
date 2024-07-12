@@ -69,7 +69,7 @@ const AppMain = () => {
   //   currentUser ? setIsLoggedIn(true) : setIsLoggedIn(false);
   // }, [currentUser]);
 
-  const { user: isLoggedIn, user: currentUser } = useSelector(
+  const { user: isLoggedIn, user: currentUser, permissionMap : permission } = useSelector(
     (state) => state.auth
   );
   useTokenRefreshHook();
@@ -98,7 +98,7 @@ const AppMain = () => {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="user">
           <Route path="list" element={<UserList currentUser={currentUser} />} />
-          <Route path="add" element={<AddUser currentUser={currentUser} />} />
+          <Route path="add" element={<AddUser user={permission} />} />
           <Route path="edit" element={<EditUser currentUser={currentUser}/>} />
           <Route path=":id" element={<User currentUser={currentUser} />} />
         </Route>
@@ -138,7 +138,7 @@ const AppMain = () => {
           <Route path=":id" element={<DisputeView />} />
         </Route>
 
-        <Route path="role" element={<SuperAdminCheck currentUser={currentUser} />}>
+        <Route path="role" element={<SuperAdminCheck currentUser={permission} />}>
           <Route path="list" element={<AddRole currentUser={currentUser} />} />
           <Route path="permission" element={<Permissions />} />
           <Route path=":id" element={<ViewSingalRole />} />

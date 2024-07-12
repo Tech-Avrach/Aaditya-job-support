@@ -32,9 +32,9 @@ const RoleList = () => {
   
   const { permissionMap: permissions } = useSelector((state) => state.auth);
 
-  const currentModuleId = 1;
+  const currentModuleId = 12;
 
-  const permission = permissions[currentModuleId];
+  const permission = permissions.find(perm => perm.moduleId === currentModuleId);
 
   const dispatch = useDispatch();
 

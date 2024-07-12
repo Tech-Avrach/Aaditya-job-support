@@ -185,7 +185,16 @@ const getNavItem = (moduleId) => {
     case 7: return {
       icon: "pe-7s-help2",
       label: "Dispute",
-      to: "/dispute/list",
+      content: [
+        {
+          label: "Add",
+          to: "/dispute/add",
+        },
+        {
+          label: "List",
+          to: "/dispute/list",
+        },
+      ],
     }
     case 8: return {
       icon: "pe-7s-display2",

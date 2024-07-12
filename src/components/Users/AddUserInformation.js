@@ -22,16 +22,20 @@ import "react-toastify/dist/ReactToastify.css";
 import { AddUserSuperAdmin, updateUser } from "../../redux/actions/users";
 import { regions } from "../Games/data";
 import ModuleIdMap from "../Common/ModuleIdMap";
+import { retrieveRole } from "../../redux/actions/roles";
 //import states action
 // import { retrieveStates } from "../../redux/actions/states";
 
 //Configure toastify
 toast.configure();
 
-const ProfileInformation = () => {
+const ProfileInformation = ({ user }) => {
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  const { role } = useSelector(state => state.role);
 
   const [currentUser, setCurrentUser] = useState({});
   //states for handling validations
@@ -62,6 +66,13 @@ const ProfileInformation = () => {
   const permissionMap = useSelector(state => state.auth.permissionMap)
 
   const permission = permissionMap[ModuleIdMap.user];
+
+  const isSuperAdmin = user[0]?.roleId
+
+  const filteredRole = role.filter(item => item.name !== 'Seller');
+
+
+
   // const permissison = {
   //   "create": element.create,
   //   "read": element.read,
@@ -78,6 +89,10 @@ const ProfileInformation = () => {
     
     setCurrentUser({ ...currentUser, [name]: value });
   };
+
+  useEffect(() => {
+    dispatch(retrieveRole());
+  }, []);
 
   //validation handler
   const handleValidation = (event) => {
@@ -376,6 +391,12 @@ const ProfileInformation = () => {
 
     if(currentUser.region !== null && currentUser.region !== undefined && currentUser.region !== "Select Region") {
       formData.append("region", currentUser.region);
+    } else {
+      errorCount++;
+    }
+
+    if(currentUser.roleId !== null && currentUser.roleId !== undefined && currentUser.roleId !== "Select Role") {
+      formData.append("roleId", currentUser.roleId);
     } else {
       errorCount++;
     }
@@ -764,7 +785,7 @@ const ProfileInformation = () => {
                   
                 </Row> */}
                 <Row>
-                  <Col md="12">
+                  <Col md={isSuperAdmin ? "6" : "12"}>
                     <FormGroup>
                       <Label for="profileImage">Profile Image</Label>
                       <Input
@@ -800,6 +821,30 @@ const ProfileInformation = () => {
                       {profileImgErr !== "" && (
                         <FormFeedback>{profileImgErr}</FormFeedback>
                       )}
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="countryCode">Role</Label>
+                      <Input
+                        type="select"
+                        name="roleId"
+                        id="roleId"
+                        value={
+                          currentUser.roleId != null
+                            ? currentUser.roleId
+                            : ""
+                        }
+                        onChange={handleInputChange}
+                      >
+                        <option value=""> Select Role </option>
+                        {filteredRole &&
+                          filteredRole.map((role, index) => (
+                            <option key={index} value={role.name}>
+                              {role.name}
+                            </option>
+                          ))}
+                      </Input>
                     </FormGroup>
                   </Col>
                   <Col md="6">

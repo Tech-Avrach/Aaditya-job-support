@@ -3,7 +3,8 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 const SuperAdminCheck = ({currentUser}) => {
 
-    if(currentUser?.permission[0]?.roleId !== 1) return <Navigate to={"/forbidden"} />
+    console.log("current user super",currentUser[0]?.roleId)
+    if(currentUser[0]?.roleId !== 1) return <Navigate to={"/forbidden"} />
 
   return (
     <Outlet />

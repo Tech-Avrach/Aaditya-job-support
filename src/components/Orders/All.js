@@ -53,7 +53,7 @@ const All = (props) => {
 
   const currentModuleId = 2;
 
-  const permission = permissions[currentModuleId];
+  const permission = permissions.find(perm => perm.moduleId === currentModuleId);
 
   useEffect(() => {
     dispatch(retrieveUsers(filterText, 1, perPage));

@@ -30,7 +30,7 @@ const BannerList = () => {
     console.log(banners);
     const { permissionMap: permissions } = useSelector((state) => state.auth);
     const currentModuleId = 18;
-    const permission = permissions[currentModuleId];
+    const permission = permissions.find(perm => perm.moduleId === currentModuleId);
     const dispatch = useDispatch();
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);

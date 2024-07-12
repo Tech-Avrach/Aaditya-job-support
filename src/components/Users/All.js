@@ -53,7 +53,7 @@ const All = () => {
 
   const currentModuleId = 1;
 
-  const permission = permissions[currentModuleId];
+  const permission = permissions.find(perm => perm.moduleId === currentModuleId);
 
   console.log(permission);
 

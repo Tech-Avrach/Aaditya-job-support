@@ -48,7 +48,7 @@ const All = () => {
 
   const currentModuleId = 8;
 
-   const permission = permissions[currentModuleId];
+   const permission = permissions.find(perm => perm.moduleId === currentModuleId);
 
   const [perPage, setPerPage] = useState(10);
   const [isOpen, setIsOpen] = useState(false);
