@@ -231,7 +231,7 @@ const All = () => {
     };
   
   
-    if (permission.delete === 0 && permission.update === 0 && permission.statusUpdate) {
+    if (permission.delete === 0 && permission.update === 0 && permission.statusUpdate === 0) {
       return commonColumns;
     }
 

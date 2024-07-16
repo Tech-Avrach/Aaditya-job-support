@@ -14,6 +14,7 @@ import banners from "./banner";
 import insurance from "./insurance";
 import cms from "./cms";
 import boosterPlan from "./boosterPlan";
+import orders from "./orders";
 const reducers = combineReducers({
   auth,
   message,
@@ -30,6 +31,7 @@ const reducers = combineReducers({
   insurance,
   cms,
   boosterPlan,
+  orders,
 });
 
 export default reducers;

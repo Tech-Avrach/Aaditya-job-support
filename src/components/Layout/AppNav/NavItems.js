@@ -284,6 +284,12 @@ const getNavItem = (moduleId) => {
         },
       ],
     }
+
+    case 10: return {
+      icon: "pe-7s-cart",
+      label: "Orders",
+      to: "/order/list",
+    }
     
     default: return null;
   }

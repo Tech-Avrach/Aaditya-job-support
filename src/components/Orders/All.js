@@ -15,14 +15,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 //import common page container
 import PageContainer from "../Layout/PageContainer";
-import { Orders } from "../dummy/index";
-//import users action
+
 import {
-  retrieveUsers,
-  updateUserStatus,
-  deleteUser,
-  restoreUser,
-} from "../../redux/actions/users";
+  retrieveOrders,
+} from "../../redux/actions/orders";
+
 
 //import common filter component
 import FilterComponent from "../../helpers/FilterComponent";
@@ -51,195 +48,248 @@ const All = (props) => {
 
   const { permissionMap: permissions } = useSelector((state) => state.auth);
 
-  const currentModuleId = 2;
+  const { orders, totalOrderCount } = useSelector((state) => state.orders);
+
+  const currentModuleId = 10;
 
   const permission = permissions.find(perm => perm.moduleId === currentModuleId);
 
+  const params = {
+    currency: "EUR"
+  }
+
   useEffect(() => {
-    dispatch(retrieveUsers(filterText, 1, perPage));
+    console.log("p")
+    dispatch(retrieveOrders(params));
   }, []);
 
   //status handler
-  const handleStatusChange = (e, id, status) => {
-    e.preventDefault();
+  // const handleStatusChange = (e, id, status) => {
+  //   e.preventDefault();
 
-    let data = {
-      isBlock: status,
-    };
+  //   let data = {
+  //     isBlock: status,
+  //   };
 
-    let message = "";
+  //   let message = "";
 
-    if (status === "0") {
-      message = "User deactivated successfully!";
-    } else if (status === "1") {
-      message = "User activated successfully!";
-    }
-    //dispatch to update the status of the user
-    dispatch(updateUserStatus(id, data))
-      .then((response) => {
-        toast(message, {
-          transition: Slide,
-          closeButton: true,
-          autoClose: 3000,
-          position: "top-right",
-          type: "success", // info/success/warning/error
-        });
-      })
-      .catch((error) => {
-        toast(error?.response?.data.message, {
-          transition: Slide,
-          closeButton: true,
-          autoClose: 3000,
-          position: "top-right",
-          type: "error",
-        });
-      });
-  };
+  //   if (status === "0") {
+  //     message = "User deactivated successfully!";
+  //   } else if (status === "1") {
+  //     message = "User activated successfully!";
+  //   }
+  //   //dispatch to update the status of the user
+  //   dispatch(updateUserStatus(id, data))
+  //     .then((response) => {
+  //       toast(message, {
+  //         transition: Slide,
+  //         closeButton: true,
+  //         autoClose: 3000,
+  //         position: "top-right",
+  //         type: "success", // info/success/warning/error
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       toast(error?.response?.data.message, {
+  //         transition: Slide,
+  //         closeButton: true,
+  //         autoClose: 3000,
+  //         position: "top-right",
+  //         type: "error",
+  //       });
+  //     });
+  // };
 
-  const handleViewClick = (row) => navigate(`/user/${row.publicId}`);
+  const handleViewClick = (row) => navigate(`/order/${row.order.publicId}`);
 
   //delete/restore handler
-  const handleDelete = (e, id, action) => {
-    e.preventDefault();
-    if (action === "delete") {
-      //dispatch to delete the user
-      dispatch(deleteUser(id))
-        .then((response) => {
-          toast("User deleted successfully!", {
-            transition: Slide,
+  // const handleDelete = (e, id, action) => {
+  //   e.preventDefault();
+  //   if (action === "delete") {
+  //     //dispatch to delete the user
+  //     dispatch(deleteUser(id))
+  //       .then((response) => {
+  //         toast("User deleted successfully!", {
+  //           transition: Slide,
 
-            closeButton: true,
+  //           closeButton: true,
 
-            autoClose: 3000,
+  //           autoClose: 3000,
 
-            position: "top-right",
+  //           position: "top-right",
 
-            type: "success", // info/success/warning/error
-          });
-        })
-        .catch((error) => {
-          toast(error.response.data.message, {
-            transition: Slide,
+  //           type: "success", // info/success/warning/error
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         toast(error.response.data.message, {
+  //           transition: Slide,
 
-            closeButton: true,
+  //           closeButton: true,
 
-            autoClose: 3000,
+  //           autoClose: 3000,
 
-            position: "top-right",
+  //           position: "top-right",
 
-            type: "error",
-          });
-        });
-    } else {
-      //dispatch to restore the user
-      dispatch(restoreUser(id))
-        .then((response) => {
-          toast("User restored successfully!", {
-            transition: Slide,
+  //           type: "error",
+  //         });
+  //       });
+  //   } else {
+  //     //dispatch to restore the user
+  //     dispatch(restoreUser(id))
+  //       .then((response) => {
+  //         toast("User restored successfully!", {
+  //           transition: Slide,
 
-            closeButton: true,
+  //           closeButton: true,
 
-            autoClose: 3000,
+  //           autoClose: 3000,
 
-            position: "top-right",
+  //           position: "top-right",
 
-            type: "success", // info/success/warning/error
-          });
-        })
-        .catch((error) => {
-          toast(error.response.data.message, {
-            transition: Slide,
+  //           type: "success", // info/success/warning/error
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         toast(error.response.data.message, {
+  //           transition: Slide,
 
-            closeButton: true,
+  //           closeButton: true,
 
-            autoClose: 3000,
+  //           autoClose: 3000,
 
-            position: "top-right",
+  //           position: "top-right",
 
-            type: "error",
-          });
-        });
-    }
-  };
+  //           type: "error",
+  //         });
+  //       });
+  //   }
+  // };
 
   const columns = useMemo(() => {
     const commonColumns = [
       {
-        name: "Unique Id",
-        selector: (row) => row.public_id,
+        name: "Public Id",
+        selector: (row) => row.order.publicId,
         sortable: true,
         width: "110px",
         headerStyle: { textAlign: "center" },
       },
       {
-        name: "Amount",
-        selector: (row) => row.amount,
+        name: "Total Amount",
+        selector: (row) => row.order.totalAmount,
+        sortable: true,
+        minWidth: "150px",
+        headerStyle: { textAlign: "center" },
+      },
+      {
+        name: "Currency",
+        selector: (row) => row.order.currency,
         sortable: true,
         headerStyle: { textAlign: "center" },
       },
       {
-        name: "Status",
-        selector: (row) => row.status,
+        name: "Payment Status",
+        selector: (row) => row.order.paymentStatus,
         sortable: true,
+        minWidth: "150px",
         headerStyle: { textAlign: "center" },
       },
       {
-        name: "Created At",
-        selector: (row) => row.created_at,
+        name: "Order Type",
+        selector: (row) => row.order.orderType,
+        sortable: true,
+        minWidth: "150px",
+        headerStyle: { textAlign: "center" },
+      },
+      {
+        name: "Username",
+        selector: (row) => row.userDetails.username,
+        sortable: true,
+        minWidth: "200px",
+        headerStyle: { textAlign: "center" },
+      },
+      {
+        name: "Game Name",
+        selector: (row) => row.gameDetails[0].gameName,
+        sortable: true,
+        minWidth: "150px",
+        headerStyle: { textAlign: "center" },
+      },
+      {
+        name: "Region",
+        selector: (row) => row.gameDetails[0].region,
         sortable: true,
         headerStyle: { textAlign: "center" },
       },
+
     ];
 
     const renderActionCell = (row) => {
-      if (row.deletedAt === null) {
+
         return (
           <>
-            {permission.update ? (
-              <IconContainer
-                Icon={FaEye}
-                // handleOnClick={() => handleViewClick(row)}
+          {permission.read === 1 ? (
+                    <IconContainer
+                      Icon={FaEye}
+                      handleOnClick={() => handleViewClick(row)}
+      
+                      text="View"
+                    />
+                  ) : null}
+        </>
+        )
 
-                text="View"
-              />
-            ) : null}
+      
+      // if (row.deletedAt === null) {
+      //   return (
+      //     <>
+      //       {permission.read ? (
+      //         <IconContainer
+      //           Icon={FaEye}
+      //           // handleOnClick={() => handleViewClick(row)}
 
-            {permission.delete ? (
-              <IconContainer
-                id={row.deletedAt === null ? "delete-icon" : "restore-icon"}
-                Icon={row.deletedAt === null ? DeleteIcon : RestoreIcon}
-                // handleOnClick={(e) =>
-                //   row.deletedAt === null
-                //     ? handleDelete(e, row.publicId, "delete")
-                //     : handleDelete(e, row.publicId, "restore")
-                // }
-                text={row.deletedAt === null ? "Delete" : "Restore"}
-                iconColor={row.deletedAt === null ? "#d92550" : "#3ac47d"}
-              />
-            ) : null}
-          </>
-        );
-      } else {
-        return permission.delete ? (
-          <IconContainer
-            id={row.deletedAt === null ? "delete-icon" : "restore-icon"}
-            Icon={row.deletedAt === null ? DeleteIcon : RestoreIcon}
-            handleOnClick={(e) =>
-              row.deletedAt === null
-                ? handleDelete(e, row.publicId, "delete")
-                : handleDelete(e, row.publicId, "restore")
-            }
-            text={row.deletedAt === null ? "Delete" : "Restore"}
-            iconColor={row.deletedAt === null ? "#d92550" : "#3ac47d"}
-          />
-        ) : null;
-      }
+      //           text="View"
+      //         />
+      //       ) : null}
+
+      //       {permission.delete ? (
+      //         <IconContainer
+      //           id={row.deletedAt === null ? "delete-icon" : "restore-icon"}
+      //           Icon={row.deletedAt === null ? DeleteIcon : RestoreIcon}
+      //           // handleOnClick={(e) =>
+      //           //   row.deletedAt === null
+      //           //     ? handleDelete(e, row.publicId, "delete")
+      //           //     : handleDelete(e, row.publicId, "restore")
+      //           // }
+      //           text={row.deletedAt === null ? "Delete" : "Restore"}
+      //           iconColor={row.deletedAt === null ? "#d92550" : "#3ac47d"}
+      //         />
+      //       ) : null}
+      //     </>
+      //   );
+      // } else {
+      //   return permission.delete ? (
+      //     <IconContainer
+      //       id={row.deletedAt === null ? "delete-icon" : "restore-icon"}
+      //       Icon={row.deletedAt === null ? DeleteIcon : RestoreIcon}
+      //       handleOnClick={(e) =>
+      //         row.deletedAt === null
+      //           ? handleDelete(e, row.publicId, "delete")
+      //           : handleDelete(e, row.publicId, "restore")
+      //       }
+      //       text={row.deletedAt === null ? "Delete" : "Restore"}
+      //       iconColor={row.deletedAt === null ? "#d92550" : "#3ac47d"}
+      //     />
+      //   ) : null;
+      // }
     };
 
     if (
       permission.delete === 0 &&
       permission.update === 0 &&
-      permission.statusUpdate
+      permission.statusUpdate === 0 &&
+      permission.read === 0
     ) {
       return commonColumns;
     }
@@ -249,29 +299,29 @@ const All = (props) => {
       {
         name: "Actions",
         button: true,
-        minWidth: "250px",
+        minWidth: "150px",
         headerStyle: { textAlign: "center" },
         cell: renderActionCell,
       },
     ];
-  }, [permission, handleViewClick, handleDelete, handleStatusChange]);
+  }, [permission, handleViewClick]);
   //
 
 
   const handlePageChange = (page) => {
-    dispatch(retrieveUsers(filterText, page, perPage));
+    // dispatch(retrieveUsers(filterText, page, perPage));
     setCurrentPage(page);
   };
 
   const handlePerRowsChange = async (newPerPage, page) => {
-    dispatch(retrieveUsers(filterText, page, newPerPage));
+    // dispatch(retrieveUsers(filterText, page, newPerPage));
     setPerPage(newPerPage);
   };
 
   // Search
   const debounceSearch = useCallback(
     debounceFunction((nextValue) => {
-      dispatch(retrieveUsers(nextValue, 1, perPage));
+      // dispatch(retrieveUsers(nextValue, 1, perPage));
     }, 1000),
     []
   );
@@ -281,7 +331,7 @@ const All = (props) => {
       if (filterText) {
         setResetPaginationToggle(!resetPaginationToggle);
         setFilterText("");
-        dispatch(retrieveUsers(filterText, 1, perPage));
+        // dispatch(retrieveUsers(filterText, 1, perPage));
       }
     };
 
@@ -309,11 +359,11 @@ const All = (props) => {
             <CardBody>
               <DataTable
                 columns={columns}
-                data={Orders}
+                data={orders}
                 pagination
                 // paginationPerPage="2"
                 paginationServer
-                paginationTotalRows={Orders.length}
+                paginationTotalRows={totalOrderCount}
                 paginationDefaultPage={currentPage}
                 onChangeRowsPerPage={handlePerRowsChange}
                 onChangePage={handlePageChange}

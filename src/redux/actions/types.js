@@ -98,3 +98,5 @@ export const UPDATE_CMS = "UPDATE_CMS";
 export const DELETE_CMS = "DELETE_CMS";
 export const RESTORE_CMS = "RESTORE_CMS";
 export const CREATE_CMS = "CREATE_CMS";
+
+export const RETRIEVE_ORDERS = "RETRIEVE_ORDERS";
