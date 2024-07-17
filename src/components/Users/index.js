@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import React, { useEffect, lazy, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Cookies from 'js-cookie';
 
 import { clearMessage } from "../../../redux/actions/message";
 
@@ -58,7 +59,7 @@ const AppMain = () => {
       dispatch(clearMessage()); // clear message when changing location
     }
 
-    const _expire = JSON.parse(localStorage.getItem("_expire"));
+    const _expire = Cookies.get("expire");
     if (+_expire < 5) {
       setTimeout(() => {
         handleRefreshTokenHelper();

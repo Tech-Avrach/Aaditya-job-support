@@ -59,7 +59,6 @@ const All = (props) => {
   }
 
   useEffect(() => {
-    console.log("p")
     dispatch(retrieveOrders(params));
   }, []);
 

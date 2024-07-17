@@ -17,7 +17,6 @@ export const login = (email, password, rememberMe) => (dispatch) => {
         payload: { user: data },
       });
 
-      console.log("data", data);
 
       return Promise.resolve();
     },

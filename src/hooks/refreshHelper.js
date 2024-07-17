@@ -1,9 +1,10 @@
 import authService from "../redux/services/auth.service";
+import Cookies from 'js-cookie';
 
 export const handleRefreshTokenHelper = () => {
   const user = JSON.parse(localStorage.getItem("_gmp"));
-  const token = user?.token;
-  const refresh = user?.refreshToken;
+  const token = Cookies.get('token');
+  const refresh = Cookies.get('refreshToken');
   const rememberMe = user?.rememberMe;
   const publicId = user?.publicId;
   const payloadBase64 = token?.split(".")[1];
@@ -15,9 +16,11 @@ export const handleRefreshTokenHelper = () => {
     const jwtexpire = getRemainingTime(parsedToken.exp);
     // console.log("jwtexpire in ", jwtexpire);
     if (jwtexpire.minutes < 7) {
-      localStorage.setItem("_expire", jwtexpire.minutes);
+      // localStorage.setItem("_expire", jwtexpire.minutes);
+      Cookies.set("expire", jwtexpire.minutes);
     } else {
-      localStorage.removeItem("_expire");
+      // localStorage.removeItem("_expire");
+      Cookies.remove("expire");
     }
     const expirationTime = parsedToken.exp * 1000;
     const refreshThreshold = expirationTime - 4 * 60000;
@@ -37,6 +40,11 @@ export const handleRefreshTokenHelper = () => {
           });
       } else {
         localStorage.removeItem("_gmp");
+
+        Cookies.remove('expiry');
+        Cookies.remove('refreshToken');
+        Cookies.remove('token');
+
         window.location.replace("/login");
       }
     }

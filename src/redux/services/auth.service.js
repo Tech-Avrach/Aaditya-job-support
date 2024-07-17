@@ -16,9 +16,9 @@ const login = (email, password, rememberMe) => {
         }
 
         const userObj = {
-          token: response.data?.data.sessionToken,
-          refreshToken: response.data?.data?.refreshToken,
-          expiry: _expiry,
+          // token: response.data?.data.sessionToken,
+          // refreshToken: response.data?.data?.refreshToken,
+          // expiry: _expiry,
           firstName: response.data?.data?.userInfo?.firstName,
           lastName: response.data?.data?.userInfo?.lastName,
           email: response.data?.data?.userInfo?.email,
@@ -32,6 +32,9 @@ const login = (email, password, rememberMe) => {
         Cookies.set('ENCRYPTED_ASE_KEY', response.data?.testPermission?.encryptedAESKey);
         Cookies.set('PERMISSION_DATA', response.data?.testPermission?.permissionData);
         Cookies.set('IV', response.data?.testPermission?.iv);
+        Cookies.set('expiry', _expiry);
+        Cookies.set('refreshToken', response.data?.data?.refreshToken);
+        Cookies.set('token', response.data?.data?.sessionToken);
 
       }
       return response.data;
@@ -52,9 +55,9 @@ const refreshToken = (userId, refreshToken, rememberMe) => {
         }
         if (response?.data?.response?.newSessionToken) {
           const userObj = {
-            token: response?.data?.response?.newSessionToken,
-            refreshToken: null,
-            expiry: _expiry,
+            // token: response?.data?.response?.newSessionToken,
+            // refreshToken: null,
+            // expiry: _expiry,
             firstName: response.data?.response?.userInfo?.firstName,
             lastName: response.data?.response?.userInfo?.lastName,
             email: response.data?.response?.userInfo?.email,
@@ -63,6 +66,10 @@ const refreshToken = (userId, refreshToken, rememberMe) => {
           };
 
           localStorage.setItem("_gmp", JSON.stringify(userObj));
+
+          Cookies.set('expiry', _expiry);
+          Cookies.set('refreshToken', response.data?.data?.refreshToken);
+          Cookies.set('token', response.data?.data?.sessionToken);
         }
       }
       return response.data.userInfo;
@@ -75,6 +82,9 @@ const logout = () => {
   Cookies.remove('ENCRYPTED_ASE_KEY');
   Cookies.remove('PERMISSION_DATA');
   Cookies.remove('IV');
+  Cookies.remove('expiry');
+  Cookies.remove('refreshToken');
+  Cookies.remove('token');
 
   <Navigate to="/login" />;
 };

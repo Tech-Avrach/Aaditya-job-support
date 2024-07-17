@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import MetisMenu from "react-metismenu";
 import { setEnableMobileMenu } from "../../../redux/reducers/ThemeOptions";
 import {
@@ -7,6 +7,8 @@ import {
   createNavItems
 } from "./NavItems";
 import withRouter from "../../../hooks/withRouter";
+import Cookies from "js-cookie";
+import { Navigate } from "react-router-dom";
 
 function Nav(props) {
   const { enableMobileMenu, setEnableMobileMenu, permission } = props;

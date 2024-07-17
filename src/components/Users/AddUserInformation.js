@@ -327,43 +327,43 @@ const ProfileInformation = ({ user }) => {
       formData.append("countryCode", currentUser.countryCode);
     }
 
-    if (
-      currentUser.companyNumber !== "" &&
-      currentUser.companyNumber !== null &&
-      currentUser.companyNumber !== undefined
-    ) {
-      formData.append("companyNumber", currentUser.companyNumber);
-    }
+    // if (
+    //   currentUser.companyNumber !== "" &&
+    //   currentUser.companyNumber !== null &&
+    //   currentUser.companyNumber !== undefined
+    // ) {
+    //   formData.append("companyNumber", currentUser.companyNumber);
+    // }
 
-    if (
-      currentUser.positionInCompany !== null &&
-      currentUser.positionInCompany !== undefined
-    ) {
-      formData.append("positionInCompany", currentUser.positionInCompany);
-    }
+    // if (
+    //   currentUser.positionInCompany !== null &&
+    //   currentUser.positionInCompany !== undefined
+    // ) {
+    //   formData.append("positionInCompany", currentUser.positionInCompany);
+    // }
 
-    if (
-      currentUser.companyAddress !== null &&
-      currentUser.companyAddress !== undefined
-    ) {
-      formData.append("companyAddress", currentUser.companyAddress);
-    }
+    // if (
+    //   currentUser.companyAddress !== null &&
+    //   currentUser.companyAddress !== undefined
+    // ) {
+    //   formData.append("companyAddress", currentUser.companyAddress);
+    // }
 
-    if (
-      currentUser.businessType !== null &&
-      currentUser.businessType !== undefined
-    ) {
-      formData.append("businessType", currentUser.businessType);
-    }
+    // if (
+    //   currentUser.businessType !== null &&
+    //   currentUser.businessType !== undefined
+    // ) {
+    //   formData.append("businessType", currentUser.businessType);
+    // }
 
-    if (
-      currentUser.vatNumber !== null &&
-      currentUser.vatNumber !== undefined &&
-      currentUser.vatNumber !== ""
-    ) {
-      formData.append("isVatNumber", "1");
-      formData.append("vatNumber", currentUser.vatNumber);
-    }
+    // if (
+    //   currentUser.vatNumber !== null &&
+    //   currentUser.vatNumber !== undefined &&
+    //   currentUser.vatNumber !== ""
+    // ) {
+    //   formData.append("isVatNumber", "1");
+    //   formData.append("vatNumber", currentUser.vatNumber);
+    // }
     // else {
     //   formData.append("isVatNumber", "0");
     // }
@@ -618,7 +618,7 @@ const ProfileInformation = ({ user }) => {
                   </Col>
                 </Row>
 
-                <Row>
+                {/* <Row>
                   <Col md="6">
                     <FormGroup>
                       <Label for="companyName">Company Name</Label>
@@ -728,7 +728,7 @@ const ProfileInformation = ({ user }) => {
                       />
                     </FormGroup>
                   </Col>
-                </Row>
+                </Row> */}
 
                 {/* <Row>
                     <Col md="4">

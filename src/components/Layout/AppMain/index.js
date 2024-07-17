@@ -1,8 +1,10 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, lazy, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { clearMessage } from "../../../redux/actions/message";
+
+import Cookies from 'js-cookie';
 
 import SuperAdminCheck from "../../../routes/SuperAdminCheck";
 import ProtectedRoutes from "../../../routes/ProtectedRoutes";
@@ -79,16 +81,23 @@ const AppMain = () => {
 
   let location = useLocation();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (["/login"].includes(location.pathname)) {
       dispatch(clearMessage()); // clear message when changing location
     }
 
-    const _expire = JSON.parse(localStorage.getItem("_expire"));
-    if (+_expire < 5) {
-      setTimeout(() => {
-        handleRefreshTokenHelper();
-      }, [1000 * 60 * 2]);
+    try {
+      const _expire = Cookies.get("expire");
+      if (+_expire < 5) {
+        setTimeout(() => {
+          handleRefreshTokenHelper();
+        }, [1000 * 60 * 2]);
+      }
+    } catch (error) {
+      navigate("/login");
+      console.log("Can not get expire from cookie", error);
     }
   }, [dispatch, location]);
 

@@ -1,11 +1,14 @@
 import { handleRefreshTokenHelper } from "../../hooks/refreshHelper";
+import Cookies from 'js-cookie';
 
-const user = JSON.parse(localStorage.getItem("_gmp"));
 let token = "";
 
-if (user && user.token) {
-  token = user.token;
+try {
+  token = Cookies.get('token');
+} catch (error) {
+  console.log("token not found in cookies");
 }
+
 export const authHeader = () => {
   handleRefreshTokenHelper();
   const headers = {
