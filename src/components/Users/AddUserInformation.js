@@ -20,7 +20,7 @@ import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 //import users action
 import { AddUserSuperAdmin, updateUser } from "../../redux/actions/users";
-import { regions } from "../Games/data";
+import { countries } from "../Games/data";
 import ModuleIdMap from "../Common/ModuleIdMap";
 import { retrieveRole } from "../../redux/actions/roles";
 //import states action
@@ -70,6 +70,8 @@ const ProfileInformation = ({ user }) => {
   const isSuperAdmin = user[0]?.roleId
 
   const filteredRole = role.filter(item => item.name !== 'Seller');
+
+  console.log(filteredRole)
 
 
 
@@ -389,8 +391,8 @@ const ProfileInformation = ({ user }) => {
         formData.append("password", currentUser.newPassword);
     }
 
-    if(currentUser.region !== null && currentUser.region !== undefined && currentUser.region !== "Select Region") {
-      formData.append("region", currentUser.region);
+    if(currentUser.country !== null && currentUser.country !== undefined && currentUser.country !== "Select Country") {
+      formData.append("country", currentUser.country);
     } else {
       errorCount++;
     }
@@ -400,6 +402,8 @@ const ProfileInformation = ({ user }) => {
     } else {
       errorCount++;
     }
+
+    console.log(errorCount)
 
     // console.log(currentUser.region)
 
@@ -440,7 +444,7 @@ const ProfileInformation = ({ user }) => {
     }
   };
 
-  const countries = [
+  const countriesCode = [
     { code: "+91", name: "India" },
     { code: "+1", name: "United States" },
     { code: "+1", name: "Canada" },
@@ -549,19 +553,19 @@ const ProfileInformation = ({ user }) => {
                   </Col>
                   <Col md="6">
                     <FormGroup>
-                      <Label for="region">Region</Label>
+                      <Label for="country">Country</Label>
                       <Input
                         type="select"
-                        name="region"
-                        id="region"
-                        value={currentUser.region ? currentUser.region : ""}
+                        name="country"
+                        id="country"
+                        value={currentUser.country ? currentUser.country : ""}
                         onChange={handleInputChange}
                       >
-                        <option value=""> Select Region </option>
-                        {regions &&
-                          regions.map((region, index) => (
-                            <option key={index} value={region.code}>
-                              {region.name}
+                        <option value=""> Select Country </option>
+                        {countries &&
+                          countries.map((countrie, index) => (
+                            <option key={index} value={countrie}>
+                              {countrie}
                             </option>
                           ))}
                       </Input>
@@ -585,8 +589,8 @@ const ProfileInformation = ({ user }) => {
                         onChange={handleInputChange}
                       >
                         <option value=""> Select Country Code </option>
-                        {countries &&
-                          countries.map((country, index) => (
+                        {countriesCode &&
+                          countriesCode.map((country, index) => (
                             <option key={index} value={country.code}>
                               {country.name}
                             </option>
@@ -840,7 +844,7 @@ const ProfileInformation = ({ user }) => {
                         <option value=""> Select Role </option>
                         {filteredRole &&
                           filteredRole.map((role, index) => (
-                            <option key={index} value={role.name}>
+                            <option key={index} value={role.id}>
                               {role.name}
                             </option>
                           ))}

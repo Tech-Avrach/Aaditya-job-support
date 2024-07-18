@@ -17,6 +17,8 @@ import {
 } from "reactstrap";
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import styles from "../../assets/preview.module.scss";
+
 //import users action
 //import states action
 import Loader from "react-loaders";
@@ -32,6 +34,20 @@ const ProfileInformation = ({ sellerDetail, handleSellerDetails }) => {
 
   const [currentSeller, setCurrentSeller] = useState(sellerDetail);
 
+  const [sellerDetails, setSellerDetails] = useState({
+    nationalIdNumber: "",
+    supportiveDoc: null,
+    accountType: "",
+    companyName: "",
+    positionInCompany: "",
+    companyNumber: "",
+    vatNumber: "",
+    companyAddress: "",
+  });
+
+  const [supportiveDocPreview, setSupportiveDocPreview] = useState("");
+
+
   //states for handling validations
 
   const [firstNameErr, setFirstNameErr] = useState("");
@@ -40,9 +56,22 @@ const ProfileInformation = ({ sellerDetail, handleSellerDetails }) => {
 
   const [phoneNumberErr, setPhoneNumberErr] = useState("");
 
+
   useEffect(() => {
     if (sellerDetail !== undefined) {
-      setCurrentSeller(sellerDetail); //set user details in the state when sellerDetail changes
+      setCurrentSeller(sellerDetail);
+      console.log('seller',sellerDetail) 
+      setSellerDetails({
+        nationalIdNumber: sellerDetail.nationalIdNumber,
+        accountType: sellerDetail.accountType,
+        companyName: sellerDetail.companyName,
+        positionInCompany: sellerDetail.positionInCompany,
+        companyNumber: sellerDetail.companyNumber,
+        vatNumber: sellerDetail.vatNumber,
+        companyAddress: sellerDetail.companyAddress,
+        supportiveDoc: sellerDetail.supportiveDoc,
+        setSupportiveDocPreview: sellerDetail.supportiveDoc
+      });
     }
   }, [sellerDetail]);
 
@@ -106,7 +135,9 @@ const ProfileInformation = ({ sellerDetail, handleSellerDetails }) => {
     }
     dispatch(handleAccountApproval(id, data))
       .then((response) => {
-        handleSellerDetails(response?.sellerInfo);
+        const sellers = response?.listSellers;
+        const sellerForUpdate = sellers?.find(seller => seller.publicId === id);
+        handleSellerDetails(sellerForUpdate);
         toast(message, {
           transition: Slide,
           closeButton: true,
@@ -138,160 +169,135 @@ const ProfileInformation = ({ sellerDetail, handleSellerDetails }) => {
                 </div>
               </CardHeader>
               <Form>
-                <CardBody>
-                  <Row>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="firstName">First Name</Label>
-                        <Input
-                          readOnly
-                          invalid={firstNameErr !== "" ? true : false}
-                          type="text"
-                          name="firstName"
-                          id="firstName"
-                          placeholder="First Name here..."
-                          value={
-                            currentSeller?.user?.firstName
-                              ? currentSeller?.user?.firstName
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                          onKeyUp={handleValidation}
-                        />
-                        {firstNameErr !== "" && (
-                          <FormFeedback>{firstNameErr}</FormFeedback>
-                        )}
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="lastName">Last Name</Label>
-                        <Input
-                          readOnly
-                          type="text"
-                          name="lastName"
-                          id="lastName"
-                          placeholder="Last Name here..."
-                          value={
-                            currentSeller.user.lastName
-                              ? currentSeller.user.lastName
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="email">Email</Label>
-                        <Input
-                          invalid={emailErr !== "" ? true : false}
-                          type="email"
-                          name="email"
-                          id="email"
-                          placeholder="Email address here..."
-                          value={
-                            currentSeller.user.email
-                              ? currentSeller.user.email
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                          onKeyUp={handleValidation}
-                          readOnly={true}
-                        />
-                        {emailErr !== "" && (
-                          <FormFeedback>{emailErr}</FormFeedback>
-                        )}
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label>Phone Number</Label>
-                        <Input
-                          invalid={phoneNumberErr !== "" ? true : false}
-                          type="text"
-                          name="phoneNumber"
-                          id="phoneNumber"
-                          placeholder="Phone Number here..."
-                          value={
-                            currentSeller.contactNumber
-                              ? currentSeller.contactNumber
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                          onKeyUp={handleValidation}
-                          readOnly={true}
-                        />
-                        {phoneNumberErr !== "" && (
-                          <FormFeedback>{phoneNumberErr}</FormFeedback>
-                        )}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  {/* == */}
+              <CardBody>
+  <Row>
+    <Col md="6">
+      <FormGroup>
+        <Label for="nationalIdNumber">National ID Number</Label>
+        <Input
+          type="text"
+          name="nationalIdNumber"
+          id="nationalIdNumber"
+          placeholder="Enter National ID Number"
+          value={sellerDetails.nationalIdNumber}
+          onChange={handleInputChange}
+          disabled={true}
+        />
+      </FormGroup>
+    </Col>
+    <Col md="6">
+      <FormGroup>
+        <Label for="supportiveDoc">Supportive Document</Label>
+        <Input
+          type="file"
+          name="supportiveDoc"
+          id="supportiveDoc"
+          // onChange={handleFileInput}
+          disabled={true}
+        />
+        {supportiveDocPreview && (
+          <div className={styles.previewContainer}>
+            <img width={100} src={supportiveDocPreview} alt="preview" />
+            {/* <a href="#" className={styles.deleteIcon} onClick={removeSupportDoc}>
+              <i className="pe-7s-trash"></i>
+            </a> */}
+          </div>
+        )}
+      </FormGroup>
+    </Col>
+  </Row>
+  <Row>
+    <Col md="6">
+      <FormGroup>
+        <Label for="accountType">Account Type</Label>
+        <Input
+          type="text"
+          name="accountType"
+          id="accountType"
+          placeholder="Enter Account Type"
+          value={sellerDetails.accountType}
+          onChange={handleInputChange}
+          disabled={true}
+        />
+      </FormGroup>
+    </Col>
+    <Col md="6">
+      <FormGroup>
+        <Label for="companyName">Company Name</Label>
+        <Input
+          type="text"
+          name="companyName"
+          id="companyName"
+          placeholder="Enter Company Name"
+          value={sellerDetails.companyName}
+          onChange={handleInputChange}
+          disabled={true}
+        />
+      </FormGroup>
+    </Col>
+  </Row>
+  <Row>
+    <Col md="6">
+      <FormGroup>
+        <Label for="positionInCompany">Position in Company</Label>
+        <Input
+          type="text"
+          name="positionInCompany"
+          id="positionInCompany"
+          placeholder="Enter Position in Company"
+          value={sellerDetails.positionInCompany}
+          onChange={handleInputChange}
+          disabled={true}
+        />
+      </FormGroup>
+    </Col>
+    <Col md="6">
+      <FormGroup>
+        <Label for="companyNumber">Company Number</Label>
+        <Input
+          type="text"
+          name="companyNumber"
+          id="companyNumber"
+          placeholder="Enter Company Number"
+          value={sellerDetails.companyNumber}
+          onChange={handleInputChange}
+          disabled={true}
+        />
+      </FormGroup>
+    </Col>
+  </Row>
+  <Row>
+    <Col md="6">
+      <FormGroup>
+        <Label for="vatNumber">VAT Number</Label>
+        <Input
+          type="text"
+          name="vatNumber"
+          id="vatNumber"
+          placeholder="Enter VAT Number"
+          value={sellerDetails.vatNumber}
+          onChange={handleInputChange}
+          disabled={true}
+        />
+      </FormGroup>
+    </Col>
+    <Col md="6">
+      <FormGroup>
+        <Label for="companyAddress">Company Address</Label>
+        <Input
+          type="text"
+          name="companyAddress"
+          id="companyAddress"
+          placeholder="Enter Company Address"
+          value={sellerDetails.companyAddress}
+          onChange={handleInputChange}
+          disabled={true}
+        />
+      </FormGroup>
+    </Col>
+  </Row>
+</CardBody>
 
-                  <Row>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="companyName">Company Name</Label>
-                        <Input
-                          readOnly
-                          type="text"
-                          name="companyName"
-                          id="companyName"
-                          placeholder="Company Name here..."
-                          value={
-                            currentSeller?.user.companyName
-                              ? currentSeller?.user.companyName
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="companyNumber">Company Number </Label>
-                        <Input
-                          readOnly
-                          type="text"
-                          name="companyNumber"
-                          id="companyNumber"
-                          placeholder="Company Number here..."
-                          value={
-                            currentSeller?.user?.companyNumber
-                              ? currentSeller?.user?.companyNumber
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="companyAddress">Company Address</Label>
-                        <Input
-                          readOnly
-                          type="text"
-                          name="companyAddress"
-                          id="companyAddress"
-                          placeholder="Company here..."
-                          value={
-                            currentSeller?.user?.companyAddress
-                              ? currentSeller?.user?.companyAddress
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </CardBody>
                 <CardFooter className="d-block">
                   <Button
                     className="me-2"

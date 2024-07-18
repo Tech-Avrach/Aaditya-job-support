@@ -30,6 +30,7 @@ const EditUser = lazy(() => import("../../Users/EditUser"));
 
 const SellerList = lazy(() => import("../../Seller/All"));
 const Seller = lazy(() => import("../../Seller/Seller"));
+const EditSeller = lazy(() => import("../../Seller/EditSeller"))
 
 const OrderList = lazy(() => import("../../Orders/All"));
 const ViewOrder = lazy(() => import("../../Orders/SeeOrderInformation"));
@@ -117,6 +118,7 @@ const AppMain = () => {
             path="list"
             element={<SellerList currentUser={currentUser} />}
           />
+          <Route path="edit/:id" element={<EditSeller currentUser={currentUser}/>} />
           <Route path=":id" element={<Seller currentUser={currentUser} />} />
         </Route>
         <Route path="order">

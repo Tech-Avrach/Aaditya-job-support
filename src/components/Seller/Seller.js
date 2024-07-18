@@ -15,6 +15,7 @@ const User = (props) => {
   const [sellerDetail, setSellerDetail] = useState({});
 
   const handleSellerDetails = (data) => {
+
     setSellerDetail((prevState) => ({
       ...prevState,
       ...data,

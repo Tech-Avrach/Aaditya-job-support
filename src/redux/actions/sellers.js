@@ -12,7 +12,7 @@ import {
 import SellerService from "../../redux/services/seller.service";
 
 export const retrieveSeller =
-  (all = false, keyword = "", page = "", perPage = "", active = "") =>
+  (all = true, keyword = "", page = "", perPage = "", active = "") =>
   async (dispatch) => {
     try {
       const res = await SellerService.getAll(
@@ -22,6 +22,7 @@ export const retrieveSeller =
         perPage,
         active
       );
+      console.log(res);
       dispatch({
         type: RETRIEVE_SELLER,
         payload: res.data.listSellers,
@@ -64,7 +65,7 @@ export const updateSeller = (id, data) => async (dispatch) => {
 
     dispatch({
       type: UPDATE_SELLER,
-      payload: res.data.userInfo,
+      payload: res.data.listSellers,
     });
 
     return Promise.resolve(res.data);
@@ -92,7 +93,7 @@ export const handleAccountApproval = (id, data) => async (dispatch) => {
     const res = await SellerService.accountApproval(id, data);
     dispatch({
       type: UPDATE_SELLER_ACCOUNT,
-      payload: res.data?.sellerInfo,
+      payload: res.data?.listSellers,
     });
 
     return Promise.resolve(res.data);

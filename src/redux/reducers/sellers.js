@@ -16,7 +16,7 @@ const sellerReducer = (state = initialState, action) => {
     case RETRIEVE_SELLER:
       return {
         sellers: payload,
-        totalSellerCount: payload.count,
+        totalSellerCount: payload.length,
       };
 
     case RETRIEVE_LOGGEDIN_SELLER:
@@ -57,7 +57,10 @@ const sellerReducer = (state = initialState, action) => {
       };
 
     case UPDATE_SELLER_ACCOUNT:
-      return state;
+      return {
+        sellers: payload,
+        totalSellerCount: state.totalSellerCount,
+      };
 
     default:
       return state;

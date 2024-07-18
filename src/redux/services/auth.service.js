@@ -29,9 +29,9 @@ const login = (email, password, rememberMe) => {
 
         localStorage.setItem("_gmp", JSON.stringify(userObj));
         
-        Cookies.set('ENCRYPTED_ASE_KEY', response.data?.testPermission?.encryptedAESKey);
-        Cookies.set('PERMISSION_DATA', response.data?.testPermission?.permissionData);
-        Cookies.set('IV', response.data?.testPermission?.iv);
+        Cookies.set('ENCRYPTED_ASE_KEY', response.data?.userPermission?.encryptedAESKey);
+        Cookies.set('PERMISSION_DATA', response.data?.userPermission?.permissionData);
+        Cookies.set('IV', response.data?.userPermission?.iv);
         Cookies.set('expiry', _expiry);
         Cookies.set('refreshToken', response.data?.data?.refreshToken);
         Cookies.set('token', response.data?.data?.sessionToken);

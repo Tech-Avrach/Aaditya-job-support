@@ -221,8 +221,8 @@ const All = () => {
         headerStyle: { textAlign: "center" },
       },
       {
-        name: "Region",
-        selector: (row) => row.region,
+        name: "Country",
+        selector: (row) => row.country,
         sortable: true,
         headerStyle: { textAlign: "center" },
       },

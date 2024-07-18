@@ -33,11 +33,13 @@ import debounceFunction from "../../helpers/Debounce";
 
 import IconContainer from "../Common/IconContainer";
 
+import { Tooltip } from "reactstrap";
+
 import { FaEye } from "react-icons/fa";
 
 import { FaTimesCircle } from "react-icons/fa";
 const DeleteIcon = Ionicons["IoIosTrash"];
-
+const EditIcon = Ionicons["IoIosCreate"];
 const RestoreIcon = Ionicons["IoIosRefresh"];
 const ActiveIcon = Ionicons["IoIosCheckmarkCircleOutline"];
 const InactiveIcon = Ionicons["IoIosCloseCircle"];
@@ -179,6 +181,7 @@ const All = (props) => {
   };
 
   const handleViewClick = (row) => navigate(`/seller/${row?.publicId}`);
+  const handleEditClick = (row) => navigate(`/seller/edit/${row?.publicId}`);
 
   //delete/restore handler
   const handleDelete = (e, id, action) => {
@@ -251,32 +254,65 @@ const All = (props) => {
     const commonColumns = [
       {
         name: "Unique Id",
-        selector: (row) => row?.publicId,
+        selector: (row) => row?.publicId === null || row?.publicId === undefined ? "null" : row.publicId,
         sortable: true,
         width: "110px",
         headerStyle: { textAlign: "center" },
       },
       {
-        name: "Name",
-        selector: (row) => `${row?.user?.firstName} ${row?.user?.lastName}`,
+        name: "National Id Number",
+        selector: (row) => row?.nationalIdNumber === null || row?.nationalIdNumber === undefined ? "null" : row.nationalIdNumber,
+        sortable: true,
+        width: "180px",
+        headerStyle: { textAlign: "center" },
+      },
+      {
+        name: "Account Type",
+        selector: (row) => row?.accountType === null || row?.accountType === undefined ? "null" : row.accountType,
         sortable: true,
         headerStyle: { textAlign: "center" },
       },
       {
-        name: "Email",
-        selector: (row) => row?.user?.email,
+        name: "Company Name",
+        selector: (row) => row?.companyName === null || row?.companyName === undefined ? "null" : row.companyName,
+        sortable: true,
+        width: "150px",
+        headerStyle: { textAlign: "center" },
+      },
+      {
+        name: "Position In Company",
+        selector: (row) => row?.positionInCompany === null || row?.positionInCompany === undefined ? "null" : row.positionInCompany,
+        sortable: true,
+        width: "180px",
+        headerStyle: { textAlign: "center" },
+      },
+      {
+        name: "Company Number",
+        selector: (row) => row?.companyNumber === null || row?.companyNumber === undefined ? "null" : row.companyNumber,
+        sortable: true,
+        width: "180px",
+        headerStyle: { textAlign: "center" },
+      },
+      {
+        name: "VAT Number",
+        selector: (row) => row?.vatNumber === null || row?.vatNumber === undefined ? "null" : row.vatNumber,
         sortable: true,
         headerStyle: { textAlign: "center" },
       },
       {
-        name: "Phone Number",
-        selector: (row) => row.contactNumber,
+        name: "Company Address",
+        selector: (row) => row?.companyAddress === null || row?.companyAddress === undefined ? "null" : row.companyAddress,
         sortable: true,
+        width: "180px",
         headerStyle: { textAlign: "center" },
       },
     ];
+    
+    
 
     const renderActionCell = (row) => {
+
+      console.log(row, "row");
       const isDeleted = row.deletedAt && row.deletedAt !== null;
   
       if (isDeleted) {
@@ -293,8 +329,23 @@ const All = (props) => {
   
       return (
         <>
-          {permission.update ? (
+
+        {
+          permission.update ? (
+            <>
             <IconContainer
+            id={"edit-icon"}
+            Icon={EditIcon}
+            handleOnClick={() => handleEditClick(row)}
+            text={"Edit"}
+          />
+      </>
+
+          ) : null 
+        }
+          {permission.read ? (
+            <IconContainer
+            id={"view-icon"}
             Icon={FaEye}
             handleOnClick={() => handleViewClick(row)}
             text="View"
