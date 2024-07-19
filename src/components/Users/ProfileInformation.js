@@ -104,6 +104,17 @@ const ProfileInformation = ({user}) => {
     setCurrentUser({ ...currentUser, [name]: value });
 }
 
+const formatDateString = (dateString) => {
+  const date = new Date(dateString);
+  if (isNaN(date)) return '';
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = String(date.getFullYear());
+  return `${month}/${day}/${year}`;
+
+};
+
   //validation handler
   const handleValidation = (event) => {
     const inputValue = event.target.value.trim();
@@ -147,6 +158,7 @@ const ProfileInformation = ({user}) => {
   const updateHandler = (event) => {
     event.preventDefault();
 
+    console.log(currentUser)
     let errorCount = 0;
 
     const formData = new FormData();
@@ -158,6 +170,7 @@ const ProfileInformation = ({user}) => {
     ) {
       setFirstNameErr("Please enter atleast 3 characters!");
 
+      console.log("fname Error");
       errorCount++;
     } else {
       formData.append("firstName", currentUser.firstName);
@@ -165,60 +178,164 @@ const ProfileInformation = ({user}) => {
       setFirstNameErr("");
     }
 
-    if (currentUser.lastName !== null && currentUser.lastName !== undefined) {
+    if (
+      currentUser.lastName === "" ||
+      currentUser.lastName === null ||
+      currentUser.lastName < 3
+    ) {
+      // setLastNameErr("Please enter atleast 3 characters!");
+
+      console.log("lastname err")
+      errorCount++;
+    } else {
       formData.append("lastName", currentUser.lastName);
+
+      // setLastNameErr("");
     }
 
     if (currentUser.email === "" || currentUser.email === null) {
       setEmailErr("Please enter a valid email address!");
 
+      console.log("email err")
       errorCount++;
     } else {
       formData.append("email", currentUser.email);
 
       setEmailErr("");
     }
+    if (currentUser.dateOfBirth === "" || currentUser.dateOfBirth === null) {
+      setDobErr("Please enter a valid date!");
+
+      console.log("date err")
+      errorCount++;
+    } else {
+
+      console.log("Formatdate", formatDate(currentUser.dateOfBirth))
+      console.log("formatDateString", formatDateString(currentUser.dateOfBirth))
+      console.log("DATE", currentUser.dateOfBirth);
+
+      
+      formData.append("dateOfBirth", formatDate(currentUser.dateOfBirth));
+
+      setDobErr("");
+    }
 
     if (
-      currentUser.contactNumber !== "" &&
-      currentUser.contactNumber !== null &&
-      currentUser.contactNumber !== undefined
+      currentUser.contactNumber === "" ||
+      currentUser.contactNumber === null ||
+      currentUser.contactNumber === undefined
     ) {
-      formData.append("contactNumber", currentUser.contactNumber);
-    }
+      setcontactNumberErr("Please enter correct contact number!");
 
-    // if (
-    //   currentUser.companyName !== null &&
-    //   currentUser.companyName !== undefined
-    // ) {
-    //   formData.append("companyName", currentUser.companyName);
-    // }
-
-    // if (
-    //   currentUser.companyNumber !== "" &&
-    //   currentUser.companyNumber !== null &&
-    //   currentUser.companyNumber !== undefined
-    // ) {
-    //   formData.append("companyNumber", currentUser.companyNumber);
-    // }
-
-    // if (
-    //   currentUser.companyAddress !== null &&
-    //   currentUser.companyAddress !== undefined
-    // ) {
-    //   formData.append("companyAddress", currentUser.companyAddress);
-    // }
-
-    if(currentUser.country !== null && currentUser.country !== undefined && currentUser.country !== "Select Region") {
-      formData.append("region", currentUser.country);
-    } else {
+      console.log("contact err")
       errorCount++;
+    } else {
+      formData.append("contactNumber", currentUser.contactNumber);
+
+      setcontactNumberErr("");
     }
 
+    if (
+      currentUser.username === "" ||
+      currentUser.username === null ||
+      currentUser.username === undefined
+    ) {
+      // setUserNameErr("Please enter user name!");
+
+      console.log("username err")
+      errorCount++;
+    } else {
+      formData.append("username", currentUser.username);
+
+      // setUserNameErr("");
+    }
+
+    if(
+      currentUser.countryCode === "" ||
+      currentUser.countryCode === null ||
+      currentUser.countryCode === undefined
+    ) {
+      // setCountryCodeErr("Please enter country code!");
+
+      console.log("country code err")
+      errorCount++;
+    } else {
+      formData.append("countryCode", currentUser.countryCode);
+
+      // setCountryCodeErr("");
+    }
+
+    if(
+      selectedProfileImg === null ||
+      selectedProfileImg === undefined ||
+      selectedProfileImg === ""
+    ) {
+      // setProfileImgErr("Please select profile image!");
+
+      console.log("profile image err")
+      errorCount++;
+    } else {
+      formData.append("profileImage", selectedProfileImg);
+
+      // setProfileImgErr("");
+    }
+
+    // if (removeProfileImg) {
+    //   formData.append("removeProfileImage", removeProfileImg);
+    // }
+
+    if (passwordErr === "" || cnfPasswordErr === "") {
+      if (
+        currentUser.newPassword === "" ||
+        currentUser.newPassword === null ||
+        currentUser.newPassword === undefined
+      ) {
+        // setPasswordErr("Please enter password!");
+        // setCnfPasswordErr("Please enter confirm password!");
+
+        console.log("password err")
+        errorCount++;
+      } else {
+        formData.append("password", currentUser.newPassword);
+      }
+    }
+
+    if (
+      currentUser.country === null ||
+      currentUser.country === undefined ||
+      currentUser.country === "Select Country" ||
+      currentUser.country === ""
+    ) {
+      // setCountryErr("Please select country!");
+      console.log("country err")
+      errorCount++;
+    } else {
+      formData.append("country", currentUser.country);
+
+      // setCountryErr("");
+    }
+
+    if (
+      currentUser.roleId === null ||
+      currentUser.roleId === undefined ||
+      currentUser.roleId === "Select Role" ||
+      currentUser.roleId === ""
+    ) {
+      // setRoleErr("Please select role!");
+
+      console.log("role err")
+      errorCount++;
+    } else {
+      formData.append("roleId", currentUser.roleId);
+
+      // setRoleErr("");
+    }
+
+    console.log(errorCount)
     if (errorCount > 0) {
       return;
     } else {
-      dispatch(updateUser(currentUser.publicId, formData))
+      dispatch(updateUser(id, formData))
         .then((response) => {
           setCurrentUser({ ...currentUser });
           navigate('/user/list')
@@ -254,9 +371,23 @@ const ProfileInformation = ({user}) => {
   useEffect(() => {
     dispatch(retrieveSingleUser(id))
       .then((response) => {
+        console.log(response)
         console.log(response.profileImage);
-        setCurrentUser( response );
+        setCurrentUser({
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          dateOfBirth: response.dateOfBirth,
+          contactNumber: response.contactNumber,
+          profileImage: response.profileImage,
+          roleId: response.roleId,
+          username: response.username,
+          newPassword: response.password,
+          country: response.country,
+          countryCode: response.countryCode,
+        });
         setProfileImgPreview(response.profileImage)
+        setSelectedProfileImg(response.profileImage);
       })
       .catch((error) => {
         toast(error.response.data.message, {
@@ -348,7 +479,7 @@ const ProfileInformation = ({user}) => {
                 <Row>
                   <Col md="6">
                     <FormGroup>
-                      <Label for="firstName">First Name</Label>
+                      <Label for="firstName"> Name</Label>
                       <Input
                         invalid={firstNameErr !== "" ? true : false}
                         type="text"

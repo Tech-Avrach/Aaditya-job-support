@@ -37,7 +37,19 @@ const ProfileInformation = ({ user }) => {
 
   const { role } = useSelector(state => state.role);
 
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({
+    firstName:"",
+    lastName: "",
+    email: "",
+    dateOfBirth: "",
+    contactNumber: "",
+    profileImage: "",
+    roleId: "",
+    username: "",
+    newPassword: "",
+    country: "",
+    countryCode: "",
+  });
   //states for handling validations
   const [selectedProfileImg, setSelectedProfileImg] = useState(null);
 
@@ -51,9 +63,19 @@ const ProfileInformation = ({ user }) => {
 
   const [firstNameErr, setFirstNameErr] = useState("");
 
+  const [lastNameErr, setLastNameErr] = useState("");
+
   const [emailErr, setEmailErr] = useState("");
 
   const [dobErr, setDobErr] = useState("");
+
+  const [countryErr, setCountryErr] = useState("");
+
+  const [countryCodeErr, setCountryCodeErr] = useState("");
+
+  const [userNameErr, setUserNameErr] = useState("");
+
+  const [roleErr, setRoleErr] = useState("");
 
   const [contactNumberErr, setcontactNumberErr] = useState("");
 
@@ -282,8 +304,18 @@ const ProfileInformation = ({ user }) => {
       setFirstNameErr("");
     }
 
-    if (currentUser.lastName !== null && currentUser.lastName !== undefined) {
+    if (
+      currentUser.lastName === "" ||
+      currentUser.lastName === null ||
+      currentUser.lastName < 3
+    ) {
+      setLastNameErr("Please enter atleast 3 characters!");
+
+      errorCount++;
+    } else {
       formData.append("lastName", currentUser.lastName);
+
+      setLastNameErr("");
     }
 
     if (currentUser.email === "" || currentUser.email === null) {
@@ -306,28 +338,47 @@ const ProfileInformation = ({ user }) => {
     }
 
     if (
-      currentUser.contactNumber !== "" &&
-      currentUser.contactNumber !== null &&
-      currentUser.contactNumber !== undefined
+      currentUser.contactNumber === "" ||
+      currentUser.contactNumber === null ||
+      currentUser.contactNumber === undefined
     ) {
-      formData.append("contactNumber", currentUser.contactNumber);
-    }
+      setcontactNumberErr("Please enter correct contact number!");
 
-    if (currentUser.username !== null && currentUser.username !== undefined) {
-      formData.append("username", currentUser.username);
+      errorCount++;
+    } else {
+      formData.append("contactNumber", currentUser.contactNumber);
+
+      setcontactNumberErr("");
     }
 
     if (
-      currentUser.companyName !== "" &&
-      currentUser.companyName !== null &&
-      currentUser.companyName !== undefined
+      currentUser.username === "" ||
+      currentUser.username === null ||
+      currentUser.username === undefined
     ) {
-      formData.append("companyName", currentUser.companyName);
+      setUserNameErr("Please enter user name!");
+
+      errorCount++;
+    } else {
+      formData.append("username", currentUser.username);
+
+      setUserNameErr("");
     }
 
-    if (currentUser.countryCode !== "" && currentUser.countryCode !== null) {
+    if(
+      currentUser.countryCode === "" ||
+      currentUser.countryCode === null ||
+      currentUser.countryCode === undefined
+    ) {
+      setCountryCodeErr("Please enter country code!");
+
+      errorCount++;
+    } else {
       formData.append("countryCode", currentUser.countryCode);
+
+      setCountryCodeErr("");
     }
+
 
     // if (
     //   currentUser.companyNumber !== "" &&
@@ -370,37 +421,64 @@ const ProfileInformation = ({ user }) => {
     //   formData.append("isVatNumber", "0");
     // }
 
-    if (profileImgErr !== "") {
+    if(
+      selectedProfileImg === null ||
+      selectedProfileImg === undefined ||
+      selectedProfileImg === ""
+    ) {
+      setProfileImgErr("Please select profile image!");
+
       errorCount++;
     } else {
-      if (selectedProfileImg !== null)
-        formData.append("profileImage", selectedProfileImg);
+      formData.append("profileImage", selectedProfileImg);
+
+      setProfileImgErr("");
     }
 
     if (removeProfileImg) {
       formData.append("removeProfileImage", removeProfileImg);
     }
 
-    if (passwordErr !== "" || cnfPasswordErr !== "") {
-      errorCount++;
-    } else {
+    if (passwordErr === "" || cnfPasswordErr === "") {
       if (
-        currentUser.newPassword !== "" &&
-        currentUser.newPassword !== undefined
-      )
+        currentUser.newPassword === "" ||
+        currentUser.newPassword === null ||
+        currentUser.newPassword === undefined
+      ) {
+        setPasswordErr("Please enter password!");
+        setCnfPasswordErr("Please enter confirm password!");
+        errorCount++;
+      } else {
         formData.append("password", currentUser.newPassword);
+      }
     }
 
-    if(currentUser.country !== null && currentUser.country !== undefined && currentUser.country !== "Select Country") {
+    if (
+      currentUser.country === null ||
+      currentUser.country === undefined ||
+      currentUser.country === "Select Country" ||
+      currentUser.country === ""
+    ) {
+      setCountryErr("Please select country!");
+      errorCount++;
+    } else {
       formData.append("country", currentUser.country);
-    } else {
-      errorCount++;
+
+      setCountryErr("");
     }
 
-    if(currentUser.roleId !== null && currentUser.roleId !== undefined && currentUser.roleId !== "Select Role") {
-      formData.append("roleId", currentUser.roleId);
-    } else {
+    if (
+      currentUser.roleId === null ||
+      currentUser.roleId === undefined ||
+      currentUser.roleId === "Select Role" ||
+      currentUser.roleId === ""
+    ) {
+      setRoleErr("Please select role!");
       errorCount++;
+    } else {
+      formData.append("roleId", currentUser.roleId);
+
+      setRoleErr("");
     }
 
     console.log(errorCount)
@@ -491,6 +569,7 @@ const ProfileInformation = ({ user }) => {
                     <FormGroup>
                       <Label for="lastName">Last Name</Label>
                       <Input
+                        invalid={lastNameErr !== "" ? true : false}
                         type="text"
                         name="lastName"
                         id="lastName"
@@ -498,6 +577,9 @@ const ProfileInformation = ({ user }) => {
                         value={currentUser.lastName ? currentUser.lastName : ""}
                         onChange={handleInputChange}
                       />
+                      {lastNameErr !== "" && (
+                        <FormFeedback>{lastNameErr}</FormFeedback>
+                      )}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -507,6 +589,7 @@ const ProfileInformation = ({ user }) => {
                     <FormGroup>
                       <Label for="username">Username</Label>
                       <Input
+                        invalid={userNameErr !== "" ? true : false}
                         type="text"
                         name="username"
                         id="username"
@@ -514,6 +597,9 @@ const ProfileInformation = ({ user }) => {
                         value={currentUser.username ? currentUser.username : ""}
                         onChange={handleInputChange}
                       />
+                      {userNameErr !== "" && (
+                        <FormFeedback>{userNameErr}</FormFeedback>
+                      )}
                     </FormGroup>
                   </Col>
                   <Col md="6">
@@ -555,6 +641,7 @@ const ProfileInformation = ({ user }) => {
                     <FormGroup>
                       <Label for="country">Country</Label>
                       <Input
+                        invalid={countryErr !== "" ? true : false}
                         type="select"
                         name="country"
                         id="country"
@@ -569,6 +656,9 @@ const ProfileInformation = ({ user }) => {
                             </option>
                           ))}
                       </Input>
+                      {countryErr !== "" && (
+                        <FormFeedback>{countryErr}</FormFeedback>
+                      )}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -578,6 +668,7 @@ const ProfileInformation = ({ user }) => {
                     <FormGroup>
                       <Label for="countryCode">Country Code</Label>
                       <Input
+                        invalid={countryCodeErr !== "" ? true : false}
                         type="select"
                         name="countryCode"
                         id="countryCode"
@@ -596,6 +687,9 @@ const ProfileInformation = ({ user }) => {
                             </option>
                           ))}
                       </Input>
+                      {countryCodeErr !== "" && (
+                        <FormFeedback>{countryCodeErr}</FormFeedback>
+                      )}
                     </FormGroup>
                   </Col>
                   <Col md="6">
@@ -831,6 +925,7 @@ const ProfileInformation = ({ user }) => {
                     <FormGroup>
                       <Label for="countryCode">Role</Label>
                       <Input
+                        invalid={roleErr !== "" ? true : false}
                         type="select"
                         name="roleId"
                         id="roleId"
@@ -849,6 +944,9 @@ const ProfileInformation = ({ user }) => {
                             </option>
                           ))}
                       </Input>
+                      {roleErr !== "" && (
+                        <FormFeedback>{roleErr}</FormFeedback>
+                      )}
                     </FormGroup>
                   </Col>
                   <Col md="6">
