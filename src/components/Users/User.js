@@ -69,7 +69,7 @@ const User = (props) => {
                     <ProfileInformation userDetail={userDetail} />
                 </TabPane>
             </Tabs> */}
-            <ProfileInformation userDetail={userDetail} />
+            <ProfileInformation user={userDetail} />
 
         </PageContainer>
     );

@@ -1,7 +1,9 @@
 
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector} from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { countries } from "../Games/data";
+import styles from "../../assets/preview.module.scss";
 import {
   Button,
   Form,
@@ -21,46 +23,80 @@ import "react-toastify/dist/ReactToastify.css";
 //import users action
 import { updateUser, retrieveSingleUser } from "../../redux/actions/users";
 import { regions } from "../Games/data";
+import { retrieveRole } from "../../redux/actions/roles";
 //import states action
 
 //Configure toastify
 toast.configure();
 
-const ProfileInformation = (props) => {
+const ProfileInformation = ({user}) => {
   const { id } = useParams();
-  const userDetail = props.userDetail;
+  const userDetail = user;
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-
-  const [currentUser, setCurrentUser] = useState(userDetail);
+  const { role } = useSelector(state => state.role);
+  const [currentUser, setCurrentUser] = useState({});
 
   //states for handling validations
+  const [selectedProfileImg, setSelectedProfileImg] = useState(null);
+
+  const [profileImgPreview, setProfileImgPreview] = useState("");
+
+  const [removeProfileImg, setRemoveProfileImg] = useState(false);
+
+  const [passwordErr, setPasswordErr] = useState("");
+
+  const [cnfPasswordErr, setCnfPasswordErr] = useState("");
+
+  // const [firstNameErr, setFirstNameErr] = useState("");
+
+  // const [emailErr, setEmailErr] = useState("");
+
+  const [dobErr, setDobErr] = useState("");
+
+  const [contactNumberErr, setcontactNumberErr] = useState("");
+
+  const [companyNumberErr, setCompanyNumberErr] = useState("");
+
+  const [profileImgErr, setProfileImgErr] = useState("");
+
+  const [regionErr, setRegionErr] = useState("");
+
 
   const [firstNameErr, setFirstNameErr] = useState("");
 
   const [emailErr, setEmailErr] = useState("");
 
   const [phoneNumberErr, setPhoneNumberErr] = useState("");
+  const isSuperAdmin = user[0]?.roleId
 
-  const handleSetFormValues = () => {
-    if (userDetail !== undefined) {
-      setCurrentUser(userDetail);
-    }
-  };
+  const filteredRole = role.filter(item => item.name !== 'Seller');
+
+  console.log(filteredRole)
+
+  // const handleSetFormValues = () => {
+  //   if (userDetail !== undefined) {
+  //     setCurrentUser(userDetail);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (userDetail !== undefined) {
+  //     setCurrentUser(userDetail); //set user details in the state when userDetail changes
+  //   }
+  // }, [userDetail]);
+
 
   useEffect(() => {
-    if (userDetail !== undefined) {
-      setCurrentUser(userDetail); //set user details in the state when userDetail changes
-    }
-  }, [userDetail]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      handleSetFormValues();
-    }, [1000]);
-  }, [Object.keys(userDetail)?.length]);
+    dispatch(retrieveRole());
+  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     handleSetFormValues();
+  //   }, [1000]);
+  // }, [Object.keys(userDetail)?.length]);
 
   //input change handler
   const handleInputChange = (event) => {
@@ -151,30 +187,30 @@ const ProfileInformation = (props) => {
       formData.append("contactNumber", currentUser.contactNumber);
     }
 
-    if (
-      currentUser.companyName !== null &&
-      currentUser.companyName !== undefined
-    ) {
-      formData.append("companyName", currentUser.companyName);
-    }
+    // if (
+    //   currentUser.companyName !== null &&
+    //   currentUser.companyName !== undefined
+    // ) {
+    //   formData.append("companyName", currentUser.companyName);
+    // }
 
-    if (
-      currentUser.companyNumber !== "" &&
-      currentUser.companyNumber !== null &&
-      currentUser.companyNumber !== undefined
-    ) {
-      formData.append("companyNumber", currentUser.companyNumber);
-    }
+    // if (
+    //   currentUser.companyNumber !== "" &&
+    //   currentUser.companyNumber !== null &&
+    //   currentUser.companyNumber !== undefined
+    // ) {
+    //   formData.append("companyNumber", currentUser.companyNumber);
+    // }
 
-    if (
-      currentUser.companyAddress !== null &&
-      currentUser.companyAddress !== undefined
-    ) {
-      formData.append("companyAddress", currentUser.companyAddress);
-    }
+    // if (
+    //   currentUser.companyAddress !== null &&
+    //   currentUser.companyAddress !== undefined
+    // ) {
+    //   formData.append("companyAddress", currentUser.companyAddress);
+    // }
 
-    if(currentUser.region !== null && currentUser.region !== undefined && currentUser.region !== "Select Region") {
-      formData.append("region", currentUser.region);
+    if(currentUser.country !== null && currentUser.country !== undefined && currentUser.country !== "Select Region") {
+      formData.append("region", currentUser.country);
     } else {
       errorCount++;
     }
@@ -218,7 +254,9 @@ const ProfileInformation = (props) => {
   useEffect(() => {
     dispatch(retrieveSingleUser(id))
       .then((response) => {
-        setCurrentUser({ ...currentUser });
+        console.log(response.profileImage);
+        setCurrentUser( response );
+        setProfileImgPreview(response.profileImage)
       })
       .catch((error) => {
         toast(error.response.data.message, {
@@ -231,179 +269,409 @@ const ProfileInformation = (props) => {
       });
   }, [id]);
 
+  const handleFileInput = (event) => {
+    setProfileImgErr("");
+
+    let fileSize = 0;
+
+    let errorCount = 0;
+
+    const file = event.target.files[0];
+
+    if (file) {
+      fileSize = file.size / 1024;
+
+      if (!file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        setProfileImgErr("Only Images are allowed! ");
+
+        errorCount++;
+      }
+
+      //check if filesize is not more than 1MB
+      if (fileSize > 1024) {
+        setProfileImgErr("Please upload a file of size less than 1MB!");
+
+        errorCount++;
+      }
+
+      if (errorCount === 0) {
+        const imageAsBase64 = URL.createObjectURL(file);
+
+        setSelectedProfileImg(file);
+
+        setProfileImgPreview(imageAsBase64);
+
+        setRemoveProfileImg(false);
+      }
+    }
+  };
+
+  const removeProfilePicture = (event) => {
+    event.preventDefault();
+
+    setProfileImgPreview("");
+
+    setSelectedProfileImg(null);
+
+    setRemoveProfileImg(true);
+  };
+
+  const formatDate = (isoDate) => {
+    if (!isoDate) return "";
+    const date = new Date(isoDate);
+    return date.toISOString().split('T')[0];
+  };
+  const countriesCode = [
+    { code: 91, name: "India" },
+    { code: 1, name: "United States" },
+    { code: 1, name: "Canada" },
+    { code: 33, name: "France" },
+    { code: 49, name: "Germany" },
+    { code: 81, name: "Japan" },
+  ];
   return (
     <>
       {currentUser ? (
-        <Row>
-          <Col md="12">
-            <Card className="main-card mb-3">
-              <CardHeader className="card-header-sm">
-                <div className="card-header-title font-size-lg text-capitalize fw-normal">
-                  Profile Information
-                </div>
-              </CardHeader>
-              <Form>
-                <CardBody>
-                  <Row>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="firstName">First Name</Label>
-                        <Input
-                          invalid={firstNameErr !== "" ? true : false}
-                          type="text"
-                          name="firstName"
-                          id="firstName"
-                          placeholder="First Name here..."
-                          value={
-                            currentUser.firstName ? currentUser.firstName : ""
-                          }
-                          onChange={handleInputChange}
-                          onKeyUp={handleValidation}
-                        />
-                        {firstNameErr !== "" && (
-                          <FormFeedback>{firstNameErr}</FormFeedback>
-                        )}
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="lastName">Last Name</Label>
-                        <Input
-                          type="text"
-                          name="lastName"
-                          id="lastName"
-                          placeholder="Last Name here..."
-                          value={
-                            currentUser.lastName ? currentUser.lastName : ""
-                          }
-                          onChange={handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="email">Email</Label>
-                        <Input
-                          invalid={emailErr !== "" ? true : false}
-                          type="email"
-                          name="email"
-                          id="email"
-                          placeholder="Email address here..."
-                          value={currentUser.email ? currentUser.email : ""}
-                          onChange={handleInputChange}
-                          onKeyUp={handleValidation}
-                          readOnly={true}
-                        />
-                        {emailErr !== "" && (
-                          <FormFeedback>{emailErr}</FormFeedback>
-                        )}
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label>Phone Number</Label>
-                        <Input
-                          invalid={phoneNumberErr !== "" ? true : false}
-                          type="text"
-                          name="phoneNumber"
-                          id="phoneNumber"
-                          placeholder="Phone Number here..."
-                          value={
-                            currentUser.contactNumber
-                              ? currentUser.contactNumber
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                          onKeyUp={handleValidation}
-                          readOnly={true}
-                        />
-                        {phoneNumberErr !== "" && (
-                          <FormFeedback>{phoneNumberErr}</FormFeedback>
-                        )}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  {/* == */}
-
-                  <Row>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="companyName">Company Name</Label>
-                        <Input
-                          type="text"
-                          name="companyName"
-                          id="companyName"
-                          placeholder="Address here..."
-                          value={
-                            currentUser.companyName
-                              ? currentUser.companyName
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="companyNumber">Company Number </Label>
-                        <Input
-                          type="text"
-                          name="companyNumber"
-                          id="companyNumber"
-                          placeholder="Address 2 here..."
-                          value={
-                            currentUser.companyNumber
-                              ? currentUser.companyNumber
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label for="companyAddress">Company Address</Label>
-                        <Input
-                          type="text"
-                          name="companyAddress"
-                          id="companyAddress"
-                          placeholder="Address here..."
-                          value={
-                            currentUser.companyAddress
-                              ? currentUser.companyAddress
-                              : ""
-                          }
-                          onChange={handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
+        <>
+      <Row>
+        <Col md="12">
+          <Card className="main-card mb-3">
+            {/* <CardHeader className="card-header-sm">
+                    <div className="card-header-title font-size-lg text-capitalize fw-normal">
+                      Profile Information
+                    </div>
+                  </CardHeader> */}
+            <Form>
+              <CardBody>
+                {/* <CardTitle>Profile Information</CardTitle> */}
+                {/* <div className="divider" /> */}
+                <Row>
+                  <Col md="6">
                     <FormGroup>
-                      <Label for="region">Region</Label>
+                      <Label for="firstName">First Name</Label>
+                      <Input
+                        invalid={firstNameErr !== "" ? true : false}
+                        type="text"
+                        name="firstName"
+                        id="firstName"
+                        placeholder="First Name here..."
+                        value={
+                          currentUser.firstName ? currentUser.firstName : ""
+                        }
+                        onChange={handleInputChange}
+                        onKeyUp={handleValidation}
+                      />
+                      {firstNameErr !== "" && (
+                        <FormFeedback>{firstNameErr}</FormFeedback>
+                      )}
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="lastName">Last Name</Label>
+                      <Input
+                        type="text"
+                        name="lastName"
+                        id="lastName"
+                        placeholder="Last Name here..."
+                        value={currentUser.lastName ? currentUser.lastName : ""}
+                        onChange={handleInputChange}
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+                
+                <Row>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="username">Username</Label>
+                      <Input
+                        type="text"
+                        name="username"
+                        id="username"
+                        placeholder="User Name here..."
+                        value={currentUser.username ? currentUser.username : ""}
+                        onChange={handleInputChange}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="username">Date of Birth</Label>
+                      <Input
+                        invalid={dobErr !== "" ? true : false}
+                        type="date"
+                        name="dateOfBirth"
+                        id="dateOfBirth"
+                        placeholder="Date of Birth here..."
+                        value={currentUser.dateOfBirth ? formatDate(currentUser.dateOfBirth) : ""}
+                        onChange={handleInputChange}
+                      />
+                      {console.log(currentUser.dateOfBirth )}
+                      {dobErr !== "" && (
+
+                        <FormFeedback>{dobErr}</FormFeedback>
+                      )}
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="email">Email</Label>
+                      <Input
+                        invalid={emailErr !== "" ? true : false}
+                        type="email"
+                        name="email"
+                        id="email"
+                        placeholder="Email address here..."
+                        value={currentUser.email ? currentUser.email : ""}
+                        onChange={handleInputChange}
+                        onKeyUp={handleValidation}
+                      />
+                      {emailErr !== "" && (
+                        <FormFeedback>{emailErr}</FormFeedback>
+                      )}
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="country">Country</Label>
                       <Input
                         type="select"
-                        name="region"
-                        id="region"
-                        value={currentUser.region ? currentUser.region : ""}
+                        name="country"
+                        id="country"
+                        value={currentUser.country ? currentUser.country : ""}
                         onChange={handleInputChange}
                       >
-                        <option value=""> Select Region </option>
-                        {regions &&
-                          regions.map((region, index) => (
-                            <option key={index} value={region.code}>
-                              {region.name}
+                        <option value=""> Select Country </option>
+                        {countries &&
+                          countries.map((countrie, index) => (
+                            <option key={index} value={countrie}>
+                              {countrie}
                             </option>
                           ))}
                       </Input>
                     </FormGroup>
                   </Col>
-                  </Row>
-                  {/* <Row>
+                </Row>
+
+                <Row>
+                <Col md="6">
+                    <FormGroup>
+                      <Label for="countryCode">Country Code</Label>
+                      <Input
+                        type="select"
+                        name="countryCode"
+                        id="countryCode"
+                        value={
+                          currentUser.countryCode != null
+                            // ? countriesCode.find(e=>e.name===currentUser.country).code
+                            ?currentUser.countryCode
+                            : ""
+                        }
+                        onChange={handleInputChange}
+                      >
+                        <option value=""> Select Country Code </option>
+                        {countriesCode &&
+                          countriesCode.map((country, index) => (
+                            <option key={index} value={country.code}>
+                              +{country.code}
+                            </option>
+                          ))}
+                      </Input>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label>Phone Number</Label>
+                      <Input
+                        invalid={contactNumberErr !== "" ? true : false}
+                        type="text"
+                        name="contactNumber"
+                        id="contactNumber"
+                        placeholder="Phone Number here..."
+                        value={
+                          currentUser.contactNumber
+                            ? currentUser.contactNumber
+                            : ""
+                        }
+                        onChange={handleInputChange}
+                        onKeyUp={handleValidation}
+                      />
+                      {contactNumberErr !== "" && (
+                        <FormFeedback>{contactNumberErr}</FormFeedback>
+                      )}
+                    </FormGroup>
+                  </Col>
+                </Row>
+
+                {/* <Row>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="companyName">Company Name</Label>
+                      <Input
+                        type="text"
+                        name="companyName"
+                        id="companyName"
+                        placeholder="Company Name here..."
+                        value={
+                          currentUser.companyName ? currentUser.companyName : ""
+                        }
+                        onChange={handleInputChange}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="companyNumber">Company Number</Label>
+                      <Input
+                        invalid={companyNumberErr !== "" ? true : false}
+                        type="text"
+                        name="companyNumber"
+                        id="companyNumber"
+                        placeholder="Company Number here..."
+                        value={
+                          currentUser.companyNumber
+                            ? currentUser.companyNumber
+                            : ""
+                        }
+                        onChange={handleInputChange}
+                        onKeyUp={handleValidation}
+                      />
+                      {companyNumberErr !== "" && (
+                        <FormFeedback>{companyNumberErr}</FormFeedback>
+                      )}
+                    </FormGroup>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="positionInCompany">Position in Company</Label>
+                      <Input
+                        type="text"
+                        name="positionInCompany"
+                        id="positionInCompany"
+                        placeholder="Position here..."
+                        value={
+                          currentUser.positionInCompany
+                            ? currentUser.positionInCompany
+                            : ""
+                        }
+                        onChange={handleInputChange}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="companyAddress">Company Address</Label>
+                      <Input
+                        type="text"
+                        name="companyAddress"
+                        id="companyAddress"
+                        placeholder="Company Address 2 here..."
+                        value={
+                          currentUser.companyAddress
+                            ? currentUser.companyAddress
+                            : ""
+                        }
+                        onChange={handleInputChange}
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="businessType">Business Type</Label>
+                      <Input
+                        type="text"
+                        name="businessType"
+                        id="businessType"
+                        placeholder="Business Type here..."
+                        value={
+                          currentUser.businessType
+                            ? currentUser.businessType
+                            : ""
+                        }
+                        onChange={handleInputChange}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="vatNumber">Vat Number</Label>
+                      <Input
+                        type="text"
+                        name="vatNumber"
+                        id="vatNumber"
+                        placeholder="Vat Number here..."
+                        value={
+                          currentUser.vatNumber ? currentUser.vatNumber : ""
+                        }
+                        onChange={handleInputChange}
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row> */}
+
+                {/* <Row>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label for="stateCode">State</Label>
+                        <Input
+                          readOnly = { role !== "admin" ? true : false }
+                          type="select"
+                          name="stateCode"
+                          id="stateCode"
+                          value={ currentUser.stateCode != null ? currentUser.stateCode : ''}
+                          onChange={handleInputChange}
+                        >
+                          <option value=""> Select State </option>
+                          {states &&
+                            states.map((state, index) => (
+                              <option key={index} value={state.code}>
+                                {state.name}
+                              </option>
+                            ))}
+                        </Input>
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label for="city">City</Label>
+                        <Input
+                          readOnly = { role !== "admin" ? true : false }
+                          type="text"
+                          name="city"
+                          id="city"
+                          value={ currentUser.city != null ? currentUser.city : ''}
+                          onChange={handleInputChange}
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label for="zipCode">Zip Code</Label>
+                        <Input
+                          readOnly = { role !== "admin" ? true : false }
+                          type="text"
+                          name="zipCode"
+                          id="zipCode"
+                          placeholder="Zip Code here..."
+                          value={currentUser.zipCode ? currentUser.zipCode : ""}
+                          onChange={handleInputChange}
+                        />
+                      </FormGroup>
+                    </Col>
+                  </Row> */}
+
+                {/* <Row>
+                  
+                </Row> */}
+                <Row>
+                  <Col md={isSuperAdmin ? "6" : "12"}>
                     <FormGroup>
                       <Label for="profileImage">Profile Image</Label>
                       <Input
@@ -420,9 +688,18 @@ const ProfileInformation = (props) => {
                             width={100}
                             src={profileImgPreview}
                             alt="preview"
-                            onError={() => setProfileImgPreview(`${process.env.REACT_APP_PROFILE_IMAGE_URL}` + `user.png`)}
+                            onError={() =>
+                              setProfileImgPreview(
+                                `${process.env.REACT_APP_PROFILE_IMAGE_URL}` +
+                                  `user.png`
+                              )
+                            }
                           />
-                          <a href="#" className={styles.deleteIcon} onClick={removeProfilePicture}>
+                          <a
+                            href="#"
+                            className={styles.deleteIcon}
+                            onClick={removeProfilePicture}
+                          >
                             <i className="pe-7s-trash"></i>
                           </a>
                         </div>
@@ -431,26 +708,87 @@ const ProfileInformation = (props) => {
                         <FormFeedback>{profileImgErr}</FormFeedback>
                       )}
                     </FormGroup>
-                  </Row> */}
-                </CardBody>
-                <CardFooter className="d-block">
-                  <Button
-                    className="me-2"
-                    color="link"
-                    onClick={() => {
-                      navigate(`/user/list`);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button size="lg" color="primary" onClick={updateHandler}>
-                    Update
-                  </Button>
-                </CardFooter>
-              </Form>
-            </Card>
-          </Col>
-        </Row>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="countryCode">Role</Label>
+                      <Input
+                        type="select"
+                        name="roleId"
+                        id="roleId"
+                        value={
+                          currentUser.roleId != null
+                            ? currentUser.roleId
+                            : ""
+                        }
+                        onChange={handleInputChange}
+                      >
+                        <option value=""> Select Role </option>
+                        {filteredRole &&
+                          filteredRole.map((role, index) => (
+                            <option key={index} value={role.id}>
+                              {role.name}
+                            </option>
+                          ))}
+                      </Input>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="newPassword">Password</Label>
+                      <Input
+                        invalid={passwordErr !== "" ? true : false}
+                        type="password"
+                        name="newPassword"
+                        id="newPassword"
+                        placeholder="New Password here..."
+                        onKeyUp={handleValidation}
+                        onChange={handleInputChange}
+                      />
+                      {passwordErr !== "" && (
+                        <FormFeedback>{passwordErr}</FormFeedback>
+                      )}
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label for="confirmPassword">Confirm Password</Label>
+                      <Input
+                        // readOnly = { role !== "admin" ? true : false }
+                        invalid={cnfPasswordErr !== "" ? true : false}
+                        type="password"
+                        name="confirmPassword"
+                        id="confirmPassword"
+                        placeholder="Confirm Password here..."
+                        onKeyUp={handleValidation}
+                        onChange={handleInputChange}
+                      />
+                      {cnfPasswordErr !== "" && (
+                        <FormFeedback>{cnfPasswordErr}</FormFeedback>
+                      )}
+                    </FormGroup>
+                  </Col>
+                </Row>
+              </CardBody>
+              <CardFooter className="d-block">
+                <Button
+                  className="me-2"
+                  color="link"
+                  onClick={() => {
+                    navigate(`/user/list`);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button size="lg" color="primary" onClick={updateHandler}>
+                  Update User
+                </Button>
+              </CardFooter>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
+    </>
       ) : (
         <Row>
           <Col md="12">
