@@ -24,6 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { updateUser, retrieveSingleUser } from "../../redux/actions/users";
 import { regions } from "../Games/data";
 import { retrieveRole } from "../../redux/actions/roles";
+import gameService from "../../redux/services/game.service";
 //import states action
 
 //Configure toastify
@@ -70,6 +71,9 @@ const ProfileInformation = ({user}) => {
   const [emailErr, setEmailErr] = useState("");
 
   const [phoneNumberErr, setPhoneNumberErr] = useState("");
+
+  const [buttonDisable, setButtonDisable] = useState(false);
+
   const isSuperAdmin = user[0]?.roleId
 
   const filteredRole = role.filter(item => item.name !== 'Seller');
@@ -203,22 +207,22 @@ const formatDateString = (dateString) => {
 
       setEmailErr("");
     }
-    if (currentUser.dateOfBirth === "" || currentUser.dateOfBirth === null) {
-      setDobErr("Please enter a valid date!");
+    // if (currentUser.dateOfBirth === "" || currentUser.dateOfBirth === null) {
+    //   setDobErr("Please enter a valid date!");
 
-      console.log("date err")
-      errorCount++;
-    } else {
+    //   console.log("date err")
+    //   errorCount++;
+    // } else {
 
-      console.log("Formatdate", formatDate(currentUser.dateOfBirth))
-      console.log("formatDateString", formatDateString(currentUser.dateOfBirth))
-      console.log("DATE", currentUser.dateOfBirth);
+    //   console.log("Formatdate", formatDate(currentUser.dateOfBirth))
+    //   console.log("formatDateString", formatDateString(currentUser.dateOfBirth))
+    //   console.log("DATE", currentUser.dateOfBirth);
 
-      
-      formData.append("dateOfBirth", formatDate(currentUser.dateOfBirth));
 
-      setDobErr("");
-    }
+    //   formData.append("dateOfBirth", formatDate(currentUser.dateOfBirth));
+
+    //   setDobErr("");
+    // }
 
     if (
       currentUser.contactNumber === "" ||
@@ -335,7 +339,20 @@ const formatDateString = (dateString) => {
     if (errorCount > 0) {
       return;
     } else {
-      dispatch(updateUser(id, formData))
+      const data = {
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        email: currentUser.email,
+        contactNumber: currentUser.contactNumber,
+        username: currentUser.username,
+        countryCode: currentUser.countryCode,
+        profileImage: selectedProfileImg,
+        password: currentUser.newPassword,
+        country: currentUser.country,
+        roleId: currentUser.roleId,
+      }
+
+      dispatch(updateUser(id, data))
         .then((response) => {
           setCurrentUser({ ...currentUser });
           navigate('/user/list')
@@ -402,6 +419,7 @@ const formatDateString = (dateString) => {
 
   const handleFileInput = (event) => {
     setProfileImgErr("");
+    setButtonDisable(true);
 
     let fileSize = 0;
 
@@ -428,10 +446,20 @@ const formatDateString = (dateString) => {
       if (errorCount === 0) {
         const imageAsBase64 = URL.createObjectURL(file);
 
-        setSelectedProfileImg(file);
+        const imageData = new FormData();
 
-        setProfileImgPreview(imageAsBase64);
+        imageData.append("adImage", file);
 
+        gameService
+          .uploadadImage(imageData)
+          .then((response) => {
+            console.log("game", response.data.imageUrl)
+            // setCurrentGame({ ...currentGame, adImage: response.data.imageUrl });
+            setSelectedProfileImg(response.data.imageUrl);
+            setProfileImgPreview(response.data.imageUrl);
+            setButtonDisable(false);
+
+          })
         setRemoveProfileImg(false);
       }
     }
@@ -526,7 +554,7 @@ const formatDateString = (dateString) => {
                       />
                     </FormGroup>
                   </Col>
-                  <Col md="6">
+                  {/* <Col md="6">
                     <FormGroup>
                       <Label for="username">Date of Birth</Label>
                       <Input
@@ -544,7 +572,7 @@ const formatDateString = (dateString) => {
                         <FormFeedback>{dobErr}</FormFeedback>
                       )}
                     </FormGroup>
-                  </Col>
+                  </Col> */}
                   <Col md="6">
                     <FormGroup>
                       <Label for="email">Email</Label>
@@ -911,7 +939,7 @@ const formatDateString = (dateString) => {
                 >
                   Cancel
                 </Button>
-                <Button size="lg" color="primary" onClick={updateHandler}>
+                <Button size="lg" color="primary" onClick={updateHandler} disabled={buttonDisable}>
                   Update User
                 </Button>
               </CardFooter>
