@@ -821,7 +821,7 @@ const EditUserInformation = (props) => {
                 >
                   Cancel
                 </Button>
-                <Button size="lg" color="primary" onClick={updateHandler}>
+                <Button size="lg" color="primary" onClick={updateHandler} disabled={buttonDisable}>
                   Edit User
                 </Button>
               </CardFooter>
