@@ -33,10 +33,12 @@ export const handleRefreshTokenHelper = () => {
             console.log("Token refreshed successfully");
           })
           .catch((error) => {
-            console.log("Error refreshing token",error);
+            localStorage.removeItem("_gmp");
 
-            // localStorage.removeItem("_gmp");
-            // window.location.replace("/login");
+            Cookies.remove('expiry');
+            Cookies.remove('refreshToken');
+            Cookies.remove('token');
+            window.location.replace("/login");
           });
       } else {
         localStorage.removeItem("_gmp");

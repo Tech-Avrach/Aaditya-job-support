@@ -19,6 +19,8 @@ import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 //import users action
 import { retrieveSingleUser, updateUser } from "../../redux/actions/users";
+
+import userService from "../../redux/services/user.service";
 //import states action
 // import { retrieveStates } from "../../redux/actions/states";
 
@@ -54,6 +56,8 @@ const EditUserInformation = (props) => {
   const [companyNumberErr, setCompanyNumberErr] = useState("");
 
   const [profileImgErr, setProfileImgErr] = useState("");
+
+  const [buttonDisable, setButtonDisable] = useState(false);
 
   useEffect(() => {
     dispatch(retrieveSingleUser(id))
@@ -182,6 +186,8 @@ const EditUserInformation = (props) => {
   const handleFileInput = (event) => {
     setProfileImgErr("");
 
+    setButtonDisable(true);
+
     let fileSize = 0;
 
     let errorCount = 0;
@@ -207,9 +213,19 @@ const EditUserInformation = (props) => {
       if (errorCount === 0) {
         const imageAsBase64 = URL.createObjectURL(file);
 
-        setSelectedProfileImg(file);
 
-        setProfileImgPreview(imageAsBase64);
+        const imageData = new FormData();
+
+        imageData.append("profileImage", file);
+
+        userService
+          .uploadUserImage(imageData)
+          .then((response) => {
+            setSelectedProfileImg(response.data.profileImageUrl);
+            setProfileImgPreview(response.data.profileImageUrl);
+            setButtonDisable(false);
+
+          })
 
         setRemoveProfileImg(false);
       }
@@ -801,6 +817,7 @@ const EditUserInformation = (props) => {
                   onClick={() => {
                     navigate(`/dashboard`);
                   }}
+                  disabled={buttonDisable}
                 >
                   Cancel
                 </Button>

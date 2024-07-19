@@ -24,7 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { updateUser, retrieveSingleUser } from "../../redux/actions/users";
 import { regions } from "../Games/data";
 import { retrieveRole } from "../../redux/actions/roles";
-import gameService from "../../redux/services/game.service";
+import userService from "../../redux/services/user.service";
 //import states action
 
 //Configure toastify
@@ -448,15 +448,14 @@ const formatDateString = (dateString) => {
 
         const imageData = new FormData();
 
-        imageData.append("adImage", file);
+        imageData.append("profileImage", file);
 
-        gameService
-          .uploadadImage(imageData)
+        userService
+          .uploadUserImage(imageData)
           .then((response) => {
-            console.log("game", response.data.imageUrl)
-            // setCurrentGame({ ...currentGame, adImage: response.data.imageUrl });
-            setSelectedProfileImg(response.data.imageUrl);
-            setProfileImgPreview(response.data.imageUrl);
+            console.log("profileImage", response)
+            setSelectedProfileImg(response.data.profileImageUrl);
+            setProfileImgPreview(response.data.profileImageUrl);
             setButtonDisable(false);
 
           })

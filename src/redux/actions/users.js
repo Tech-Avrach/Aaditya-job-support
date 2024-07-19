@@ -57,6 +57,8 @@ export const updateUser = (id, data) => async (dispatch) => {
   try {
     const res = await UserService.update(id, data);
 
+    console.log("res",res)
+
     dispatch({
       type: UPDATE_USER,
       payload: res.data.userInfo,

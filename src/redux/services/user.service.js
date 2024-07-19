@@ -63,6 +63,12 @@ const addusersuperadmin = (data) => {
   });
 };
 
+const uploadUserImage = (formImage) => {
+  return axios.post(process.env.REACT_APP_API_URL + `user/upload/profileImage`, formImage, {
+    headers: multipartHeader(),
+  })
+}
+
 export default {
   getAll,
   get,
@@ -71,5 +77,6 @@ export default {
   updateStatus,
   deleteUser,
   restore,
-  addusersuperadmin
+  addusersuperadmin,
+  uploadUserImage
 };

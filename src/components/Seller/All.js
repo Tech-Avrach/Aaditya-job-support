@@ -57,7 +57,7 @@ const All = (props) => {
 
   const dispatch = useDispatch();
 
-  const { sellers: filteredsellers, totalSellerCount: totalSellers } =
+  const { sellers: Allsellers, totalSellerCount: totalSellers } =
     useSelector((state) => state.seller);
 
   const { permissionMap: permissions } = useSelector((state) => state.auth);
@@ -80,6 +80,8 @@ const All = (props) => {
   const handleChange = (selecteValue) => {
     setSelectedOption(selecteValue);
   };
+
+  const filteredsellers = Allsellers.filter(seller => seller.ads[0]?.userId !== 1);
 
   useEffect(() => {
     if (selectedOption.label === "All") {
@@ -311,72 +313,75 @@ const All = (props) => {
     
 
     const renderActionCell = (row) => {
-
-      console.log(row, "row");
-      const isDeleted = row.deletedAt && row.deletedAt !== null;
-  
-      if (isDeleted) {
-        return permission.delete ? (
-          <IconContainer
-              id={"restore-icon"}
-              Icon={RestoreIcon}
-              handleOnClick={(e) => handleDelete(e, row.publicId, "restore")}
-              text={"Restore"}
-              iconColor={"#3ac47d"}
-            />
-        ) : null;
+      // Ensure row and row.ads are defined
+      if (!row || !row.ads) {
+        return null;
       }
-  
+    
+      // Check for the specific condition
+      if (row.ads[0]?.userId === 1) {
+        return null;
+      }
+    
+      const isDeleted = row.deletedAt && row.deletedAt !== null;
+    
       return (
         <>
-
-        {
-          permission.update ? (
-            <>
+          {isDeleted && permission?.delete ? (
             <IconContainer
-            id={"edit-icon"}
-            Icon={EditIcon}
-            handleOnClick={() => handleEditClick(row)}
-            text={"Edit"}
-          />
-      </>
-
-          ) : null 
-        }
-          {permission.read ? (
+              id="restore-icon"
+              Icon={RestoreIcon}
+              handleOnClick={(e) => handleDelete(e, row.publicId, "restore")}
+              text="Restore"
+              iconColor="#3ac47d"
+            />
+          ) : null}
+    
+          {permission?.update ? (
             <IconContainer
-            id={"view-icon"}
-            Icon={FaEye}
-            handleOnClick={() => handleViewClick(row)}
-            text="View"
-          />
-
-          ) : null }
-          {permission.delete ? (
+              id="edit-icon"
+              Icon={EditIcon}
+              handleOnClick={() => handleEditClick(row)}
+              text="Edit"
+            />
+          ) : null}
+    
+          {permission?.read ? (
             <IconContainer
-            id={"delete-icon"}
-            Icon={DeleteIcon}
-            handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
-            text={"Delete"}
-            iconColor={"#d92550"}
-          />
-          ) : null }
-          {permission.statusUpdate ? (
+              id="view-icon"
+              Icon={FaEye}
+              handleOnClick={() => handleViewClick(row)}
+              text="View"
+            />
+          ) : null}
+    
+          {permission?.delete ? (
             <IconContainer
-            id={ `active-deactivate-icon-${row.id}`}
-            Icon={row.isBlock ? InactiveIcon : ActiveIcon}
-            handleOnClick={(e) =>
-              row.isBlock
-                ? handleStatusChange(e, row.publicId, 0)
-                : handleStatusChange(e, row.publicId, 1)
-            }
-            text={row.isBlock ? "Unblock" : "Block"}
-            iconColor={row.isBlock ? "#d92550" : "#3ac47d"}
-          />
+              id="delete-icon"
+              Icon={DeleteIcon}
+              handleOnClick={(e) => handleDelete(e, row.publicId, "delete")}
+              text="Delete"
+              iconColor="#d92550"
+            />
+          ) : null}
+    
+          {permission?.statusUpdate ? (
+            <IconContainer
+              id={`active-deactivate-icon-${row.id}`}
+              Icon={row.isBlock ? InactiveIcon : ActiveIcon}
+              handleOnClick={(e) =>
+                row.isBlock
+                  ? handleStatusChange(e, row.publicId, 0)
+                  : handleStatusChange(e, row.publicId, 1)
+              }
+              text={row.isBlock ? "Unblock" : "Block"}
+              iconColor={row.isBlock ? "#d92550" : "#3ac47d"}
+            />
           ) : null}
         </>
       );
     };
+    
   
   
     if (permission.delete === 0 && permission.update === 0 && permission.statusUpdate) {
