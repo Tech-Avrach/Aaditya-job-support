@@ -38,6 +38,7 @@ import { Tooltip } from "reactstrap";
 import { FaEye } from "react-icons/fa";
 
 import { FaTimesCircle } from "react-icons/fa";
+import Loader from "react-loaders";
 const DeleteIcon = Ionicons["IoIosTrash"];
 const EditIcon = Ionicons["IoIosCreate"];
 const RestoreIcon = Ionicons["IoIosRefresh"];
@@ -420,7 +421,9 @@ const All = (props) => {
       pageHeading="Sellers"
       pageSubTitle="Listing all the sellers on the system"
     >
-      <Row>
+      {
+        filteredsellers ? (
+          <Row>
         <Col md="12">
           <Card className="main-card mb-3 ">
             <CardBody>
@@ -441,6 +444,28 @@ const All = (props) => {
           </Card>
         </Col>
       </Row>
+        ) : (
+          <>
+          <Row>
+          <Col md="12">
+            <Card className="main-card mb-3">
+              <div
+                className="loader-container"
+                style={{ width: "75vw", height: "75vh" }}
+              >
+                <div className="loader-container-inner">
+                  <div className="text-center">
+                    <Loader type="ball-pulse-rise" />
+                  </div>
+                  <h6 className="mt-5">Please wait...</h6>
+                </div>
+              </div>
+            </Card>
+          </Col>
+        </Row>
+          </>
+        )
+      }
     </PageContainer>
   );
 };

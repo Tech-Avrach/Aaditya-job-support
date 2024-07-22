@@ -21,16 +21,16 @@ function Nav(props) {
   return (
     <>
       <h5 className="app-sidebar__heading"></h5>
-        <MetisMenu
-          content={permission?.[0].roleId == 1 ? AdminNav : createNavItems(permission)}
-          // content={AdminNav}
+      <MetisMenu
+        content={permission?.[0].roleId == 1 ? AdminNav : createNavItems(permission)}
+        // content={AdminNav}
 
-          onSelected={toggleMobileSidebar}
-          activeLinkFromLocation
-          className="vertical-nav-menu"
-          iconNamePrefix=""
-          classNameStateIcon="pe-7s-angle-down"
-        />              
+        onSelected={toggleMobileSidebar}
+        activeLinkFromLocation
+        className="vertical-nav-menu"
+        iconNamePrefix=""
+        classNameStateIcon="pe-7s-angle-down"
+      />
     </>
   );
 }

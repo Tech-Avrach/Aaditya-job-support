@@ -74,6 +74,12 @@ const restore = (id, data) => {
   });
 };
 
+const uploadDoc = (formImage) => {
+  return axios.post(process.env.REACT_APP_API_URL + `seller/upload/document`, formImage, {
+    headers: multipartHeader(),
+  })
+}
+
 export default {
   getAll,
   get,
@@ -83,4 +89,5 @@ export default {
   deleteUser,
   restore,
   accountApproval,
+  uploadDoc,
 };

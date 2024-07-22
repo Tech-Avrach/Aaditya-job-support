@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { format } from "date-fns";
 import styles from "../../assets/preview.module.scss";
 import PageContainer from "../Layout/PageContainer";
+import Loader from "react-loaders";
 
 const EditIcon = Ionicons["IoIosCreate"];
 const DeleteIcon = Ionicons["IoIosTrash"];
@@ -305,26 +306,46 @@ const BoosterList = () => {
             pageHeading={"Booster Plan"}
             pageSubTitle={"List of all booster plans"}
         >
-            <Row>
-                <Col>
-                    <Card className="main-card mb-3">
-                        <CardBody>
-                            <DataTable
-                                columns={columns}
-                                data={boosterPlan}
-                                pagination
-                                paginationServer
-                                paginationTotalRows={totalBoosterPlanCount}
-                                paginationDefaultPage={currentPage}
-                                onChangeRowsPerPage={handlePerRowsChange}
-                                onChangePage={handlePageChange}
-                                subHeader
-                                subHeaderComponent={subHeaderComponent}
-                            />
-                        </CardBody>
-                    </Card>
-                </Col>
-            </Row>
+            
+
+            {
+                boosterPlan ? (<Row>
+                    <Col>
+                        <Card className="main-card mb-3">
+                            <CardBody>
+                                <DataTable
+                                    columns={columns}
+                                    data={boosterPlan}
+                                    pagination
+                                    paginationServer
+                                    paginationTotalRows={totalBoosterPlanCount}
+                                    paginationDefaultPage={currentPage}
+                                    onChangeRowsPerPage={handlePerRowsChange}
+                                    onChangePage={handlePageChange}
+                                    subHeader
+                                    subHeaderComponent={subHeaderComponent}
+                                />
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>) : (<Row>
+                    <Col md="12">
+                      <Card className="main-card mb-3">
+                        <div
+                          className="loader-container"
+                          style={{ width: "75vw", height: "75vh" }}
+                        >
+                          <div className="loader-container-inner">
+                            <div className="text-center">
+                              <Loader type="ball-pulse-rise" />
+                            </div>
+                            <h6 className="mt-5">Please wait...</h6>
+                          </div>
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>)
+            }
         </PageContainer>
     );
 };

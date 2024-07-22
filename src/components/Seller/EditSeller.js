@@ -42,6 +42,7 @@ function EditSeller() {
 
   const [supportiveDocPreview, setSupportiveDocPreview] = useState("");
   const [supportiveDocErr, setSupportiveDocErr] = useState("");
+  const [buttonDisable, setButtonDisable] = useState(false);
   const [errors, setErrors] = useState({
     nationalIdNumber: "",
     accountType: "",
@@ -59,6 +60,8 @@ function EditSeller() {
         const sellerInfo = res?.data?.sellerInfo;
         if (sellerInfo) {
           console.log(sellerInfo.supportiveDoc);
+
+          setSupportiveDocPreview(sellerInfo.supportiveDoc);
           setSellerDetails({
             nationalIdNumber: sellerInfo.nationalIdNumber,
             accountType: sellerInfo.accountType,
@@ -68,7 +71,6 @@ function EditSeller() {
             vatNumber: sellerInfo.vatNumber,
             companyAddress: sellerInfo.companyAddress,
             supportiveDoc: sellerInfo.supportiveDoc,
-            setSupportiveDocPreview: sellerInfo.supportiveDoc // Ensure to set the existing document here
           });
         }
       });
@@ -82,20 +84,36 @@ function EditSeller() {
   };
 
   const handleFileInput = (event) => {
+    setSupportiveDocErr("");
+    setButtonDisable(true);
     const file = event.target.files[0];
     if (file) {
-      setSellerDetails({ ...sellerDetails, supportiveDoc: file });
-  
-      try {
-        const objectUrl = URL.createObjectURL(file);
-        setSupportiveDocPreview(objectUrl);
-        setSupportiveDocErr("");
-      } catch (error) {
-        console.error("Error creating object URL:", error);
-        setSupportiveDocErr("Error previewing file");
+      // Validate file type
+      const allowedTypes = ["image/jpeg", "application/pdf"];
+      if (!allowedTypes.includes(file.type)) {
+        setSupportiveDocErr("Only JPG and PDF files are allowed.");
+        setButtonDisable(false);
+        return;
       }
+  
+      const supportiveDoc = new FormData();
+      supportiveDoc.append("supportiveDoc", file);
+  
+      sellerService.uploadDoc(supportiveDoc)
+        .then((response) => {
+          setSupportiveDocPreview(response.data.supportiveDocUrl);
+          setSellerDetails({ ...sellerDetails, supportiveDoc: response.data.supportiveDocUrl });
+          setSupportiveDocErr("");
+          setButtonDisable(false);
+        })
+        .catch((error) => {
+          console.error("Error uploading file:", error);
+          setSupportiveDocErr("Error uploading file");
+          setButtonDisable(false);
+        });
     }
   };
+  
 
   const removeSupportDoc = () => {
     setSellerDetails({ ...sellerDetails, supportiveDoc: null });
@@ -358,10 +376,11 @@ function EditSeller() {
                   onClick={() => {
                     navigate(`/seller/list`);
                   }}
+                  disabled={buttonDisable}
                 >
                   Cancel
                 </Button>
-                <Button size="lg" color="primary" onClick={updateHandler}>
+                <Button size="lg" color="primary" onClick={updateHandler} disabled={buttonDisable}>
                   Update Seller
                 </Button>
               </CardFooter>

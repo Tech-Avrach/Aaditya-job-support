@@ -27,6 +27,7 @@ import { FaEye } from "react-icons/fa";
 
 import debounceFunction from "../../helpers/Debounce";
 import IconContainer from "../Common/IconContainer";
+import Loader from "react-loaders";
 
 const DeleteIcon = Ionicons["IoIosTrash"];
 
@@ -55,8 +56,11 @@ const All = (props) => {
   const permission = permissions.find(perm => perm.moduleId === currentModuleId);
 
   const params = {
-    currency: "EUR"
-  }
+    currency: "EUR",
+    keyword: filterText,
+    page: currentPage,
+    perPage: perPage,
+  };
 
   useEffect(() => {
     dispatch(retrieveOrders(params));
@@ -352,7 +356,9 @@ const All = (props) => {
       pageHeading="Orders"
       pageSubTitle="Listing all the orders on the system"
     >
-      <Row>
+      {
+        orders ? (
+          <Row>
         <Col md="12">
           <Card className="main-card mb-3">
             <CardBody>
@@ -373,6 +379,26 @@ const All = (props) => {
           </Card>
         </Col>
       </Row>
+        ) : (
+          <Row>
+          <Col md="12">
+            <Card className="main-card mb-3">
+              <div
+                className="loader-container"
+                style={{ width: "75vw", height: "75vh" }}
+              >
+                <div className="loader-container-inner">
+                  <div className="text-center">
+                    <Loader type="ball-pulse-rise" />
+                  </div>
+                  <h6 className="mt-5">Please wait...</h6>
+                </div>
+              </div>
+            </Card>
+          </Col>
+        </Row>
+        )
+      }
     </PageContainer>
   );
 };
