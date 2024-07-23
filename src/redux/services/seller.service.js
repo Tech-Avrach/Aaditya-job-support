@@ -36,7 +36,7 @@ const create = (data) => {
 
 const update = (id, data) => {
   return axios.put(process.env.REACT_APP_API_URL + `seller/update/${id}`, data, {
-    headers: multipartHeader(),
+    headers: authHeader(),
   });
 };
 

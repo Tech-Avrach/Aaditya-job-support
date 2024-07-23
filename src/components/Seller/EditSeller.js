@@ -146,19 +146,30 @@ function EditSeller() {
 
     if (errorCount === 0) {
       // Construct form data object
-      const formData = new FormData();
+      // const formData = new FormData();
 
-      formData.append("nationalIdNumber", sellerDetails.nationalIdNumber);
-      formData.append("supportiveDoc", sellerDetails.supportiveDoc);
-      formData.append("accountType", sellerDetails.accountType);
-      formData.append("companyName", sellerDetails.companyName);
-      formData.append("positionInCompany", sellerDetails.positionInCompany);
-      formData.append("companyNumber", sellerDetails.companyNumber);
-      formData.append("vatNumber", sellerDetails.vatNumber);
-      formData.append("companyAddress", sellerDetails.companyAddress);
+      // formData.append("nationalIdNumber", sellerDetails.nationalIdNumber);
+      // formData.append("supportiveDoc", sellerDetails.supportiveDoc);
+      // formData.append("accountType", sellerDetails.accountType);
+      // formData.append("companyName", sellerDetails.companyName);
+      // formData.append("positionInCompany", sellerDetails.positionInCompany);
+      // formData.append("companyNumber", sellerDetails.companyNumber);
+      // formData.append("vatNumber", sellerDetails.vatNumber);
+      // formData.append("companyAddress", sellerDetails.companyAddress);
+
+      const data = {
+        nationalIdNumber: sellerDetails.nationalIdNumber,
+        supportiveDoc: sellerDetails.supportiveDoc,
+        accountType: sellerDetails.accountType,
+        companyName: sellerDetails.companyName,
+        positionInCompany: sellerDetails.positionInCompany,
+        companyNumber: sellerDetails.companyNumber,
+        vatNumber: sellerDetails.vatNumber,
+        companyAddress: sellerDetails.companyAddress,
+      };
 
       // Perform the update operation here with formData
-      dispatch(updateSeller(id ,formData))
+      dispatch(updateSeller(id ,data))
         .then((response) => {
           toast("Seller Added successfully!", {
             transition: Slide,
@@ -261,23 +272,28 @@ function EditSeller() {
                   </Col>
                 </Row>
                 <Row>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label for="accountType">Account Type</Label>
-                      <Input
-                        type="text"
-                        name="accountType"
-                        id="accountType"
-                        placeholder="Enter Account Type"
-                        value={sellerDetails.accountType}
-                        onChange={handleInputChange}
-                        invalid={errors.accountType !== ""}
-                      />
-                      {errors.accountType && (
-                        <FormFeedback>{errors.accountType}</FormFeedback>
-                      )}
-                    </FormGroup>
-                  </Col>
+                <Col md="6">
+  <FormGroup>
+    <Label for="accountType">Account Type</Label>
+    <Input
+      type="select"
+      name="accountType"
+      id="accountType"
+      placeholder="Enter Account Type"
+      value={sellerDetails.accountType}
+      onChange={handleInputChange}
+      invalid={errors.accountType !== ""}
+    >
+      <option value="">Select Account Type</option>
+      <option value="personal">Personal</option>
+      <option value="business">Company</option>
+    </Input>
+    {errors.accountType && (
+      <FormFeedback>{errors.accountType}</FormFeedback>
+    )}
+  </FormGroup>
+</Col>
+
                   <Col md="6">
                     <FormGroup>
                       <Label for="companyName">Company Name</Label>
